@@ -75,18 +75,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, nil
 
-        case "enter", " ":
-            if m.CurrentPlayer == 1 {
-                m.Board[m.Selection] = Player1
-                m.CurrentPlayer = 2
-            } else if m.CurrentPlayer == 2 {
-                m.Board[m.Selection] = Player2
-                m.CurrentPlayer = 1
-            } else {
-                // TODO: proper error handling
-                fmt.Fprintf(os.Stderr, "internal error: current player is impossible\n")
-                os.Exit(1)
-            }
+		case "enter", " ":
+			if m.Board[m.Selection] != Unoccupied {
+				return m, nil
+			}
+
+			if m.CurrentPlayer == 1 {
+				m.Board[m.Selection] = Player1
+				m.CurrentPlayer = 2
+			} else if m.CurrentPlayer == 2 {
+				m.Board[m.Selection] = Player2
+				m.CurrentPlayer = 1
+			} else {
+				// TODO: proper error handling
+				fmt.Fprintf(os.Stderr, "internal error: current player is impossible\n")
+				os.Exit(1)
+			}
 		}
 	}
 
@@ -119,16 +123,16 @@ func (m Model) View() string {
 		view.WriteByte('\n')
 	}
 
-    view.WriteByte('\n')
-    view.WriteString("Current player: ")
+	view.WriteByte('\n')
+	view.WriteString("Current player: ")
 
-    if m.CurrentPlayer == 1 {
-        view.WriteRune('X')
-    } else if m.CurrentPlayer == 2 {
-        view.WriteRune('O')
-    }
+	if m.CurrentPlayer == 1 {
+		view.WriteRune('X')
+	} else if m.CurrentPlayer == 2 {
+		view.WriteRune('O')
+	}
 
-    view.WriteByte('\n')
+	view.WriteByte('\n')
 
 	return view.String()
 }
