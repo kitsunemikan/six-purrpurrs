@@ -174,6 +174,82 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+func (m *Model) solutionView(cliBoard map[Offset]string) string {
+	for _, cell := range m.Solution {
+		cliBoard[cell] = winCell.Render(cliBoard[cell])
+	}
+
+	var view strings.Builder
+	for y := 0; y < m.BoardSize.Y; y++ {
+		for x := 0; x < m.BoardSize.X; x++ {
+			view.WriteRune(' ')
+
+			curCell := Offset{x, y}
+			if m.Board[curCell] == 0 {
+				view.WriteString(".")
+			} else {
+				view.WriteString(cliBoard[Offset{x, y}])
+			}
+
+			view.WriteRune(' ')
+		}
+		view.WriteByte('\n')
+	}
+
+	view.WriteByte('\n')
+
+	view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+	view.WriteString(" wins!")
+
+	view.WriteByte('\n')
+
+	return view.String()
+}
+
+func (m *Model) selectionView(cliBoard map[Offset]string) string {
+	var view strings.Builder
+	for y := 0; y < m.BoardSize.Y; y++ {
+		for x := 0; x < m.BoardSize.X; x++ {
+			leftSide := " "
+			rightSide := " "
+			if x == m.Selection.X && y == m.Selection.Y {
+				leftSide = "["
+				rightSide = "]"
+			}
+
+			curCell := Offset{x, y}
+
+			if m.Board[curCell] != 0 {
+				view.WriteString(inactiveText.Render(leftSide))
+			} else {
+				view.WriteString(leftSide)
+			}
+
+			if m.Board[curCell] == 0 {
+				view.WriteString(".")
+			} else {
+				view.WriteString(cliBoard[Offset{x, y}])
+			}
+
+			if m.Board[curCell] != 0 {
+				view.WriteString(inactiveText.Render(rightSide))
+			} else {
+				view.WriteString(rightSide)
+			}
+		}
+		view.WriteByte('\n')
+	}
+
+	view.WriteByte('\n')
+
+	view.WriteString("Current player: ")
+	view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+
+	view.WriteByte('\n')
+
+	return view.String()
+}
+
 func (m Model) View() string {
 	cliBoard := make(map[Offset]string)
 	for pos, player := range m.Board {
@@ -181,10 +257,10 @@ func (m Model) View() string {
 	}
 
 	if m.Solution != nil {
-		for _, cell := range m.Solution {
-			cliBoard[cell] = winCell.Render(cliBoard[cell])
-		}
+		return m.solutionView(cliBoard)
 	}
+
+	return m.selectionView(cliBoard)
 
 	var view strings.Builder
 	for y := 0; y < m.BoardSize.Y; y++ {
