@@ -30,6 +30,7 @@ var (
 	playersFlag = flag.String("players", "XO", "a list of players and their tokens")
 	wFlag       = flag.Uint("w", 3, "board width")
 	hFlag       = flag.Uint("h", 3, "board height")
+	strikeFlag  = flag.Uint("strike", 3, "the number of marks in a row to win the game")
 )
 
 var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
@@ -49,7 +50,7 @@ type Model struct {
 func initialModel() Model {
 	w, h := int(*wFlag), int(*hFlag)
 	return Model{
-		StrikeLength: 3,
+		StrikeLength: int(*strikeFlag),
 		BoardSize:    Offset{w, h},
 		Board:        make(map[Offset]PlayerID),
 
