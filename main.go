@@ -23,9 +23,13 @@ var (
 	hFlag       = flag.Uint("h", 3, "board height")
 )
 
+var solutionOffsets = []Offset{{1,0}, {1,1}, {0, 1}, {1,-1}}
+
 type Model struct {
+    StrikeLength int
 	BoardSize Offset
 	Board     map[Offset]PlayerID
+    Solution  []Offset
 
 	Selection     Offset
 	CurrentPlayer PlayerID
@@ -36,6 +40,7 @@ type Model struct {
 func initialModel() Model {
 	w, h := int(*wFlag), int(*hFlag)
 	return Model{
+        StrikeLength: 3,
 		BoardSize: Offset{w, h},
 		Board:     make(map[Offset]PlayerID),
 
@@ -56,6 +61,46 @@ func (m *Model) PlayerToken(player PlayerID) rune {
 	}
 
 	return m.playerTokens[int(player)-1]
+}
+
+func (m *Model) IsInsideBoard(pos Offset) bool {
+    return pos.X >= 0 && pos.X < m.BoardSize.X && pos.Y >= 0 && pos.Y < m.BoardSize.Y
+}
+
+func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
+    solution := make([]Offset, 0, m.StrikeLength)
+
+    for _, dir := range solutionOffsets {
+        solution = solution[:0]
+
+        if len(solution) != 0 {
+            panic(42)
+        }
+
+        for i := 0; i < m.StrikeLength; i++ {
+            curCell := Offset{pos.X + i * dir.X, pos.Y + i * dir.Y}
+            if m.Board[curCell] != player {
+                break
+            }
+
+            solution = append(solution, curCell)
+        }
+
+        for i := 1; i < m.StrikeLength; i++ {
+            curCell := Offset{pos.X - i * dir.X, pos.Y - i * dir.Y}
+            if m.Board[curCell] != player {
+                break
+            }
+
+            solution = append(solution, curCell)
+        }
+
+        if len(solution) >= m.StrikeLength {
+            return solution
+        }
+    }
+
+    return nil
 }
 
 func (m Model) Init() tea.Cmd {
@@ -94,11 +139,21 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "enter", " ":
+            if m.Solution != nil {
+                return m, tea.Quit
+            }
+
 			if m.Board[m.Selection] != Unoccupied {
 				return m, nil
 			}
 
 			m.Board[m.Selection] = m.CurrentPlayer
+
+            m.Solution = m.CheckSolutionsAt(m.Selection, m.CurrentPlayer)
+            if m.Solution != nil {
+                return m, nil
+            }
+
 			if m.CurrentPlayer == m.LastPlayer() {
 				m.CurrentPlayer = 1
 			} else {
@@ -134,8 +189,15 @@ func (m Model) View() string {
 	}
 
 	view.WriteByte('\n')
-	view.WriteString("Current player: ")
-	view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+
+    if m.Solution != nil {
+        view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+        view.WriteString(" wins!")
+    } else {
+        view.WriteString("Current player: ")
+        view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+    }
+
 	view.WriteByte('\n')
 
 	return view.String()
