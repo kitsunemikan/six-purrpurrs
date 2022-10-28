@@ -261,43 +261,6 @@ func (m Model) View() string {
 	}
 
 	return m.selectionView(cliBoard)
-
-	var view strings.Builder
-	for y := 0; y < m.BoardSize.Y; y++ {
-		for x := 0; x < m.BoardSize.X; x++ {
-			leftSide := ' '
-			rightSide := ' '
-			if x == m.Selection.X && y == m.Selection.Y {
-				leftSide = '['
-				rightSide = ']'
-			}
-			view.WriteRune(leftSide)
-
-			curCell := Offset{x, y}
-			if m.Board[curCell] == 0 {
-				view.WriteString(".")
-			} else {
-				view.WriteString(cliBoard[Offset{x, y}])
-			}
-
-			view.WriteRune(rightSide)
-		}
-		view.WriteByte('\n')
-	}
-
-	view.WriteByte('\n')
-
-	if m.Solution != nil {
-		view.WriteRune(m.PlayerToken(m.CurrentPlayer))
-		view.WriteString(" wins!")
-	} else {
-		view.WriteString("Current player: ")
-		view.WriteRune(m.PlayerToken(m.CurrentPlayer))
-	}
-
-	view.WriteByte('\n')
-
-	return view.String()
 }
 
 func main() {
