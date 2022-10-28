@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -16,6 +17,12 @@ type PlayerID int
 
 const Unoccupied PlayerID = 0
 
+var (
+	playersFlag = flag.String("players", "XO", "a list of players and their tokens")
+	wFlag       = flag.Uint("w", 3, "board width")
+	hFlag       = flag.Uint("h", 3, "board height")
+)
+
 type Model struct {
 	BoardSize Offset
 	Board     map[Offset]PlayerID
@@ -26,18 +33,21 @@ type Model struct {
 	playerTokens []rune
 }
 
-var initialModel = Model{
-	BoardSize: Offset{3, 3},
-	Board:     make(map[Offset]PlayerID),
+func initialModel() Model {
+	w, h := int(*wFlag), int(*hFlag)
+	return Model{
+		BoardSize: Offset{w, h},
+		Board:     make(map[Offset]PlayerID),
 
-	Selection:     Offset{1, 1},
-	CurrentPlayer: 1,
+		Selection:     Offset{w / 2, h / 2},
+		CurrentPlayer: 1,
 
-	playerTokens: []rune("XO"),
+		playerTokens: []rune(*playersFlag),
+	}
 }
 
 func (m *Model) LastPlayer() PlayerID {
-    return PlayerID(len(m.playerTokens))
+	return PlayerID(len(m.playerTokens))
 }
 
 func (m *Model) PlayerToken(player PlayerID) rune {
@@ -132,7 +142,9 @@ func (m Model) View() string {
 }
 
 func main() {
-	p := tea.NewProgram(initialModel)
+	flag.Parse()
+
+	p := tea.NewProgram(initialModel())
 	if err := p.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, "internal error: %v\n", err)
 		os.Exit(1)
