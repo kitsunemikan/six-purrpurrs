@@ -7,7 +7,16 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
+
+var winCell = lipgloss.NewStyle().
+	Bold(true).
+	Foreground(lipgloss.Color("10"))
+
+var inactiveText = lipgloss.NewStyle().
+	Bold(true).
+	Foreground(lipgloss.Color("8"))
 
 type Offset struct {
 	X, Y int
@@ -23,13 +32,13 @@ var (
 	hFlag       = flag.Uint("h", 3, "board height")
 )
 
-var solutionOffsets = []Offset{{1,0}, {1,1}, {0, 1}, {1,-1}}
+var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 
 type Model struct {
-    StrikeLength int
-	BoardSize Offset
-	Board     map[Offset]PlayerID
-    Solution  []Offset
+	StrikeLength int
+	BoardSize    Offset
+	Board        map[Offset]PlayerID
+	Solution     []Offset
 
 	Selection     Offset
 	CurrentPlayer PlayerID
@@ -40,9 +49,9 @@ type Model struct {
 func initialModel() Model {
 	w, h := int(*wFlag), int(*hFlag)
 	return Model{
-        StrikeLength: 3,
-		BoardSize: Offset{w, h},
-		Board:     make(map[Offset]PlayerID),
+		StrikeLength: 3,
+		BoardSize:    Offset{w, h},
+		Board:        make(map[Offset]PlayerID),
 
 		Selection:     Offset{w / 2, h / 2},
 		CurrentPlayer: 1,
@@ -64,43 +73,43 @@ func (m *Model) PlayerToken(player PlayerID) rune {
 }
 
 func (m *Model) IsInsideBoard(pos Offset) bool {
-    return pos.X >= 0 && pos.X < m.BoardSize.X && pos.Y >= 0 && pos.Y < m.BoardSize.Y
+	return pos.X >= 0 && pos.X < m.BoardSize.X && pos.Y >= 0 && pos.Y < m.BoardSize.Y
 }
 
 func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
-    solution := make([]Offset, 0, m.StrikeLength)
+	solution := make([]Offset, 0, m.StrikeLength)
 
-    for _, dir := range solutionOffsets {
-        solution = solution[:0]
+	for _, dir := range solutionOffsets {
+		solution = solution[:0]
 
-        if len(solution) != 0 {
-            panic(42)
-        }
+		if len(solution) != 0 {
+			panic(42)
+		}
 
-        for i := 0; i < m.StrikeLength; i++ {
-            curCell := Offset{pos.X + i * dir.X, pos.Y + i * dir.Y}
-            if m.Board[curCell] != player {
-                break
-            }
+		for i := 0; i < m.StrikeLength; i++ {
+			curCell := Offset{pos.X + i*dir.X, pos.Y + i*dir.Y}
+			if m.Board[curCell] != player {
+				break
+			}
 
-            solution = append(solution, curCell)
-        }
+			solution = append(solution, curCell)
+		}
 
-        for i := 1; i < m.StrikeLength; i++ {
-            curCell := Offset{pos.X - i * dir.X, pos.Y - i * dir.Y}
-            if m.Board[curCell] != player {
-                break
-            }
+		for i := 1; i < m.StrikeLength; i++ {
+			curCell := Offset{pos.X - i*dir.X, pos.Y - i*dir.Y}
+			if m.Board[curCell] != player {
+				break
+			}
 
-            solution = append(solution, curCell)
-        }
+			solution = append(solution, curCell)
+		}
 
-        if len(solution) >= m.StrikeLength {
-            return solution
-        }
-    }
+		if len(solution) >= m.StrikeLength {
+			return solution
+		}
+	}
 
-    return nil
+	return nil
 }
 
 func (m Model) Init() tea.Cmd {
@@ -139,9 +148,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "enter", " ":
-            if m.Solution != nil {
-                return m, tea.Quit
-            }
+			if m.Solution != nil {
+				return m, tea.Quit
+			}
 
 			if m.Board[m.Selection] != Unoccupied {
 				return m, nil
@@ -149,10 +158,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			m.Board[m.Selection] = m.CurrentPlayer
 
-            m.Solution = m.CheckSolutionsAt(m.Selection, m.CurrentPlayer)
-            if m.Solution != nil {
-                return m, nil
-            }
+			m.Solution = m.CheckSolutionsAt(m.Selection, m.CurrentPlayer)
+			if m.Solution != nil {
+				return m, nil
+			}
 
 			if m.CurrentPlayer == m.LastPlayer() {
 				m.CurrentPlayer = 1
@@ -166,6 +175,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
+	cliBoard := make(map[Offset]string)
+	for pos, player := range m.Board {
+		cliBoard[pos] = string(m.PlayerToken(player))
+	}
+
+	if m.Solution != nil {
+		for _, cell := range m.Solution {
+			cliBoard[cell] = winCell.Render(cliBoard[cell])
+		}
+	}
+
 	var view strings.Builder
 	for y := 0; y < m.BoardSize.Y; y++ {
 		for x := 0; x < m.BoardSize.X; x++ {
@@ -177,10 +197,11 @@ func (m Model) View() string {
 			}
 			view.WriteRune(leftSide)
 
-			if m.Board[Offset{x, y}] == 0 {
-				view.WriteByte('.')
+			curCell := Offset{x, y}
+			if m.Board[curCell] == 0 {
+				view.WriteString(".")
 			} else {
-				view.WriteRune(m.PlayerToken(m.Board[Offset{x, y}]))
+				view.WriteString(cliBoard[Offset{x, y}])
 			}
 
 			view.WriteRune(rightSide)
@@ -190,13 +211,13 @@ func (m Model) View() string {
 
 	view.WriteByte('\n')
 
-    if m.Solution != nil {
-        view.WriteRune(m.PlayerToken(m.CurrentPlayer))
-        view.WriteString(" wins!")
-    } else {
-        view.WriteString("Current player: ")
-        view.WriteRune(m.PlayerToken(m.CurrentPlayer))
-    }
+	if m.Solution != nil {
+		view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+		view.WriteString(" wins!")
+	} else {
+		view.WriteString("Current player: ")
+		view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+	}
 
 	view.WriteByte('\n')
 
