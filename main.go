@@ -12,32 +12,41 @@ type Offset struct {
 	X, Y int
 }
 
-type CellState int
+type PlayerID int
 
-const (
-	Unoccupied CellState = iota
-	Player1
-	Player2
-)
+const Unoccupied PlayerID = 0
 
 type Model struct {
 	BoardSize Offset
-	Board     map[Offset]CellState
+	Board     map[Offset]PlayerID
 
 	Selection     Offset
-	CurrentPlayer int
+	CurrentPlayer PlayerID
 
-	PlayerCount int
+	LastPlayer   PlayerID
+	playerTokens []rune
 }
 
 var initialModel = Model{
 	BoardSize: Offset{3, 3},
-	Board:     make(map[Offset]CellState),
+	Board:     make(map[Offset]PlayerID),
 
 	Selection:     Offset{1, 1},
 	CurrentPlayer: 1,
 
-	PlayerCount: 2,
+	LastPlayer:   2,
+	playerTokens: []rune("XO"),
+}
+
+func (m *Model) PlayerToken(player PlayerID) rune {
+	if player < 1 || player > m.LastPlayer {
+		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, m.LastPlayer))
+	}
+
+	if int(player)-1 >= len(m.playerTokens) {
+		panic(fmt.Sprintf("model: player token for ID=%v: not enough player tokens, only %d specified (%v)", player, len(m.playerTokens), m.playerTokens))
+	}
+	return m.playerTokens[int(player)-1]
 }
 
 func (m Model) Init() tea.Cmd {
@@ -80,16 +89,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
-			if m.CurrentPlayer == 1 {
-				m.Board[m.Selection] = Player1
-				m.CurrentPlayer = 2
-			} else if m.CurrentPlayer == 2 {
-				m.Board[m.Selection] = Player2
+			m.Board[m.Selection] = m.CurrentPlayer
+			if m.CurrentPlayer == m.LastPlayer {
 				m.CurrentPlayer = 1
 			} else {
-				// TODO: proper error handling
-				fmt.Fprintf(os.Stderr, "internal error: current player is impossible\n")
-				os.Exit(1)
+				m.CurrentPlayer++
 			}
 		}
 	}
@@ -109,13 +113,10 @@ func (m Model) View() string {
 			}
 			view.WriteRune(leftSide)
 
-			switch m.Board[Offset{x, y}] {
-			case Unoccupied:
+			if m.Board[Offset{x, y}] == 0 {
 				view.WriteByte('.')
-			case Player1:
-				view.WriteByte('X')
-			case Player2:
-				view.WriteByte('O')
+			} else {
+				view.WriteRune(m.PlayerToken(m.Board[Offset{x, y}]))
 			}
 
 			view.WriteRune(rightSide)
@@ -125,13 +126,7 @@ func (m Model) View() string {
 
 	view.WriteByte('\n')
 	view.WriteString("Current player: ")
-
-	if m.CurrentPlayer == 1 {
-		view.WriteRune('X')
-	} else if m.CurrentPlayer == 2 {
-		view.WriteRune('O')
-	}
-
+	view.WriteRune(m.PlayerToken(m.CurrentPlayer))
 	view.WriteByte('\n')
 
 	return view.String()
