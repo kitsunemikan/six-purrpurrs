@@ -23,7 +23,6 @@ type Model struct {
 	Selection     Offset
 	CurrentPlayer PlayerID
 
-	LastPlayer   PlayerID
 	playerTokens []rune
 }
 
@@ -34,18 +33,18 @@ var initialModel = Model{
 	Selection:     Offset{1, 1},
 	CurrentPlayer: 1,
 
-	LastPlayer:   2,
 	playerTokens: []rune("XO"),
 }
 
+func (m *Model) LastPlayer() PlayerID {
+    return PlayerID(len(m.playerTokens))
+}
+
 func (m *Model) PlayerToken(player PlayerID) rune {
-	if player < 1 || player > m.LastPlayer {
-		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, m.LastPlayer))
+	if player < 1 || player > m.LastPlayer() {
+		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, m.LastPlayer()))
 	}
 
-	if int(player)-1 >= len(m.playerTokens) {
-		panic(fmt.Sprintf("model: player token for ID=%v: not enough player tokens, only %d specified (%v)", player, len(m.playerTokens), m.playerTokens))
-	}
 	return m.playerTokens[int(player)-1]
 }
 
@@ -90,7 +89,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			m.Board[m.Selection] = m.CurrentPlayer
-			if m.CurrentPlayer == m.LastPlayer {
+			if m.CurrentPlayer == m.LastPlayer() {
 				m.CurrentPlayer = 1
 			} else {
 				m.CurrentPlayer++
