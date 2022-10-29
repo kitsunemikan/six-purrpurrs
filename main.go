@@ -46,34 +46,40 @@ var (
 
 var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 
-type Model struct {
-	StrikeLength int
+type GameOptions struct {
 	BoardSize    Offset
-	Board        map[Offset]PlayerID
-	Solution     []Offset
+	StrikeLength int
+	PlayerTokens []rune
+}
+
+type Model struct {
+	Conf GameOptions
+
+	Board    map[Offset]PlayerID
+	Solution []Offset
 
 	Selection     Offset
 	CurrentPlayer PlayerID
-
-	playerTokens []rune
 }
 
 func initialModel() Model {
 	w, h := int(*wFlag), int(*hFlag)
 	return Model{
-		StrikeLength: int(*strikeFlag),
-		BoardSize:    Offset{w, h},
-		Board:        make(map[Offset]PlayerID),
+		Conf: GameOptions{
+			StrikeLength: int(*strikeFlag),
+			BoardSize:    Offset{w, h},
+			PlayerTokens: []rune(*playersFlag),
+		},
+
+		Board: make(map[Offset]PlayerID),
 
 		Selection:     Offset{w / 2, h / 2},
 		CurrentPlayer: 1,
-
-		playerTokens: []rune(*playersFlag),
 	}
 }
 
 func (m *Model) LastPlayer() PlayerID {
-	return PlayerID(len(m.playerTokens))
+	return PlayerID(len(m.Conf.PlayerTokens))
 }
 
 func (m *Model) PlayerToken(player PlayerID) rune {
@@ -81,15 +87,15 @@ func (m *Model) PlayerToken(player PlayerID) rune {
 		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, m.LastPlayer()))
 	}
 
-	return m.playerTokens[int(player)-1]
+	return m.Conf.PlayerTokens[int(player)-1]
 }
 
 func (m *Model) IsInsideBoard(pos Offset) bool {
-	return pos.X >= 0 && pos.X < m.BoardSize.X && pos.Y >= 0 && pos.Y < m.BoardSize.Y
+	return pos.X >= 0 && pos.X < m.Conf.BoardSize.X && pos.Y >= 0 && pos.Y < m.Conf.BoardSize.Y
 }
 
 func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
-	solution := make([]Offset, 0, m.StrikeLength)
+	solution := make([]Offset, 0, m.Conf.StrikeLength)
 
 	for _, dir := range solutionOffsets {
 		solution = solution[:0]
@@ -98,7 +104,7 @@ func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 			panic(42)
 		}
 
-		for i := 0; i < m.StrikeLength; i++ {
+		for i := 0; i < m.Conf.StrikeLength; i++ {
 			curCell := Offset{pos.X + i*dir.X, pos.Y + i*dir.Y}
 			if m.Board[curCell] != player {
 				break
@@ -107,7 +113,7 @@ func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 			solution = append(solution, curCell)
 		}
 
-		for i := 1; i < m.StrikeLength; i++ {
+		for i := 1; i < m.Conf.StrikeLength; i++ {
 			curCell := Offset{pos.X - i*dir.X, pos.Y - i*dir.Y}
 			if m.Board[curCell] != player {
 				break
@@ -116,7 +122,7 @@ func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 			solution = append(solution, curCell)
 		}
 
-		if len(solution) >= m.StrikeLength {
+		if len(solution) >= m.Conf.StrikeLength {
 			return solution
 		}
 	}
@@ -125,14 +131,14 @@ func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 }
 
 func (m *Model) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
-	candidates := make([]Offset, 0, 2*len(solutionOffsets)*(m.StrikeLength-1)+1)
+	candidates := make([]Offset, 0, 2*len(solutionOffsets)*(m.Conf.StrikeLength-1)+1)
 
 	if m.Board[pos] == player {
 		candidates = append(candidates, pos)
 	}
 
 	for _, dir := range solutionOffsets {
-		for i := 1; i < m.StrikeLength; i++ {
+		for i := 1; i < m.Conf.StrikeLength; i++ {
 			curCell := pos.Add(dir.Scale(i))
 			if m.Board[curCell] == player {
 				candidates = append(candidates, curCell)
@@ -141,7 +147,7 @@ func (m *Model) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 			}
 		}
 
-		for i := 1; i < m.StrikeLength; i++ {
+		for i := 1; i < m.Conf.StrikeLength; i++ {
 			curCell := pos.Add(dir.Scale(-i))
 			if m.Board[curCell] == player {
 				candidates = append(candidates, curCell)
@@ -172,7 +178,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "right", "l":
-			if m.Selection.X < m.BoardSize.X-1 {
+			if m.Selection.X < m.Conf.BoardSize.X-1 {
 				m.Selection.X += 1
 			}
 			return m, nil
@@ -184,7 +190,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "down", "j":
-			if m.Selection.Y < m.BoardSize.Y-1 {
+			if m.Selection.Y < m.Conf.BoardSize.Y-1 {
 				m.Selection.Y += 1
 			}
 			return m, nil
@@ -222,8 +228,8 @@ func (m *Model) solutionView(cliBoard map[Offset]string) string {
 	}
 
 	var view strings.Builder
-	for y := 0; y < m.BoardSize.Y; y++ {
-		for x := 0; x < m.BoardSize.X; x++ {
+	for y := 0; y < m.Conf.BoardSize.Y; y++ {
+		for x := 0; x < m.Conf.BoardSize.X; x++ {
 			view.WriteRune(' ')
 
 			curCell := Offset{x, y}
@@ -258,8 +264,8 @@ func (m *Model) selectionView(cliBoard map[Offset]string) string {
 	}
 
 	var view strings.Builder
-	for y := 0; y < m.BoardSize.Y; y++ {
-		for x := 0; x < m.BoardSize.X; x++ {
+	for y := 0; y < m.Conf.BoardSize.Y; y++ {
+		for x := 0; x < m.Conf.BoardSize.X; x++ {
 			leftSide := " "
 			rightSide := " "
 			if x == m.Selection.X && y == m.Selection.Y {
