@@ -15,7 +15,7 @@ var playerTypes = map[string]func(){
 }
 
 var (
-	avatarsFlag     = flag.String("avatars", "X,O", "a list of strings used as player board marks")
+	avatarsFlag     = flag.String("avatars", ".,X,O", "a list of strings used as player board marks, including empty cell")
 	playerTypesFlag = flag.String("playertypes", "local,ai", fmt.Sprintf("specifies logic for each player (available options: %s)", availablePlayerTypes()))
 	wFlag           = flag.Uint("w", 3, "board width")
 	hFlag           = flag.Uint("h", 3, "board height")
@@ -27,7 +27,7 @@ func availablePlayerTypes() (list string) {
 	for name := range playerTypes {
 		list += name
 		if typeID < len(playerTypes)-1 {
-			list += " "
+			list += ", "
 		}
 		typeID++
 	}

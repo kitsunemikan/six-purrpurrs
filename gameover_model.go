@@ -31,13 +31,14 @@ func (m GameOverModel) View() string {
 	}
 
 	var view strings.Builder
+	UnoccupiedToken := m.Game.PlayerToken(Unoccupied)
 	for y := 0; y < m.Game.BoardSize().Y; y++ {
 		for x := 0; x < m.Game.BoardSize().X; x++ {
 			view.WriteRune(' ')
 
 			curCell := Offset{x, y}
 			if m.Game.Cell(curCell) == Unoccupied {
-				view.WriteString(".")
+				view.WriteString(UnoccupiedToken)
 			} else {
 				view.WriteString(cliBoard[Offset{x, y}])
 			}

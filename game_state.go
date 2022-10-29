@@ -33,7 +33,7 @@ func NewGame(conf GameOptions) *GameState {
 }
 
 func (g *GameState) LastPlayer() PlayerID {
-	return PlayerID(len(g.Conf.PlayerTokens))
+	return PlayerID(len(g.Conf.PlayerTokens) - 1)
 }
 
 func (g *GameState) Cell(pos Offset) PlayerID {
@@ -45,11 +45,11 @@ func (g *GameState) BoardSize() Offset {
 }
 
 func (g *GameState) PlayerToken(player PlayerID) string {
-	if player < 1 || player > g.LastPlayer() {
+	if player < 0 || player > g.LastPlayer() {
 		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, g.LastPlayer()))
 	}
 
-	return g.Conf.PlayerTokens[int(player)-1]
+	return g.Conf.PlayerTokens[int(player)]
 }
 
 func (g *GameState) IsInsideBoard(pos Offset) bool {
