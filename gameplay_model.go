@@ -126,7 +126,7 @@ func (m GameplayModel) View() string {
 	view.WriteByte('\n')
 
 	view.WriteString("Current player: ")
-	view.WriteRune(m.Game.PlayerToken(m.CurrentPlayer))
+	view.WriteString(m.Game.PlayerToken(m.CurrentPlayer))
 
 	view.WriteByte('\n')
 

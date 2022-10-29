@@ -52,7 +52,7 @@ func (m GameOverModel) View() string {
 	if m.Game.Solution() == nil {
 		view.WriteString("A draw...")
 	} else {
-		view.WriteRune(m.Game.PlayerToken(m.Game.Winner()))
+		view.WriteString(m.Game.PlayerToken(m.Game.Winner()))
 		view.WriteString(" wins!")
 	}
 

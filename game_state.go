@@ -13,7 +13,7 @@ var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 type GameOptions struct {
 	BoardSize    Offset
 	StrikeLength int
-	PlayerTokens []rune
+	PlayerTokens []string
 }
 
 type GameState struct {
@@ -44,7 +44,7 @@ func (g *GameState) BoardSize() Offset {
 	return g.Conf.BoardSize
 }
 
-func (g *GameState) PlayerToken(player PlayerID) rune {
+func (g *GameState) PlayerToken(player PlayerID) string {
 	if player < 1 || player > g.LastPlayer() {
 		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, g.LastPlayer()))
 	}
