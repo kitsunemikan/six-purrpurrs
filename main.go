@@ -72,6 +72,11 @@ func main() {
 		players[PlayerID(i+1)] = playerTypeGenerators[playerType]()
 	}
 
+	if len(avatars)-1 != len(players) {
+		fmt.Fprintf(os.Stderr, "error: mismatch between number of player avatars (%d) and number of player types (%d) specified\nnote: avatars: %s\nnote: player types: %s\n", len(avatars)-1, len(players), *avatarsFlag, *playerTypesFlag)
+		os.Exit(1)
+	}
+
 	p := tea.NewProgram(NewGameplayModel(game, players))
 	if err := p.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, "internal error: %v\n", err)

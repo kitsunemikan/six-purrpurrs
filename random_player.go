@@ -13,7 +13,7 @@ func NewRandomPlayer() PlayerAgent {
 }
 
 func (p *RandomPlayer) MakeMove(g *GameState) Offset {
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(50 * time.Millisecond)
 
 	var validMoves []Offset
 	for x := 0; x < g.BoardSize().X; x++ {
