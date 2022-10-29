@@ -55,6 +55,10 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 
+		if !m.IsLocalPlayerTurn() {
+			break
+		}
+
 		switch msg.String() {
 		case "left", "h":
 			if m.Selection.X > 0 {
@@ -81,10 +85,6 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "enter", " ":
-			localPlayer, local := m.Players[m.CurrentPlayer].(*LocalPlayer)
-			if !local {
-				break
-			}
 
 			if m.MoveCommitted {
 				return m, nil
@@ -94,6 +94,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
+			localPlayer := m.Players[m.CurrentPlayer].(*LocalPlayer)
 			localPlayer.CommitMove(m.Selection)
 
 			m.MoveCommitted = true
@@ -123,7 +124,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m GameplayModel) View() string {
 	cliBoard := m.Game.BoardToStrings()
 
-	if m.Game.Cell(m.Selection) == Unoccupied {
+	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == Unoccupied {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
@@ -137,7 +138,7 @@ func (m GameplayModel) View() string {
 		for x := 0; x < m.Game.BoardSize().X; x++ {
 			leftSide := " "
 			rightSide := " "
-			if x == m.Selection.X && y == m.Selection.Y {
+			if m.IsLocalPlayerTurn() && x == m.Selection.X && y == m.Selection.Y {
 				leftSide = "["
 				rightSide = "]"
 			}
