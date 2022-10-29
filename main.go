@@ -48,8 +48,12 @@ func main() {
 	}
 
 	game := NewGame(conf)
+	players := map[PlayerID]PlayerAgent{
+		1: NewLocalPlayer(),
+		2: NewLocalPlayer(),
+	}
 
-	p := tea.NewProgram(NewGameplayModel(game))
+	p := tea.NewProgram(NewGameplayModel(game, players))
 	if err := p.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, "internal error: %v\n", err)
 		os.Exit(1)

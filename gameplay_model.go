@@ -6,24 +6,45 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// A bubbletea event
+type PlayerMoveMsg struct {
+	ChosenCell Offset
+}
+
 type GameplayModel struct {
 	Game *GameState
 
-	Selection     Offset
+	Selection Offset
+
+	MoveCommitted bool
 	CurrentPlayer PlayerID
+	Players       map[PlayerID]PlayerAgent
 }
 
-func NewGameplayModel(game *GameState) GameplayModel {
+func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent) GameplayModel {
 	return GameplayModel{
-		Game: game,
+		Game:    game,
+		Players: players,
 
 		Selection:     Offset{game.BoardSize().X / 2, game.BoardSize().Y / 2},
 		CurrentPlayer: 1,
 	}
 }
 
+func (m *GameplayModel) AwaitMove(player PlayerID) tea.Cmd {
+	return func() tea.Msg {
+		move := m.Players[player].MakeMove(m.Game)
+		return PlayerMoveMsg{move}
+	}
+}
+
+func (m *GameplayModel) IsLocalPlayerTurn() bool {
+	_, local := m.Players[m.CurrentPlayer].(*LocalPlayer)
+	return local
+}
+
 func (m GameplayModel) Init() tea.Cmd {
-	return nil
+	return m.AwaitMove(m.CurrentPlayer)
 }
 
 func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -32,7 +53,9 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
+		}
 
+		switch msg.String() {
 		case "left", "h":
 			if m.Selection.X > 0 {
 				m.Selection.X -= 1
@@ -58,22 +81,40 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "enter", " ":
+			localPlayer, local := m.Players[m.CurrentPlayer].(*LocalPlayer)
+			if !local {
+				break
+			}
+
+			if m.MoveCommitted {
+				return m, nil
+			}
+
 			if m.Game.Cell(m.Selection) != Unoccupied {
 				return m, nil
 			}
 
-			m.Game.MarkCell(m.Selection, m.CurrentPlayer)
+			localPlayer.CommitMove(m.Selection)
 
-			if m.Game.Over() {
-				return GameOverModel{m.Game}, nil
-			}
-
-			if m.CurrentPlayer == m.Game.LastPlayer() {
-				m.CurrentPlayer = 1
-			} else {
-				m.CurrentPlayer++
-			}
+			m.MoveCommitted = true
+			return m, nil
 		}
+
+	case PlayerMoveMsg:
+		m.Game.MarkCell(msg.ChosenCell, m.CurrentPlayer)
+		m.MoveCommitted = false
+
+		if m.Game.Over() {
+			return GameOverModel{m.Game}, nil
+		}
+
+		if m.CurrentPlayer == m.Game.LastPlayer() {
+			m.CurrentPlayer = 1
+		} else {
+			m.CurrentPlayer++
+		}
+
+		return m, m.AwaitMove(m.CurrentPlayer)
 	}
 
 	return m, nil
@@ -126,8 +167,14 @@ func (m GameplayModel) View() string {
 
 	view.WriteByte('\n')
 
-	view.WriteString("Current player: ")
-	view.WriteString(m.Game.PlayerToken(m.CurrentPlayer))
+	if m.IsLocalPlayerTurn() {
+		view.WriteString("Current player: ")
+		view.WriteString(m.Game.PlayerToken(m.CurrentPlayer))
+	} else {
+		view.WriteString("Awaiting player ")
+		view.WriteString(m.Game.PlayerToken(m.CurrentPlayer))
+		view.WriteString(" move...")
+	}
 
 	view.WriteByte('\n')
 
