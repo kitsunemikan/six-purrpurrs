@@ -10,16 +10,27 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var winCell = lipgloss.NewStyle().
+var winCellStyle = lipgloss.NewStyle().
 	Bold(true).
 	Foreground(lipgloss.Color("10"))
 
-var inactiveText = lipgloss.NewStyle().
+var inactiveTextStyle = lipgloss.NewStyle().
 	Bold(true).
 	Foreground(lipgloss.Color("8"))
 
+var candidateStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("177"))
+
 type Offset struct {
 	X, Y int
+}
+
+func (a Offset) Add(b Offset) Offset {
+	return Offset{a.X + b.X, a.Y + b.Y}
+}
+
+func (a Offset) Scale(c int) Offset {
+	return Offset{c * a.X, c * a.Y}
 }
 
 type PlayerID int
@@ -113,6 +124,36 @@ func (m *Model) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 	return nil
 }
 
+func (m *Model) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
+	candidates := make([]Offset, 0, 2*len(solutionOffsets)*(m.StrikeLength-1)+1)
+
+	if m.Board[pos] == player {
+		candidates = append(candidates, pos)
+	}
+
+	for _, dir := range solutionOffsets {
+		for i := 1; i < m.StrikeLength; i++ {
+			curCell := pos.Add(dir.Scale(i))
+			if m.Board[curCell] == player {
+				candidates = append(candidates, curCell)
+			} else {
+				break
+			}
+		}
+
+		for i := 1; i < m.StrikeLength; i++ {
+			curCell := pos.Add(dir.Scale(-i))
+			if m.Board[curCell] == player {
+				candidates = append(candidates, curCell)
+			} else {
+				break
+			}
+		}
+	}
+
+	return candidates
+}
+
 func (m Model) Init() tea.Cmd {
 	return nil
 }
@@ -177,7 +218,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m *Model) solutionView(cliBoard map[Offset]string) string {
 	for _, cell := range m.Solution {
-		cliBoard[cell] = winCell.Render(cliBoard[cell])
+		cliBoard[cell] = winCellStyle.Render(cliBoard[cell])
 	}
 
 	var view strings.Builder
@@ -208,6 +249,14 @@ func (m *Model) solutionView(cliBoard map[Offset]string) string {
 }
 
 func (m *Model) selectionView(cliBoard map[Offset]string) string {
+	if m.Board[m.Selection] == Unoccupied {
+		candidates := m.CandidateCellsAt(m.Selection, m.CurrentPlayer)
+
+		for _, cell := range candidates {
+			cliBoard[cell] = candidateStyle.Render(cliBoard[cell])
+		}
+	}
+
 	var view strings.Builder
 	for y := 0; y < m.BoardSize.Y; y++ {
 		for x := 0; x < m.BoardSize.X; x++ {
@@ -221,7 +270,7 @@ func (m *Model) selectionView(cliBoard map[Offset]string) string {
 			curCell := Offset{x, y}
 
 			if m.Board[curCell] != 0 {
-				view.WriteString(inactiveText.Render(leftSide))
+				view.WriteString(inactiveTextStyle.Render(leftSide))
 			} else {
 				view.WriteString(leftSide)
 			}
@@ -233,7 +282,7 @@ func (m *Model) selectionView(cliBoard map[Offset]string) string {
 			}
 
 			if m.Board[curCell] != 0 {
-				view.WriteString(inactiveText.Render(rightSide))
+				view.WriteString(inactiveTextStyle.Render(rightSide))
 			} else {
 				view.WriteString(rightSide)
 			}
