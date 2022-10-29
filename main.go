@@ -55,8 +55,9 @@ type GameOptions struct {
 type Model struct {
 	Conf GameOptions
 
-	Board    map[Offset]PlayerID
-	Solution []Offset
+	Board      map[Offset]PlayerID
+	Solution   []Offset
+	MoveNumber int
 
 	Selection     Offset
 	CurrentPlayer PlayerID
@@ -160,6 +161,10 @@ func (m *Model) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 	return candidates
 }
 
+func (m *Model) NoMoreMoves() bool {
+	return m.MoveNumber == m.Conf.BoardSize.X*m.Conf.BoardSize.Y
+}
+
 func (m Model) Init() tea.Cmd {
 	return nil
 }
@@ -196,7 +201,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case "enter", " ":
-			if m.Solution != nil {
+			if m.Solution != nil || m.NoMoreMoves() {
 				return m, tea.Quit
 			}
 
@@ -205,6 +210,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			m.Board[m.Selection] = m.CurrentPlayer
+			m.MoveNumber++
 
 			m.Solution = m.CheckSolutionsAt(m.Selection, m.CurrentPlayer)
 			if m.Solution != nil {
@@ -246,8 +252,12 @@ func (m *Model) solutionView(cliBoard map[Offset]string) string {
 
 	view.WriteByte('\n')
 
-	view.WriteRune(m.PlayerToken(m.CurrentPlayer))
-	view.WriteString(" wins!")
+	if m.Solution == nil {
+		view.WriteString("A draw...")
+	} else {
+		view.WriteRune(m.PlayerToken(m.CurrentPlayer))
+		view.WriteString(" wins!")
+	}
 
 	view.WriteByte('\n')
 
@@ -312,7 +322,7 @@ func (m Model) View() string {
 		cliBoard[pos] = string(m.PlayerToken(player))
 	}
 
-	if m.Solution != nil {
+	if m.Solution != nil || m.NoMoreMoves() {
 		return m.solutionView(cliBoard)
 	}
 
