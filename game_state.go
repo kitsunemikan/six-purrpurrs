@@ -101,7 +101,7 @@ func (g *GameState) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 
 	for _, dir := range solutionOffsets {
 		for i := 1; i < g.Conf.StrikeLength; i++ {
-			curCell := pos.Add(dir.Scale(i))
+			curCell := pos.Add(dir.ScaleUp(i))
 			if g.Board[curCell] == player {
 				candidates = append(candidates, curCell)
 			} else {
@@ -110,7 +110,7 @@ func (g *GameState) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 		}
 
 		for i := 1; i < g.Conf.StrikeLength; i++ {
-			curCell := pos.Add(dir.Scale(-i))
+			curCell := pos.Add(dir.ScaleUp(-i))
 			if g.Board[curCell] == player {
 				candidates = append(candidates, curCell)
 			} else {

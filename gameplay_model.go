@@ -122,20 +122,34 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameplayModel) View() string {
-	cliBoard := m.Game.BoardToStrings()
+	cliBoard := make(map[Offset]string, m.Game.BoardSize().Area())
+	// bottomRight is one-cell beyond valid range
+	topLeft := m.Selection.Add(m.Game.BoardSize().ScaleDown(-2))
+	bottomRight := m.Selection.Add(m.Game.BoardSize().Add(Offset{1, 1}).ScaleDown(2))
+
+	for y := topLeft.Y; y < bottomRight.Y; y++ {
+		for x := topLeft.X; x < bottomRight.X; x++ {
+			curCell := Offset{x, y}
+			cliBoard[curCell] = m.Game.PlayerToken(m.Game.Cell(curCell))
+		}
+	}
 
 	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == Unoccupied {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
+			if !cell.IsInsideRect(topLeft, bottomRight) {
+				continue
+			}
+
 			cliBoard[cell] = candidateStyle.Render(cliBoard[cell])
 		}
 	}
 
 	var view strings.Builder
 	UnoccupiedToken := m.Game.PlayerToken(Unoccupied)
-	for y := 0; y < m.Game.BoardSize().Y; y++ {
-		for x := 0; x < m.Game.BoardSize().X; x++ {
+	for y := topLeft.Y; y < bottomRight.Y; y++ {
+		for x := topLeft.X; x < bottomRight.X; x++ {
 			leftSide := " "
 			rightSide := " "
 			if m.IsLocalPlayerTurn() && x == m.Selection.X && y == m.Selection.Y {
