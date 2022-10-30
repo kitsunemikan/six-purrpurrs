@@ -17,10 +17,10 @@ var playerTypeGenerators = map[string]func() PlayerAgent{
 var (
 	avatarsFlag     = flag.String("avatars", " ,.,X,O", "a list of strings used as player board marks, including unavailable and empty cell")
 	playerTypesFlag = flag.String("playertypes", "local,random", fmt.Sprintf("specifies logic for each player (available options: %s)", availablePlayerTypes()))
-	wFlag           = flag.Uint("w", 3, "board width")
-	hFlag           = flag.Uint("h", 3, "board height")
-	borderFlag      = flag.Uint("border", 3, "the width of a border around marked cells where players can make a move")
-	strikeFlag      = flag.Uint("strike", 3, "the number of marks in a row to win the game")
+	wFlag           = flag.Uint("w", 40, "screen width")
+	hFlag           = flag.Uint("h", 25, "screen height")
+	borderFlag      = flag.Uint("border", 6, "the width of a border around marked cells where players can make a move")
+	strikeFlag      = flag.Uint("strike", 6, "the number of marks in a row to win the game")
 )
 
 func availablePlayerTypes() (list string) {
