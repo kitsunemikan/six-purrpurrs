@@ -13,6 +13,11 @@ const (
 
 var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 
+type PlayerMove struct {
+	Cell Offset
+	ID   PlayerID
+}
+
 type GameOptions struct {
 	Border       int
 	StrikeLength int
@@ -23,12 +28,13 @@ type GameState struct {
 	// TODO: make private
 	Conf GameOptions
 
-	Board      map[Offset]PlayerID
-	solution   []Offset
-	winner     PlayerID
-	MoveNumber int
+	Board    map[Offset]PlayerID
+	solution []Offset
+	winner   PlayerID
 
-	circleMask []Offset
+	circleMask  []Offset
+	moveHistory []PlayerMove
+	boardBound  Rect
 }
 
 func NewGame(conf GameOptions) *GameState {
@@ -36,6 +42,7 @@ func NewGame(conf GameOptions) *GameState {
 		Conf:       conf,
 		Board:      make(map[Offset]PlayerID),
 		circleMask: make([]Offset, 0, conf.Border*conf.Border),
+		boardBound: Rect{X: -conf.Border, Y: -conf.Border, W: 2*conf.Border + 1, H: 2*conf.Border + 1},
 	}
 
 	// Generate circle mask
@@ -60,6 +67,10 @@ func NewGame(conf GameOptions) *GameState {
 
 func (g *GameState) LastPlayer() PlayerID {
 	return PlayerID(len(g.Conf.PlayerTokens) - 2)
+}
+
+func (g *GameState) MoveNumber() int {
+	return len(g.moveHistory)
 }
 
 func (g *GameState) Cell(pos Offset) PlayerID {
@@ -160,6 +171,10 @@ func (g *GameState) Over() bool {
 	return g.solution != nil || g.NoMoreMoves()
 }
 
+func (g *GameState) BoardBound() Rect {
+	return g.boardBound
+}
+
 func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	if g.Board[pos] != CellUnoccupied {
 		panic(fmt.Sprintf("Trying to mark an occupied cell at %#v", pos))
@@ -170,7 +185,27 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	}
 
 	g.Board[pos] = player
-	g.MoveNumber++
+	g.moveHistory = append(g.moveHistory, PlayerMove{pos, player})
+
+	// Update board bounding rectangle
+	if pos.X+g.Conf.Border > g.boardBound.X+g.boardBound.W {
+		g.boardBound.W = pos.X + g.Conf.Border - g.boardBound.X
+	}
+
+	if pos.X-g.Conf.Border < g.boardBound.X {
+		g.boardBound.W += g.boardBound.X - pos.X + g.Conf.Border
+		g.boardBound.X = pos.X - g.Conf.Border
+	}
+
+	if pos.Y+g.Conf.Border > g.boardBound.Y+g.boardBound.H {
+		g.boardBound.H = pos.Y + g.Conf.Border - g.boardBound.Y
+	}
+
+	if pos.Y-g.Conf.Border < g.boardBound.Y {
+		// TODO: move behind an (???) extend (?) function
+		g.boardBound.H += g.boardBound.Y - pos.Y + g.Conf.Border
+		g.boardBound.Y = pos.Y - g.Conf.Border
+	}
 
 	// Create new available cells
 	for _, ds := range g.circleMask {
