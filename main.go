@@ -18,7 +18,7 @@ var (
 	avatarsFlag     = flag.String("avatars", " ,.,X,O", "a list of strings used as player board marks, including unavailable and empty cell")
 	playerTypesFlag = flag.String("playertypes", "local,random", fmt.Sprintf("specifies logic for each player (available options: %s)", availablePlayerTypes()))
 	wFlag           = flag.Uint("w", 40, "screen width")
-	hFlag           = flag.Uint("h", 25, "screen height")
+	hFlag           = flag.Uint("h", 20, "screen height")
 	borderFlag      = flag.Uint("border", 6, "the width of a border around marked cells where players can make a move")
 	strikeFlag      = flag.Uint("strike", 6, "the number of marks in a row to win the game")
 )
