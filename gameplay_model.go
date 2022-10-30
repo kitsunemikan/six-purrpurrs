@@ -69,23 +69,31 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch msg.String() {
 		case "left", "h":
-			m.Selection.X -= 1
-			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			if m.Selection.X > m.cameraBound.X {
+				m.Selection.X -= 1
+				m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			}
 			return m, nil
 
 		case "right", "l":
-			m.Selection.X += 1
-			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			if m.Selection.X < m.cameraBound.X+m.cameraBound.W-1 {
+				m.Selection.X += 1
+				m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			}
 			return m, nil
 
 		case "up", "k":
-			m.Selection.Y -= 1
-			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			if m.Selection.Y > m.cameraBound.Y {
+				m.Selection.Y -= 1
+				m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			}
 			return m, nil
 
 		case "down", "j":
-			m.Selection.Y += 1
-			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			if m.Selection.Y < m.cameraBound.Y+m.cameraBound.H-1 {
+				m.Selection.Y += 1
+				m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
+			}
 			return m, nil
 
 		case "enter", " ":

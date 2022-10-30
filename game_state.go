@@ -188,24 +188,10 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	g.moveHistory = append(g.moveHistory, PlayerMove{pos, player})
 
 	// Update board bounding rectangle
-	if pos.X+g.Conf.Border > g.boardBound.X+g.boardBound.W {
-		g.boardBound.W = pos.X + g.Conf.Border - g.boardBound.X
-	}
 
-	if pos.X-g.Conf.Border < g.boardBound.X {
-		g.boardBound.W += g.boardBound.X - pos.X + g.Conf.Border
-		g.boardBound.X = pos.X - g.Conf.Border
-	}
-
-	if pos.Y+g.Conf.Border > g.boardBound.Y+g.boardBound.H {
-		g.boardBound.H = pos.Y + g.Conf.Border - g.boardBound.Y
-	}
-
-	if pos.Y-g.Conf.Border < g.boardBound.Y {
-		// TODO: move behind an (???) extend (?) function
-		g.boardBound.H += g.boardBound.Y - pos.Y + g.Conf.Border
-		g.boardBound.Y = pos.Y - g.Conf.Border
-	}
+	borderOffset := Offset{g.Conf.Border, g.Conf.Border}
+	newCellsBoundingRect := NewRectFromOffsets(pos.Sub(borderOffset), borderOffset.ScaleUp(2).AddXY(1, 1))
+	g.boardBound = g.boardBound.GrowToContainRect(newCellsBoundingRect)
 
 	// Create new available cells
 	for _, ds := range g.circleMask {

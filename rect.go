@@ -90,6 +90,46 @@ func (r Rect) SnapInto(bound Rect) Rect {
 	return r
 }
 
+func (r Rect) GrowToContainOffset(pos Offset) Rect {
+	if pos.X < r.X {
+		r.W += r.X - pos.X
+		r.X = pos.X
+	} else if pos.X >= r.X+r.W {
+		r.W += pos.X - r.X - r.W + 1
+	}
+
+	if pos.Y < r.Y {
+		r.H += r.Y - pos.Y
+		r.Y = pos.Y
+	} else if pos.Y >= r.Y+r.H {
+		r.H += pos.Y - r.Y - r.H + 1
+	}
+
+	return r
+}
+
+func (r Rect) GrowToContainRect(other Rect) Rect {
+	if other.X < r.X {
+		r.W += r.X - other.X
+		r.X = other.X
+	}
+
+	if other.X+other.W > r.X+r.W {
+		r.W = other.X + other.W - r.X
+	}
+
+	if other.Y < r.Y {
+		r.H += r.Y - other.Y
+		r.Y = other.Y
+	}
+
+	if other.Y+other.H > r.Y+r.H {
+		r.H = other.Y + other.H - r.Y
+	}
+
+	return r
+}
+
 func (r Rect) String() string {
 	return fmt.Sprintf("(%d;%d) - (%d;%d)", r.X, r.Y, r.X+r.W, r.Y+r.H)
 }
