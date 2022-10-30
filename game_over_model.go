@@ -8,8 +8,8 @@ import (
 )
 
 type GameOverModel struct {
-	Game       *GameState
-	ScreenSize Offset
+	Game   *GameState
+	Camera Rect
 }
 
 func (m GameOverModel) Init() tea.Cmd {
@@ -34,8 +34,8 @@ func (m GameOverModel) View() string {
 
 	var view strings.Builder
 	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
-	for y := 0; y < m.ScreenSize.Y; y++ {
-		for x := 0; x < m.ScreenSize.X; x++ {
+	for y := 0; y < m.Camera.H; y++ {
+		for x := 0; x < m.Camera.W; x++ {
 			view.WriteRune(' ')
 
 			curCell := Offset{x, y}

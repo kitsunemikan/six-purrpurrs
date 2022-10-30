@@ -14,8 +14,7 @@ type PlayerMoveMsg struct {
 type GameplayModel struct {
 	Game *GameState
 
-	Camera     Offset
-	ScreenSize Offset
+	Camera Rect
 
 	Selection Offset
 
@@ -29,8 +28,7 @@ func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent, screenS
 		Game:    game,
 		Players: players,
 
-		Camera:     screenSize.ScaleDown(-2),
-		ScreenSize: screenSize,
+		Camera: NewRectFromOffsets(screenSize.ScaleDown(-2), screenSize),
 
 		Selection:     Offset{0, 0},
 		CurrentPlayer: 1,
@@ -107,7 +105,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.MoveCommitted = false
 
 		if m.Game.Over() {
-			return GameOverModel{m.Game, m.ScreenSize}, nil
+			return GameOverModel{m.Game, m.Camera}, nil
 		}
 
 		if m.CurrentPlayer == m.Game.LastPlayer() {
@@ -123,11 +121,11 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameplayModel) View() string {
-	cliBoard := make(map[Offset]string, m.ScreenSize.Area())
+	cliBoard := make(map[Offset]string, m.Camera.Area())
 
-	for y := 0; y < m.ScreenSize.Y; y++ {
-		for x := 0; x < m.ScreenSize.X; x++ {
-			curCell := m.Camera.Add(Offset{x, y})
+	for x := 0; x < m.Camera.W; x++ {
+		for y := 0; y < m.Camera.H; y++ {
+			curCell := m.Camera.ToWorldXY(x, y)
 			cliBoard[curCell] = m.Game.PlayerToken(m.Game.Cell(curCell))
 		}
 	}
@@ -136,7 +134,7 @@ func (m GameplayModel) View() string {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
-			if !cell.IsInsideRect(m.Camera, m.Camera.Add(m.ScreenSize)) {
+			if !m.Camera.IsOffsetInside(cell) {
 				continue
 			}
 
@@ -146,9 +144,9 @@ func (m GameplayModel) View() string {
 
 	var view strings.Builder
 	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
-	for y := 0; y < m.ScreenSize.Y; y++ {
-		for x := 0; x < m.ScreenSize.X; x++ {
-			curCell := m.Camera.Add(Offset{x, y})
+	for y := 0; y < m.Camera.H; y++ {
+		for x := 0; x < m.Camera.W; x++ {
+			curCell := m.Camera.ToWorldXY(x, y)
 
 			leftSide := " "
 			rightSide := " "
