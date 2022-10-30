@@ -28,3 +28,8 @@ func (a Offset) IsInsideRect(topLeft, bottomRight Offset) bool {
 func (a Offset) Area() int {
 	return a.X * a.Y
 }
+
+func (a Offset) IsInsideCircle(radius int) bool {
+	radius += 1
+	return a.X*a.X+a.Y*a.Y <= radius*radius
+}

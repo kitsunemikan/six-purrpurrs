@@ -161,9 +161,16 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	g.Board[pos] = player
 	g.MoveNumber++
 
-	for dx := -g.Conf.Border; dx < g.Conf.Border; dx++ {
-		for dy := -g.Conf.Border; dy < g.Conf.Border; dy++ {
-			curCell := pos.Add(Offset{dx, dy})
+	// TODO: pregenerate mask cells based on the border and reuse them
+	// to avoid using the formula every time
+	for dx := -g.Conf.Border; dx <= g.Conf.Border; dx++ {
+		for dy := -g.Conf.Border; dy <= g.Conf.Border; dy++ {
+			ds := Offset{dx, dy}
+			if !ds.IsInsideCircle(g.Conf.Border) {
+				continue
+			}
+
+			curCell := pos.Add(ds)
 			_, available := g.Board[curCell]
 			if !available {
 				g.Board[curCell] = CellUnoccupied
