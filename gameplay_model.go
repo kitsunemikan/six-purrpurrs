@@ -90,7 +90,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
-			if m.Game.Cell(m.Selection) != Unoccupied {
+			if m.Game.Cell(m.Selection) != CellUnoccupied {
 				return m, nil
 			}
 
@@ -134,7 +134,7 @@ func (m GameplayModel) View() string {
 		}
 	}
 
-	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == Unoccupied {
+	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == CellUnoccupied {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
@@ -147,7 +147,7 @@ func (m GameplayModel) View() string {
 	}
 
 	var view strings.Builder
-	UnoccupiedToken := m.Game.PlayerToken(Unoccupied)
+	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
 	for y := topLeft.Y; y < bottomRight.Y; y++ {
 		for x := topLeft.X; x < bottomRight.X; x++ {
 			leftSide := " "
@@ -159,19 +159,19 @@ func (m GameplayModel) View() string {
 
 			curCell := Offset{x, y}
 
-			if m.Game.Cell(curCell) != Unoccupied {
+			if m.Game.Cell(curCell) != CellUnoccupied {
 				view.WriteString(inactiveTextStyle.Render(leftSide))
 			} else {
 				view.WriteString(leftSide)
 			}
 
-			if m.Game.Cell(curCell) == Unoccupied {
+			if m.Game.Cell(curCell) == CellUnoccupied {
 				view.WriteString(UnoccupiedToken)
 			} else {
 				view.WriteString(cliBoard[Offset{x, y}])
 			}
 
-			if m.Game.Cell(curCell) != Unoccupied {
+			if m.Game.Cell(curCell) != CellUnoccupied {
 				view.WriteString(inactiveTextStyle.Render(rightSide))
 			} else {
 				view.WriteString(rightSide)

@@ -6,7 +6,10 @@ import (
 
 type PlayerID int
 
-const Unoccupied PlayerID = 0
+const (
+	CellUnavailable PlayerID = -1
+	CellUnoccupied  PlayerID = 0
+)
 
 var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 
@@ -37,6 +40,10 @@ func (g *GameState) LastPlayer() PlayerID {
 }
 
 func (g *GameState) Cell(pos Offset) PlayerID {
+	if !pos.IsInsideRect(Offset{0, 0}, g.Conf.BoardSize) {
+		return CellUnavailable
+	}
+
 	return g.Board[pos]
 }
 
@@ -45,6 +52,10 @@ func (g *GameState) BoardSize() Offset {
 }
 
 func (g *GameState) PlayerToken(player PlayerID) string {
+	if player == CellUnavailable {
+		return " "
+	}
+
 	if player < 0 || player > g.LastPlayer() {
 		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, g.LastPlayer()))
 	}
@@ -131,7 +142,7 @@ func (g *GameState) Over() bool {
 }
 
 func (g *GameState) MarkCell(pos Offset, player PlayerID) {
-	if g.Board[pos] != Unoccupied {
+	if g.Board[pos] != CellUnoccupied {
 		panic(fmt.Sprintf("Trying to mark an occupied cell at %#v", pos))
 	}
 
