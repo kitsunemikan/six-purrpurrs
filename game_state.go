@@ -192,12 +192,15 @@ func (g *GameState) Winner() PlayerID {
 	return g.winner
 }
 
-func (g *GameState) BoardToStrings() map[Offset]string {
-	cliBoard := make(map[Offset]string)
-	for pos, player := range g.Board {
-		cliBoard[pos] = g.PlayerToken(player)
-	}
+func (g *GameState) BoardToStrings(camera Rect) map[Offset]string {
+	cliBoard := make(map[Offset]string, camera.Area())
 
+	for x := 0; x < camera.W; x++ {
+		for y := 0; y < camera.H; y++ {
+			curCell := camera.ToWorldXY(x, y)
+			cliBoard[curCell] = g.PlayerToken(g.Cell(curCell))
+		}
+	}
 	return cliBoard
 }
 

@@ -26,7 +26,7 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameOverModel) View() string {
-	cliBoard := m.Game.BoardToStrings()
+	cliBoard := m.Game.BoardToStrings(m.Camera)
 
 	for _, cell := range m.Game.Solution() {
 		cliBoard[cell] = winCellStyle.Render(cliBoard[cell])
@@ -38,11 +38,11 @@ func (m GameOverModel) View() string {
 		for x := 0; x < m.Camera.W; x++ {
 			view.WriteRune(' ')
 
-			curCell := Offset{x, y}
+			curCell := m.Camera.ToWorldXY(x, y)
 			if m.Game.Cell(curCell) == CellUnoccupied {
 				view.WriteString(UnoccupiedToken)
 			} else {
-				view.WriteString(cliBoard[Offset{x, y}])
+				view.WriteString(cliBoard[curCell])
 			}
 
 			view.WriteRune(' ')

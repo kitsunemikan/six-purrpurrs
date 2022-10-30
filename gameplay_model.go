@@ -121,14 +121,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameplayModel) View() string {
-	cliBoard := make(map[Offset]string, m.Camera.Area())
-
-	for x := 0; x < m.Camera.W; x++ {
-		for y := 0; y < m.Camera.H; y++ {
-			curCell := m.Camera.ToWorldXY(x, y)
-			cliBoard[curCell] = m.Game.PlayerToken(m.Game.Cell(curCell))
-		}
-	}
+	cliBoard := m.Game.BoardToStrings(m.Camera)
 
 	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == CellUnoccupied {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
