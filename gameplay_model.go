@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -21,6 +22,8 @@ type GameplayModel struct {
 	MoveCommitted bool
 	CurrentPlayer PlayerID
 	Players       map[PlayerID]PlayerAgent
+
+	cameraBound Rect
 }
 
 func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent, screenSize Offset) GameplayModel {
@@ -28,7 +31,8 @@ func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent, screenS
 		Game:    game,
 		Players: players,
 
-		Camera: NewRectFromOffsets(screenSize.ScaleDown(-2), screenSize),
+		Camera:      NewRectFromOffsets(screenSize.ScaleDown(-2), screenSize),
+		cameraBound: game.BoardBound(),
 
 		Selection:     Offset{0, 0},
 		CurrentPlayer: 1,
@@ -66,22 +70,22 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "left", "h":
 			m.Selection.X -= 1
-			m.Camera.X -= 1
+			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
 			return m, nil
 
 		case "right", "l":
 			m.Selection.X += 1
-			m.Camera.X += 1
+			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
 			return m, nil
 
 		case "up", "k":
 			m.Selection.Y -= 1
-			m.Camera.Y -= 1
+			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
 			return m, nil
 
 		case "down", "j":
 			m.Selection.Y += 1
-			m.Camera.Y += 1
+			m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
 			return m, nil
 
 		case "enter", " ":
@@ -113,6 +117,9 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			m.CurrentPlayer++
 		}
+
+		m.cameraBound = m.Game.BoardBound()
+		m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
 
 		return m, m.AwaitMove(m.CurrentPlayer)
 	}
@@ -180,6 +187,7 @@ func (m GameplayModel) View() string {
 		view.WriteString(" move...")
 	}
 
+	view.WriteString(fmt.Sprintf("\nCamera bound: %v | Camera: %v", m.cameraBound, m.Camera))
 	view.WriteByte('\n')
 
 	return view.String()

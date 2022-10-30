@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type Rect struct {
 	X, Y, W, H int
 }
@@ -19,26 +21,75 @@ func (r Rect) Move(ds Offset) Rect {
 	return r
 }
 
-func (r Rect) TopLeft() Offset {
+func (r *Rect) TopLeft() Offset {
 	return Offset{r.X, r.Y}
 }
 
-func (r Rect) ToWorld(local Offset) Offset {
+func (r *Rect) ToWorld(local Offset) Offset {
 	return Offset{r.X + local.X, r.Y + local.Y}
 }
 
-func (r Rect) ToWorldXY(x, y int) Offset {
+func (r *Rect) ToWorldXY(x, y int) Offset {
 	return Offset{r.X + x, r.Y + y}
 }
 
-func (r Rect) ToLocal(world Offset) Offset {
+func (r *Rect) ToLocal(world Offset) Offset {
 	return Offset{world.X - r.X, world.Y - r.Y}
 }
 
-func (r Rect) Area() int {
+func (r *Rect) Area() int {
 	return r.W * r.H
 }
 
-func (r Rect) IsOffsetInside(pos Offset) bool {
+func (r *Rect) IsOffsetInside(pos Offset) bool {
 	return r.X <= pos.X && pos.X < r.X+r.W && r.Y <= pos.Y && pos.Y < r.Y+r.H
+}
+
+func (r Rect) CenterOn(pos Offset) Rect {
+	return Rect{
+		X: pos.X - r.W/2,
+		Y: pos.Y - r.H/2,
+		W: r.W,
+		H: r.H,
+	}
+}
+
+func (r *Rect) Center() Offset {
+	return Offset{r.X + r.W/2, r.Y + r.H/2}
+}
+
+// SnapInto will snap rectangle to the closest boundary of the
+// bound rectangle. If rectangle is inside bound rectangle, the
+// same rectangle is returned. If bound rectangle is smaller than
+// the rectangle, the rectangle is centered on the bound rectangle.
+func (r Rect) SnapInto(bound Rect) Rect {
+	if r.W >= bound.W {
+		r.X = bound.Center().X - r.W/2
+	} else if bound.X-r.X > 0 && r.X+r.W-bound.X-bound.W < 0 {
+		// It's poking out of bound rect from the left
+		r.X = bound.X
+	} else if bound.X-r.X < 0 && r.X+r.W-bound.X-bound.W > 0 {
+		// It's poking out of bound rect from the right
+		r.X = bound.X + bound.W - r.W
+	} else {
+		// It's already inside
+	}
+
+	if r.H >= bound.H {
+		r.Y = bound.Center().Y - r.H/2
+	} else if bound.Y-r.Y > 0 && r.Y+r.H-bound.Y-bound.H < 0 {
+		// It's poking out of bound rect from the left
+		r.Y = bound.Y
+	} else if bound.Y-r.Y < 0 && r.Y+r.H-bound.Y-bound.H > 0 {
+		// It's poking out of bound rect from the right
+		r.Y = bound.Y + bound.H - r.H
+	} else {
+		// It's already inside
+	}
+
+	return r
+}
+
+func (r Rect) String() string {
+	return fmt.Sprintf("(%d;%d) - (%d;%d)", r.X, r.Y, r.X+r.W, r.Y+r.H)
 }
