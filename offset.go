@@ -33,3 +33,7 @@ func (a Offset) IsInsideCircle(radius int) bool {
 	radius += 1
 	return a.X*a.X+a.Y*a.Y <= radius*radius
 }
+
+func (a Offset) IsEqual(b Offset) bool {
+	return a.X == b.X && a.Y == b.Y
+}

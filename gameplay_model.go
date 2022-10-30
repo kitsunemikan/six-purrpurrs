@@ -12,7 +12,9 @@ type PlayerMoveMsg struct {
 }
 
 type GameplayModel struct {
-	Game       *GameState
+	Game *GameState
+
+	Camera     Offset
 	ScreenSize Offset
 
 	Selection Offset
@@ -24,8 +26,10 @@ type GameplayModel struct {
 
 func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent, screenSize Offset) GameplayModel {
 	return GameplayModel{
-		Game:       game,
-		Players:    players,
+		Game:    game,
+		Players: players,
+
+		Camera:     screenSize.ScaleDown(-2),
 		ScreenSize: screenSize,
 
 		Selection:     Offset{0, 0},
@@ -64,18 +68,22 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "left", "h":
 			m.Selection.X -= 1
+			m.Camera.X -= 1
 			return m, nil
 
 		case "right", "l":
 			m.Selection.X += 1
+			m.Camera.X += 1
 			return m, nil
 
 		case "up", "k":
 			m.Selection.Y -= 1
+			m.Camera.Y -= 1
 			return m, nil
 
 		case "down", "j":
 			m.Selection.Y += 1
+			m.Camera.Y += 1
 			return m, nil
 
 		case "enter", " ":
@@ -116,13 +124,10 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m GameplayModel) View() string {
 	cliBoard := make(map[Offset]string, m.ScreenSize.Area())
-	// bottomRight is one-cell beyond valid range
-	topLeft := m.Selection.Add(m.ScreenSize.ScaleDown(-2))
-	bottomRight := m.Selection.Add(m.ScreenSize.Add(Offset{1, 1}).ScaleDown(2))
 
-	for y := topLeft.Y; y < bottomRight.Y; y++ {
-		for x := topLeft.X; x < bottomRight.X; x++ {
-			curCell := Offset{x, y}
+	for y := 0; y < m.ScreenSize.Y; y++ {
+		for x := 0; x < m.ScreenSize.X; x++ {
+			curCell := m.Camera.Add(Offset{x, y})
 			cliBoard[curCell] = m.Game.PlayerToken(m.Game.Cell(curCell))
 		}
 	}
@@ -131,7 +136,7 @@ func (m GameplayModel) View() string {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
-			if !cell.IsInsideRect(topLeft, bottomRight) {
+			if !cell.IsInsideRect(m.Camera, m.Camera.Add(m.ScreenSize)) {
 				continue
 			}
 
@@ -141,16 +146,16 @@ func (m GameplayModel) View() string {
 
 	var view strings.Builder
 	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
-	for y := topLeft.Y; y < bottomRight.Y; y++ {
-		for x := topLeft.X; x < bottomRight.X; x++ {
+	for y := 0; y < m.ScreenSize.Y; y++ {
+		for x := 0; x < m.ScreenSize.X; x++ {
+			curCell := m.Camera.Add(Offset{x, y})
+
 			leftSide := " "
 			rightSide := " "
-			if m.IsLocalPlayerTurn() && x == m.Selection.X && y == m.Selection.Y {
+			if m.IsLocalPlayerTurn() && curCell.IsEqual(m.Selection) {
 				leftSide = "["
 				rightSide = "]"
 			}
-
-			curCell := Offset{x, y}
 
 			if m.Game.Cell(curCell) != CellUnoccupied {
 				view.WriteString(inactiveTextStyle.Render(leftSide))
