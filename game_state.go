@@ -15,6 +15,7 @@ var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 
 type GameOptions struct {
 	BoardSize    Offset
+	Border       int
 	StrikeLength int
 	PlayerTokens []string
 }
@@ -29,22 +30,31 @@ type GameState struct {
 }
 
 func NewGame(conf GameOptions) *GameState {
-	return &GameState{
+	g := &GameState{
 		Conf:  conf,
 		Board: make(map[Offset]PlayerID),
 	}
+
+	for x := -conf.Border; x < conf.Border; x++ {
+		for y := -conf.Border; y < conf.Border; y++ {
+			g.Board[Offset{x, y}] = CellUnoccupied
+		}
+	}
+
+	return g
 }
 
 func (g *GameState) LastPlayer() PlayerID {
-	return PlayerID(len(g.Conf.PlayerTokens) - 1)
+	return PlayerID(len(g.Conf.PlayerTokens) - 2)
 }
 
 func (g *GameState) Cell(pos Offset) PlayerID {
-	if !pos.IsInsideRect(Offset{0, 0}, g.Conf.BoardSize) {
+	state, available := g.Board[pos]
+	if !available {
 		return CellUnavailable
 	}
 
-	return g.Board[pos]
+	return state
 }
 
 func (g *GameState) BoardSize() Offset {
@@ -52,17 +62,14 @@ func (g *GameState) BoardSize() Offset {
 }
 
 func (g *GameState) PlayerToken(player PlayerID) string {
-	if player == CellUnavailable {
-		return " "
-	}
-
-	if player < 0 || player > g.LastPlayer() {
+	if player < -1 || player > g.LastPlayer() {
 		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, g.LastPlayer()))
 	}
 
-	return g.Conf.PlayerTokens[int(player)]
+	return g.Conf.PlayerTokens[int(player)+1]
 }
 
+// Deprecated: Use Offset.IsInsideRect() instead
 func (g *GameState) IsInsideBoard(pos Offset) bool {
 	return pos.X >= 0 && pos.X < g.Conf.BoardSize.X && pos.Y >= 0 && pos.Y < g.Conf.BoardSize.Y
 }
@@ -134,7 +141,8 @@ func (g *GameState) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 }
 
 func (g *GameState) NoMoreMoves() bool {
-	return g.MoveNumber == g.Conf.BoardSize.X*g.Conf.BoardSize.Y
+	return false
+	// return g.MoveNumber == g.Conf.BoardSize.X*g.Conf.BoardSize.Y
 }
 
 func (g *GameState) Over() bool {
@@ -153,6 +161,16 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	g.Board[pos] = player
 	g.MoveNumber++
 
+	for dx := -g.Conf.Border; dx < g.Conf.Border; dx++ {
+		for dy := -g.Conf.Border; dy < g.Conf.Border; dy++ {
+			curCell := pos.Add(Offset{dx, dy})
+			_, available := g.Board[curCell]
+			if !available {
+				g.Board[curCell] = CellUnoccupied
+			}
+		}
+	}
+
 	g.solution = g.CheckSolutionsAt(pos, player)
 	if g.solution != nil {
 		g.winner = player
@@ -166,7 +184,7 @@ func (g *GameState) Winner() PlayerID {
 func (g *GameState) BoardToStrings() map[Offset]string {
 	cliBoard := make(map[Offset]string)
 	for pos, player := range g.Board {
-		cliBoard[pos] = string(g.PlayerToken(player))
+		cliBoard[pos] = g.PlayerToken(player)
 	}
 
 	return cliBoard

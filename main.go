@@ -15,10 +15,11 @@ var playerTypeGenerators = map[string]func() PlayerAgent{
 }
 
 var (
-	avatarsFlag     = flag.String("avatars", ".,X,O", "a list of strings used as player board marks, including empty cell")
+	avatarsFlag     = flag.String("avatars", " ,.,X,O", "a list of strings used as player board marks, including unavailable and empty cell")
 	playerTypesFlag = flag.String("playertypes", "local,random", fmt.Sprintf("specifies logic for each player (available options: %s)", availablePlayerTypes()))
 	wFlag           = flag.Uint("w", 3, "board width")
 	hFlag           = flag.Uint("h", 3, "board height")
+	borderFlag      = flag.Uint("border", 3, "the width of a border around marked cells where players can make a move")
 	strikeFlag      = flag.Uint("strike", 3, "the number of marks in a row to win the game")
 )
 
@@ -35,8 +36,12 @@ func availablePlayerTypes() (list string) {
 	return
 }
 
+func CommaListUnfiltered(s string) []string {
+	return strings.FieldsFunc(s, func(c rune) bool { return c == ',' })
+}
+
 func CommaList(s string) []string {
-	fields := strings.FieldsFunc(s, func(c rune) bool { return c == ',' })
+	fields := CommaListUnfiltered(s)
 	for i, dirty := range fields {
 		fields[i] = strings.TrimSpace(dirty)
 	}
@@ -48,10 +53,11 @@ func main() {
 	flag.Parse()
 
 	// Initialize game
-	avatars := CommaList(*avatarsFlag)
+	avatars := CommaListUnfiltered(*avatarsFlag)
 
 	w, h := int(*wFlag), int(*hFlag)
 	conf := GameOptions{
+		Border:       int(*borderFlag),
 		BoardSize:    Offset{w, h},
 		StrikeLength: int(*strikeFlag),
 		PlayerTokens: avatars,
@@ -72,7 +78,7 @@ func main() {
 		players[PlayerID(i+1)] = playerTypeGenerators[playerType]()
 	}
 
-	if len(avatars)-1 != len(players) {
+	if len(avatars)-2 != len(players) {
 		fmt.Fprintf(os.Stderr, "error: mismatch between number of player avatars (%d) and number of player types (%d) specified\nnote: avatars: %s\nnote: player types: %s\n", len(avatars)-1, len(players), *avatarsFlag, *playerTypesFlag)
 		os.Exit(1)
 	}

@@ -26,7 +26,7 @@ func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent) Gamepla
 		Game:    game,
 		Players: players,
 
-		Selection:     Offset{game.BoardSize().X / 2, game.BoardSize().Y / 2},
+		Selection:     Offset{0, 0},
 		CurrentPlayer: 1,
 	}
 }
@@ -61,31 +61,22 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch msg.String() {
 		case "left", "h":
-			if m.Selection.X > 0 {
-				m.Selection.X -= 1
-			}
+			m.Selection.X -= 1
 			return m, nil
 
 		case "right", "l":
-			if m.Selection.X < m.Game.BoardSize().X-1 {
-				m.Selection.X += 1
-			}
+			m.Selection.X += 1
 			return m, nil
 
 		case "up", "k":
-			if m.Selection.Y > 0 {
-				m.Selection.Y -= 1
-			}
+			m.Selection.Y -= 1
 			return m, nil
 
 		case "down", "j":
-			if m.Selection.Y < m.Game.BoardSize().Y-1 {
-				m.Selection.Y += 1
-			}
+			m.Selection.Y += 1
 			return m, nil
 
 		case "enter", " ":
-
 			if m.MoveCommitted {
 				return m, nil
 			}
