@@ -12,7 +12,8 @@ type PlayerMoveMsg struct {
 }
 
 type GameplayModel struct {
-	Game *GameState
+	Game       *GameState
+	ScreenSize Offset
 
 	Selection Offset
 
@@ -21,10 +22,11 @@ type GameplayModel struct {
 	Players       map[PlayerID]PlayerAgent
 }
 
-func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent) GameplayModel {
+func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent, screenSize Offset) GameplayModel {
 	return GameplayModel{
-		Game:    game,
-		Players: players,
+		Game:       game,
+		Players:    players,
+		ScreenSize: screenSize,
 
 		Selection:     Offset{0, 0},
 		CurrentPlayer: 1,
@@ -97,7 +99,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.MoveCommitted = false
 
 		if m.Game.Over() {
-			return GameOverModel{m.Game}, nil
+			return GameOverModel{m.Game, m.ScreenSize}, nil
 		}
 
 		if m.CurrentPlayer == m.Game.LastPlayer() {
@@ -113,10 +115,10 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameplayModel) View() string {
-	cliBoard := make(map[Offset]string, m.Game.BoardSize().Area())
+	cliBoard := make(map[Offset]string, m.ScreenSize.Area())
 	// bottomRight is one-cell beyond valid range
-	topLeft := m.Selection.Add(m.Game.BoardSize().ScaleDown(-2))
-	bottomRight := m.Selection.Add(m.Game.BoardSize().Add(Offset{1, 1}).ScaleDown(2))
+	topLeft := m.Selection.Add(m.ScreenSize.ScaleDown(-2))
+	bottomRight := m.Selection.Add(m.ScreenSize.Add(Offset{1, 1}).ScaleDown(2))
 
 	for y := topLeft.Y; y < bottomRight.Y; y++ {
 		for x := topLeft.X; x < bottomRight.X; x++ {
@@ -159,7 +161,7 @@ func (m GameplayModel) View() string {
 			if m.Game.Cell(curCell) == CellUnoccupied {
 				view.WriteString(UnoccupiedToken)
 			} else {
-				view.WriteString(cliBoard[Offset{x, y}])
+				view.WriteString(cliBoard[curCell])
 			}
 
 			if m.Game.Cell(curCell) != CellUnoccupied {

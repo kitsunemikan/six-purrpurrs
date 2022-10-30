@@ -14,7 +14,6 @@ const (
 var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
 
 type GameOptions struct {
-	BoardSize    Offset
 	Border       int
 	StrikeLength int
 	PlayerTokens []string
@@ -57,10 +56,6 @@ func (g *GameState) Cell(pos Offset) PlayerID {
 	return state
 }
 
-func (g *GameState) BoardSize() Offset {
-	return g.Conf.BoardSize
-}
-
 func (g *GameState) PlayerToken(player PlayerID) string {
 	if player < -1 || player > g.LastPlayer() {
 		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, g.LastPlayer()))
@@ -69,9 +64,10 @@ func (g *GameState) PlayerToken(player PlayerID) string {
 	return g.Conf.PlayerTokens[int(player)+1]
 }
 
-// Deprecated: Use Offset.IsInsideRect() instead
 func (g *GameState) IsInsideBoard(pos Offset) bool {
-	return pos.X >= 0 && pos.X < g.Conf.BoardSize.X && pos.Y >= 0 && pos.Y < g.Conf.BoardSize.Y
+	// TODO: based on another border
+
+	return true
 }
 
 func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {

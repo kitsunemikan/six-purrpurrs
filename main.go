@@ -55,10 +55,8 @@ func main() {
 	// Initialize game
 	avatars := CommaListUnfiltered(*avatarsFlag)
 
-	w, h := int(*wFlag), int(*hFlag)
 	conf := GameOptions{
 		Border:       int(*borderFlag),
-		BoardSize:    Offset{w, h},
 		StrikeLength: int(*strikeFlag),
 		PlayerTokens: avatars,
 	}
@@ -83,7 +81,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	p := tea.NewProgram(NewGameplayModel(game, players))
+	w, h := int(*wFlag), int(*hFlag)
+	p := tea.NewProgram(NewGameplayModel(game, players, Offset{w, h}))
 	if err := p.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, "internal error: %v\n", err)
 		os.Exit(1)
