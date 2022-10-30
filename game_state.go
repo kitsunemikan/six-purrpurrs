@@ -20,24 +20,39 @@ type GameOptions struct {
 }
 
 type GameState struct {
+	// TODO: make private
 	Conf GameOptions
 
 	Board      map[Offset]PlayerID
 	solution   []Offset
 	winner     PlayerID
 	MoveNumber int
+
+	circleMask []Offset
 }
 
 func NewGame(conf GameOptions) *GameState {
 	g := &GameState{
-		Conf:  conf,
-		Board: make(map[Offset]PlayerID),
+		Conf:       conf,
+		Board:      make(map[Offset]PlayerID),
+		circleMask: make([]Offset, 0, conf.Border*conf.Border),
 	}
 
-	for x := -conf.Border; x < conf.Border; x++ {
-		for y := -conf.Border; y < conf.Border; y++ {
-			g.Board[Offset{x, y}] = CellUnoccupied
+	// Generate circle mask
+	for dx := -g.Conf.Border; dx <= g.Conf.Border; dx++ {
+		for dy := -g.Conf.Border; dy <= g.Conf.Border; dy++ {
+			ds := Offset{dx, dy}
+			if !ds.IsInsideCircle(g.Conf.Border) {
+				continue
+			}
+
+			g.circleMask = append(g.circleMask, ds)
 		}
+	}
+
+	// Mark initial available cells
+	for _, ds := range g.circleMask {
+		g.Board[ds] = CellUnoccupied
 	}
 
 	return g
@@ -157,20 +172,13 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	g.Board[pos] = player
 	g.MoveNumber++
 
-	// TODO: pregenerate mask cells based on the border and reuse them
-	// to avoid using the formula every time
-	for dx := -g.Conf.Border; dx <= g.Conf.Border; dx++ {
-		for dy := -g.Conf.Border; dy <= g.Conf.Border; dy++ {
-			ds := Offset{dx, dy}
-			if !ds.IsInsideCircle(g.Conf.Border) {
-				continue
-			}
+	// Create new available cells
+	for _, ds := range g.circleMask {
+		curCell := pos.Add(ds)
 
-			curCell := pos.Add(ds)
-			_, available := g.Board[curCell]
-			if !available {
-				g.Board[curCell] = CellUnoccupied
-			}
+		_, available := g.Board[curCell]
+		if !available {
+			g.Board[curCell] = CellUnoccupied
 		}
 	}
 
