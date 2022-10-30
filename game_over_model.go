@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -58,7 +59,7 @@ func (m GameOverModel) View() string {
 		view.WriteString(" wins!")
 	}
 
-	view.WriteString("\n\nPress any key to exit...\n")
+	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\nPress any key to exit...\n", m.Game.MoveNumber))
 
 	return view.String()
 }
