@@ -70,7 +70,7 @@ func (g *GameState) LastPlayer() PlayerID {
 }
 
 func (g *GameState) MoveNumber() int {
-	return len(g.moveHistory)
+	return len(g.moveHistory) + 1
 }
 
 func (g *GameState) Cell(pos Offset) PlayerID {
@@ -227,4 +227,12 @@ func (g *GameState) BoardToStrings(camera Rect) map[Offset]string {
 
 func (g *GameState) Solution() []Offset {
 	return g.solution
+}
+
+func (g *GameState) LatestMove() PlayerMove {
+	if len(g.moveHistory) == 0 {
+		panic("game state: get last move: no moves have been yet made")
+	}
+
+	return g.moveHistory[len(g.moveHistory)-1]
 }

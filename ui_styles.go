@@ -14,3 +14,6 @@ var inactiveTextStyle = lipgloss.NewStyle().
 
 var candidateStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("177"))
+
+var enemyCellStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("210"))

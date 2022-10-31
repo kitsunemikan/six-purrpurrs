@@ -150,6 +150,11 @@ func (m GameplayModel) View() string {
 		}
 	}
 
+	if m.Game.MoveNumber() > 1 {
+		latestMove := m.Game.LatestMove()
+		cliBoard[latestMove.Cell] = enemyCellStyle.Render(cliBoard[latestMove.Cell])
+	}
+
 	var view strings.Builder
 	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
 	for y := 0; y < m.Camera.H; y++ {
