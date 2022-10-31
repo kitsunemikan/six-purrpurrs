@@ -36,16 +36,14 @@ func (m GameOverModel) View() string {
 	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
 	for y := 0; y < m.Camera.H; y++ {
 		for x := 0; x < m.Camera.W; x++ {
-			view.WriteRune(' ')
-
 			curCell := m.Camera.ToWorldXY(x, y)
-			if m.Game.Cell(curCell) == CellUnoccupied {
-				view.WriteString(UnoccupiedToken)
-			} else {
-				view.WriteString(cliBoard[curCell])
-			}
 
-			view.WriteRune(' ')
+			view.WriteString(" ")
+			if m.Game.Cell(curCell) != CellUnoccupied {
+				view.WriteString(cliBoard[curCell])
+			} else {
+				view.WriteString(UnoccupiedToken)
+			}
 		}
 		view.WriteByte('\n')
 	}
@@ -59,7 +57,7 @@ func (m GameOverModel) View() string {
 		view.WriteString(" wins!")
 	}
 
-	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\nPress any key to exit...\n", m.Game.MoveNumber))
+	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\nPress any key to exit...\n", m.Game.MoveNumber()-1))
 
 	return view.String()
 }

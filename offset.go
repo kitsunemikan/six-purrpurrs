@@ -16,6 +16,10 @@ func (a Offset) Sub(b Offset) Offset {
 	return Offset{a.X - b.X, a.Y - b.Y}
 }
 
+func (a Offset) SubXY(dx, dy int) Offset {
+	return Offset{a.X - dx, a.Y - dy}
+}
+
 func (a Offset) ScaleUp(c int) Offset {
 	return Offset{c * a.X, c * a.Y}
 }

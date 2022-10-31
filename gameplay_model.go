@@ -162,27 +162,25 @@ func (m GameplayModel) View() string {
 			curCell := m.Camera.ToWorldXY(x, y)
 
 			leftSide := " "
-			rightSide := " "
-			if m.IsLocalPlayerTurn() && curCell.IsEqual(m.Selection) {
-				leftSide = "["
-				rightSide = "]"
+			rightSide := ""
+			if m.IsLocalPlayerTurn() {
+				if curCell.IsEqual(m.Selection) {
+					leftSide = "["
+					rightSide = "]"
+				} else if curCell.IsEqual(m.Selection.SubXY(1, 0)) {
+					rightSide = ""
+				} else if curCell.IsEqual(m.Selection.AddXY(1, 0)) {
+					leftSide = ""
+				}
 			}
 
 			if m.Game.Cell(curCell) != CellUnoccupied {
 				view.WriteString(inactiveTextStyle.Render(leftSide))
-			} else {
-				view.WriteString(leftSide)
-			}
-
-			if m.Game.Cell(curCell) == CellUnoccupied {
-				view.WriteString(UnoccupiedToken)
-			} else {
 				view.WriteString(cliBoard[curCell])
-			}
-
-			if m.Game.Cell(curCell) != CellUnoccupied {
 				view.WriteString(inactiveTextStyle.Render(rightSide))
 			} else {
+				view.WriteString(leftSide)
+				view.WriteString(UnoccupiedToken)
 				view.WriteString(rightSide)
 			}
 		}
