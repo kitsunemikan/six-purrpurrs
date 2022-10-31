@@ -19,7 +19,7 @@ var (
 	playerTypesFlag = flag.String("playertypes", "local,random", fmt.Sprintf("specifies logic for each player (available options: %s)", availablePlayerTypes()))
 	wFlag           = flag.Uint("w", 40, "screen width")
 	hFlag           = flag.Uint("h", 20, "screen height")
-	borderFlag      = flag.Uint("border", 6, "the width of a border around marked cells where players can make a move")
+	borderFlag      = flag.Uint("border", 7, "the width of a border around marked cells where players can make a move")
 	strikeFlag      = flag.Uint("strike", 6, "the number of marks in a row to win the game")
 )
 
