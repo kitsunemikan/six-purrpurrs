@@ -30,8 +30,25 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m GameOverModel) View() string {
 	cliBoard := m.Theme.BoardToText(m.Game.AllCells(), m.Camera)
 
+	styledCells := make(map[Offset]lipgloss.Style)
+
 	for _, cell := range m.Game.Solution() {
-		cliBoard[cell] = winCellStyle.Render(cliBoard[cell])
+		styledCells[cell] = m.Theme.VictoryCellStyle
+	}
+
+	for pos, str := range cliBoard {
+		style, special := styledCells[pos]
+		if special {
+			cliBoard[pos] = style.Render(str)
+			continue
+		}
+
+		cellState := m.Game.Cell(pos)
+		if cellState == CellUnavailable || cellState == CellUnoccupied {
+			continue
+		}
+
+		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState-1].Render(str)
 	}
 
 	var view strings.Builder

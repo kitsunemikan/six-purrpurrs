@@ -168,6 +168,8 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m GameplayModel) View() string {
 	cliBoard := m.Theme.BoardToText(m.Game.AllCells(), m.Camera)
 
+	styledCells := make(map[Offset]lipgloss.Style)
+
 	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == CellUnoccupied {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
@@ -176,13 +178,28 @@ func (m GameplayModel) View() string {
 				continue
 			}
 
-			cliBoard[cell] = candidateStyle.Render(cliBoard[cell])
+			styledCells[cell] = m.Theme.CandidateCellStyle
 		}
 	}
 
 	if m.Game.MoveNumber() > 1 {
 		latestMove := m.Game.LatestMove()
-		cliBoard[latestMove.Cell] = lastEnemyCellStyle.Render(cliBoard[latestMove.Cell])
+		styledCells[latestMove.Cell] = m.Theme.LastEnemyCellStyle
+	}
+
+	for pos, str := range cliBoard {
+		style, special := styledCells[pos]
+		if special {
+			cliBoard[pos] = style.Render(str)
+			continue
+		}
+
+		cellState := m.Game.Cell(pos)
+		if cellState == CellUnavailable || cellState == CellUnoccupied {
+			continue
+		}
+
+		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState-1].Render(str)
 	}
 
 	var view strings.Builder

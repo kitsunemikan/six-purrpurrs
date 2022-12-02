@@ -20,8 +20,7 @@ var defaultBoardTheme = BoardTheme{
 		Foreground(lipgloss.Color("10")),
 
 	LastEnemyCellStyle: lipgloss.NewStyle().
-		Foreground(lipgloss.Color("0")).
-		Background(lipgloss.Color("1")),
+		Background(lipgloss.Color("88")),
 
 	SelectionInactiveStyle: lipgloss.NewStyle().
 		Bold(true).
