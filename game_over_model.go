@@ -48,7 +48,7 @@ func (m GameOverModel) View() string {
 			continue
 		}
 
-		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState-1].Render(str)
+		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState].Render(str)
 	}
 
 	var view strings.Builder
@@ -71,7 +71,7 @@ func (m GameOverModel) View() string {
 	if m.Game.Solution() == nil {
 		view.WriteString("A draw...")
 	} else {
-		view.WriteString(m.Theme.PlayerCells[m.Game.Winner()-1])
+		view.WriteString(m.Theme.PlayerCells[m.Game.Winner()])
 		view.WriteString(" wins!")
 	}
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -14,7 +15,7 @@ type PlayerMoveMsg struct {
 
 type GameplayModelConfig struct {
 	Game    *GameState
-	Players map[PlayerID]PlayerAgent
+	Players []PlayerAgent
 
 	Theme      *BoardTheme
 	ScreenSize Offset
@@ -30,7 +31,7 @@ type GameplayModel struct {
 
 	MoveCommitted bool
 	CurrentPlayer PlayerID
-	Players       map[PlayerID]PlayerAgent
+	Players       []PlayerAgent
 
 	cameraBound Rect
 }
@@ -63,7 +64,7 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 		cameraBound: config.Game.BoardBound(),
 
 		Selection:     Offset{0, 0},
-		CurrentPlayer: 1,
+		CurrentPlayer: P1,
 	}
 }
 
@@ -148,12 +149,12 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return GameOverModel{m.Game, m.Theme, m.Camera}, nil
 		}
 
-		// TODO: ugly and wrong, if PlayerID can be arbitrary number
-		// then this is wrong!
-		if int(m.CurrentPlayer) == len(m.Players) {
-			m.CurrentPlayer = 1
+		if m.CurrentPlayer == P1 {
+			m.CurrentPlayer = P2
+		} else if m.CurrentPlayer == P2 {
+			m.CurrentPlayer = P1
 		} else {
-			m.CurrentPlayer++
+			panic(fmt.Sprintf("gameplay model: current player became invalid (of value %d)", m.CurrentPlayer))
 		}
 
 		m.cameraBound = m.Game.BoardBound()
@@ -199,7 +200,7 @@ func (m GameplayModel) View() string {
 			continue
 		}
 
-		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState-1].Render(str)
+		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState].Render(str)
 	}
 
 	var view strings.Builder
@@ -237,10 +238,10 @@ func (m GameplayModel) View() string {
 
 	if m.IsLocalPlayerTurn() {
 		view.WriteString("Current player: ")
-		view.WriteString(m.Theme.PlayerCells[m.CurrentPlayer-1])
+		view.WriteString(m.Theme.PlayerCells[m.CurrentPlayer])
 	} else {
 		view.WriteString("Awaiting player ")
-		view.WriteString(m.Theme.PlayerCells[m.CurrentPlayer-1])
+		view.WriteString(m.Theme.PlayerCells[m.CurrentPlayer])
 		view.WriteString(" move...")
 	}
 

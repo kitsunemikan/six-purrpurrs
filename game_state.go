@@ -4,11 +4,28 @@ import (
 	"fmt"
 )
 
+// CellState has a property of, when positive, being equal
+// to a correct PlayerID that occupies it. Special meanings
+// are negative. This way, CellState can be used for indexing
+// slices related to players without any additionaly manipulation
+type CellState int
+
+const (
+	CellUnavailable CellState = iota - 2
+	CellUnoccupied
+	CellP1
+	CellP2
+)
+
+func (cs CellState) IsOccupiedBy(player PlayerID) bool {
+	return cs >= 0 && PlayerID(cs) == player
+}
+
 type PlayerID int
 
 const (
-	CellUnavailable PlayerID = -1
-	CellUnoccupied  PlayerID = 0
+	P1 PlayerID = iota
+	P2
 )
 
 var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
@@ -27,7 +44,7 @@ type GameState struct {
 	// TODO: make private
 	Conf GameOptions
 
-	Board    map[Offset]PlayerID
+	Board    map[Offset]CellState
 	solution []Offset
 	winner   PlayerID
 
@@ -39,7 +56,7 @@ type GameState struct {
 func NewGame(conf GameOptions) *GameState {
 	g := &GameState{
 		Conf:       conf,
-		Board:      make(map[Offset]PlayerID),
+		Board:      make(map[Offset]CellState),
 		circleMask: make([]Offset, 0, conf.Border*conf.Border),
 		boardBound: Rect{X: -conf.Border, Y: -conf.Border, W: 2*conf.Border + 1, H: 2*conf.Border + 1},
 	}
@@ -64,7 +81,7 @@ func NewGame(conf GameOptions) *GameState {
 	return g
 }
 
-func (g *GameState) AllCells() map[Offset]PlayerID {
+func (g *GameState) AllCells() map[Offset]CellState {
 	return g.Board
 }
 
@@ -72,7 +89,7 @@ func (g *GameState) MoveNumber() int {
 	return len(g.moveHistory) + 1
 }
 
-func (g *GameState) Cell(pos Offset) PlayerID {
+func (g *GameState) Cell(pos Offset) CellState {
 	state, available := g.Board[pos]
 	if !available {
 		return CellUnavailable
@@ -99,7 +116,7 @@ func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 
 		for i := 0; i < g.Conf.StrikeLength; i++ {
 			curCell := Offset{pos.X + i*dir.X, pos.Y + i*dir.Y}
-			if g.Board[curCell] != player {
+			if !g.Board[curCell].IsOccupiedBy(player) {
 				break
 			}
 
@@ -108,7 +125,7 @@ func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 
 		for i := 1; i < g.Conf.StrikeLength; i++ {
 			curCell := Offset{pos.X - i*dir.X, pos.Y - i*dir.Y}
-			if g.Board[curCell] != player {
+			if !g.Board[curCell].IsOccupiedBy(player) {
 				break
 			}
 
@@ -126,14 +143,14 @@ func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 func (g *GameState) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 	candidates := make([]Offset, 0, 2*len(solutionOffsets)*(g.Conf.StrikeLength-1)+1)
 
-	if g.Board[pos] == player {
+	if g.Board[pos].IsOccupiedBy(player) {
 		candidates = append(candidates, pos)
 	}
 
 	for _, dir := range solutionOffsets {
 		for i := 1; i < g.Conf.StrikeLength; i++ {
 			curCell := pos.Add(dir.ScaleUp(i))
-			if g.Board[curCell] == player {
+			if g.Board[curCell].IsOccupiedBy(player) {
 				candidates = append(candidates, curCell)
 			} else {
 				break
@@ -142,7 +159,7 @@ func (g *GameState) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
 
 		for i := 1; i < g.Conf.StrikeLength; i++ {
 			curCell := pos.Add(dir.ScaleUp(-i))
-			if g.Board[curCell] == player {
+			if g.Board[curCell].IsOccupiedBy(player) {
 				candidates = append(candidates, curCell)
 			} else {
 				break
@@ -175,7 +192,7 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 		panic(fmt.Sprintf("Trying to mark a cell at %#v, when the game is already over", pos))
 	}
 
-	g.Board[pos] = player
+	g.Board[pos] = CellState(player)
 	g.moveHistory = append(g.moveHistory, PlayerMove{pos, player})
 
 	// Update board bounding rectangle

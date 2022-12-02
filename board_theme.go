@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -33,29 +31,25 @@ func ApplyCyclingStyles(text []string, styles []lipgloss.Style) []string {
 	return styledText
 }
 
-func (ts *BoardTheme) BoardToText(board map[Offset]PlayerID, camera Rect) map[Offset]string {
+func (ts *BoardTheme) BoardToText(board map[Offset]CellState, camera Rect) map[Offset]string {
 	cliBoard := make(map[Offset]string, camera.Area())
 
 	for x := 0; x < camera.W; x++ {
 		for y := 0; y < camera.H; y++ {
 			curCell := camera.ToWorldXY(x, y)
 
-			player, present := board[curCell]
+			state, present := board[curCell]
 			if !present {
 				cliBoard[curCell] = ts.InvalidCell
 				continue
 			}
 
-			if player == 0 {
+			if state == CellUnoccupied {
 				cliBoard[curCell] = ts.UnoccupiedCell
 				continue
 			}
 
-			if int(player)-1 >= len(ts.PlayerCells) {
-				panic(fmt.Sprintf("board theme: no player style definition for ID=%v: out of range (PlayerCount=%v)", player, len(ts.PlayerCells)))
-			}
-
-			cliBoard[curCell] = ts.PlayerCells[player-1]
+			cliBoard[curCell] = ts.PlayerCells[state]
 		}
 	}
 	return cliBoard

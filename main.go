@@ -70,14 +70,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	players := map[PlayerID]PlayerAgent{}
-	for i, playerType := range playerTypes {
+	players := make([]PlayerAgent, 0, len(playerTypes))
+	for _, playerType := range playerTypes {
 		if _, exists := playerTypeGenerators[playerType]; !exists {
 			fmt.Fprintf(os.Stderr, "error: invalid player type supplied: '%s'\nnote: available types are: %s\n", playerType, availablePlayerTypes())
 			os.Exit(1)
 		}
 
-		players[PlayerID(i+1)] = playerTypeGenerators[playerType]()
+		players = append(players, playerTypeGenerators[playerType]())
 	}
 
 	gameConf := GameOptions{
