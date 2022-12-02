@@ -1,0 +1,70 @@
+name: Generate artifacts for the latest release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  latest-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.latesttag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v2.3.3
+        with:
+          fetch-depth: 0
+      - name: Get latest tag
+        id: latesttag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      - name: Print version
+        run: echo Latest version ${{ steps.latesttag.outputs.tag }}
+
+  generate:
+    needs: latest-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.18
+      - uses: actions/checkout@v2.3.3
+      - name: Make directory for binaries
+        run: mkdir bin
+      - name: Build Windows x86
+        env:
+          GOOS: windows
+          GOARCH: "386"
+        run: go build -o bin/infinitoe.${{ needs.latest-tag.outputs.tag }}.windows-386.exe .
+      - name: Build Windows x86_64
+        env:
+          GOOS: windows
+          GOARCH: amd64
+        run: go build -o bin/inifinitoe.${{ needs.latest-tag.outputs.tag }}.windows-amd64.exe .
+      - name: Build Linux x86
+        env:
+          GOOS: linux
+          GOARCH: "386"
+        run: go build -o bin/inifinitoe.${{ needs.latest-tag.outputs.tag }}.linux-386 .
+      - name: Build Linux x86_64
+        env:
+          GOOS: linux
+          GOARCH: amd64
+        run: go build -o bin/inifinitoe.${{ needs.latest-tag.outputs.tag }}.linux-amd64 .
+      - name: Build Mac OS X
+        env:
+          GOOS: darwin
+          GOARCH: amd64
+        run: go build -o bin/inifinitoe.${{ needs.latest-tag.outputs.tag }}.darwin-amd64 .
+
+      # Ensure that the release is present
+      - name: Create release
+        uses: Roang-zero1/github-create-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts to release
+        uses: Roang-zero1/github-upload-release-artifacts-action@master
+        with:
+          args: bin/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
