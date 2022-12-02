@@ -153,7 +153,7 @@ func (m GameplayModel) View() string {
 
 	if m.Game.MoveNumber() > 1 {
 		latestMove := m.Game.LatestMove()
-		cliBoard[latestMove.Cell] = enemyCellStyle.Render(cliBoard[latestMove.Cell])
+		cliBoard[latestMove.Cell] = lastEnemyCellStyle.Render(cliBoard[latestMove.Cell])
 	}
 
 	var view strings.Builder

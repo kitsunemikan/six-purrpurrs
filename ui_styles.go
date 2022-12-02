@@ -5,8 +5,8 @@ import (
 )
 
 var winCellStyle = lipgloss.NewStyle().
-	Bold(true).
-	Foreground(lipgloss.Color("10"))
+	Foreground(lipgloss.Color("0")).
+	Background(lipgloss.Color("2"))
 
 var inactiveTextStyle = lipgloss.NewStyle().
 	Bold(true).
@@ -15,5 +15,6 @@ var inactiveTextStyle = lipgloss.NewStyle().
 var candidateStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("177"))
 
-var enemyCellStyle = lipgloss.NewStyle().
-	Foreground(lipgloss.Color("210"))
+var lastEnemyCellStyle = lipgloss.NewStyle().
+	Foreground(lipgloss.Color("0")).
+	Background(lipgloss.Color("1"))
