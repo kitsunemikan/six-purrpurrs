@@ -40,3 +40,7 @@ func (a Offset) IsInsideCircle(radius int) bool {
 func (a Offset) IsEqual(b Offset) bool {
 	return a.X == b.X && a.Y == b.Y
 }
+
+func (a Offset) IsZero() bool {
+	return a.X == 0 && a.Y == 0
+}

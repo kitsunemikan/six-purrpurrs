@@ -5,10 +5,12 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type GameOverModel struct {
 	Game   *GameState
+	Theme  *BoardTheme
 	Camera Rect
 }
 
@@ -26,14 +28,13 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameOverModel) View() string {
-	cliBoard := m.Game.BoardToStrings(m.Camera)
+	cliBoard := m.Theme.BoardToText(m.Game.AllCells(), m.Camera)
 
 	for _, cell := range m.Game.Solution() {
 		cliBoard[cell] = winCellStyle.Render(cliBoard[cell])
 	}
 
 	var view strings.Builder
-	UnoccupiedToken := m.Game.PlayerToken(CellUnoccupied)
 	for y := 0; y < m.Camera.H; y++ {
 		for x := 0; x < m.Camera.W; x++ {
 			curCell := m.Camera.ToWorldXY(x, y)
@@ -42,7 +43,7 @@ func (m GameOverModel) View() string {
 			if m.Game.Cell(curCell) != CellUnoccupied {
 				view.WriteString(cliBoard[curCell])
 			} else {
-				view.WriteString(UnoccupiedToken)
+				view.WriteString(m.Theme.UnoccupiedCell)
 			}
 		}
 		view.WriteByte('\n')
@@ -53,7 +54,7 @@ func (m GameOverModel) View() string {
 	if m.Game.Solution() == nil {
 		view.WriteString("A draw...")
 	} else {
-		view.WriteString(m.Game.PlayerToken(m.Game.Winner()))
+		view.WriteString(m.Theme.PlayerCells[m.Game.Winner()-1])
 		view.WriteString(" wins!")
 	}
 

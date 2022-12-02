@@ -52,19 +52,23 @@ func CommaList(s string) []string {
 func main() {
 	flag.Parse()
 
-	// Initialize game
 	avatars := CommaListUnfiltered(*avatarsFlag)
-
-	conf := GameOptions{
-		Border:       int(*borderFlag),
-		StrikeLength: int(*strikeFlag),
-		PlayerTokens: avatars,
+	if len(avatars) < 3 {
+		fmt.Fprintf(os.Stderr, "error: at least 3 avatars must be provided (for unavailable, unoccupied and first player cells). Provided %d\n", len(avatars))
+		os.Exit(1)
 	}
 
-	game := NewGame(conf)
+	theme := defaultBoardTheme
+	theme.InvalidCell = avatars[0]
+	theme.UnoccupiedCell = avatars[1]
+	theme.PlayerCells = avatars[2:]
 
 	// Create players
 	playerTypes := CommaList(*playerTypesFlag)
+	if len(theme.PlayerCells) != len(playerTypes) {
+		fmt.Fprintf(os.Stderr, "error: mismatch between number of player avatars (%d) and number of player types (%d) specified\nnote: avatars: %s\nnote: player types: %s\n", len(theme.PlayerCells), len(playerTypes), *avatarsFlag, *playerTypesFlag)
+		os.Exit(1)
+	}
 
 	players := map[PlayerID]PlayerAgent{}
 	for i, playerType := range playerTypes {
@@ -76,13 +80,21 @@ func main() {
 		players[PlayerID(i+1)] = playerTypeGenerators[playerType]()
 	}
 
-	if len(avatars)-2 != len(players) {
-		fmt.Fprintf(os.Stderr, "error: mismatch between number of player avatars (%d) and number of player types (%d) specified\nnote: avatars: %s\nnote: player types: %s\n", len(avatars)-1, len(players), *avatarsFlag, *playerTypesFlag)
-		os.Exit(1)
+	gameConf := GameOptions{
+		Border:       int(*borderFlag),
+		StrikeLength: int(*strikeFlag),
 	}
 
-	w, h := int(*wFlag), int(*hFlag)
-	p := tea.NewProgram(NewGameplayModel(game, players, Offset{w, h}))
+	game := NewGame(gameConf)
+
+	modelConf := GameplayModelConfig{
+		Game:       game,
+		Players:    players,
+		Theme:      &theme,
+		ScreenSize: Offset{int(*wFlag), int(*hFlag)},
+	}
+
+	p := tea.NewProgram(NewGameplayModel(modelConf))
 	if err := p.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, "internal error: %v\n", err)
 		os.Exit(1)

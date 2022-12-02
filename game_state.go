@@ -21,7 +21,6 @@ type PlayerMove struct {
 type GameOptions struct {
 	Border       int
 	StrikeLength int
-	PlayerTokens []string
 }
 
 type GameState struct {
@@ -65,8 +64,8 @@ func NewGame(conf GameOptions) *GameState {
 	return g
 }
 
-func (g *GameState) LastPlayer() PlayerID {
-	return PlayerID(len(g.Conf.PlayerTokens) - 2)
+func (g *GameState) AllCells() map[Offset]PlayerID {
+	return g.Board
 }
 
 func (g *GameState) MoveNumber() int {
@@ -80,14 +79,6 @@ func (g *GameState) Cell(pos Offset) PlayerID {
 	}
 
 	return state
-}
-
-func (g *GameState) PlayerToken(player PlayerID) string {
-	if player < -1 || player > g.LastPlayer() {
-		panic(fmt.Sprintf("model: player token for ID=%v: out of range (LastPlayerID=%v)", player, g.LastPlayer()))
-	}
-
-	return g.Conf.PlayerTokens[int(player)+1]
 }
 
 func (g *GameState) IsInsideBoard(pos Offset) bool {
@@ -211,18 +202,6 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 
 func (g *GameState) Winner() PlayerID {
 	return g.winner
-}
-
-func (g *GameState) BoardToStrings(camera Rect) map[Offset]string {
-	cliBoard := make(map[Offset]string, camera.Area())
-
-	for x := 0; x < camera.W; x++ {
-		for y := 0; y < camera.H; y++ {
-			curCell := camera.ToWorldXY(x, y)
-			cliBoard[curCell] = g.PlayerToken(g.Cell(curCell))
-		}
-	}
-	return cliBoard
 }
 
 func (g *GameState) Solution() []Offset {
