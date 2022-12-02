@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -31,6 +30,8 @@ func NewGameplayModel(game *GameState, players map[PlayerID]PlayerAgent, screenS
 		Game:    game,
 		Players: players,
 
+		// Board extends to negative integers, so board's center is at (0,0),
+		// and not (screenWidth/2, screenHeight/2)
 		Camera:      NewRectFromOffsets(screenSize.ScaleDown(-2), screenSize),
 		cameraBound: game.BoardBound(),
 
@@ -198,7 +199,7 @@ func (m GameplayModel) View() string {
 		view.WriteString(" move...")
 	}
 
-	view.WriteString(fmt.Sprintf("\nCamera bound: %v | Camera: %v", m.cameraBound, m.Camera))
+	// view.WriteString(fmt.Sprintf("\nCamera bound: %v | Camera: %v", m.cameraBound, m.Camera))
 	view.WriteByte('\n')
 
 	return view.String()
