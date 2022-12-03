@@ -19,10 +19,8 @@ func (p *RandomPlayer) MakeMove(g *game.GameState) Offset {
 	time.Sleep(50 * time.Millisecond)
 
 	var validMoves []Offset
-	for cell, state := range g.Board {
-		if state == game.CellUnoccupied {
-			validMoves = append(validMoves, cell)
-		}
+	for cell := range g.Board.UnoccupiedCells() {
+		validMoves = append(validMoves, cell)
 	}
 
 	if len(validMoves) == 0 {
