@@ -9,7 +9,7 @@ import (
 // CellState has a property of, when positive, being equal
 // to a correct PlayerID that occupies it. Special meanings
 // are negative. This way, CellState can be used for indexing
-// slices related to players without any additionaly manipulation
+// slices related to players without any additional manipulation
 type CellState int
 
 const (
@@ -30,7 +30,17 @@ const (
 	P2
 )
 
-var solutionOffsets = []Offset{{1, 0}, {1, 1}, {0, 1}, {1, -1}}
+func (p PlayerID) Other() PlayerID {
+	if p == P1 {
+		return P2
+	} else if p == P2 {
+		return P1
+	}
+
+	panic(fmt.Sprintf("PlayerID: get other player: player is invalid (value=%d)", p))
+}
+
+var solutionOffsets = []Offset{{X: 1, Y: 0}, {X: 1, Y: 1}, {X: 0, Y: 1}, {X: 1, Y: -1}}
 
 type PlayerMove struct {
 	Cell Offset
@@ -66,7 +76,7 @@ func NewGame(conf GameOptions) *GameState {
 	// Generate circle mask
 	for dx := -g.Conf.Border; dx <= g.Conf.Border; dx++ {
 		for dy := -g.Conf.Border; dy <= g.Conf.Border; dy++ {
-			ds := Offset{dx, dy}
+			ds := Offset{X: dx, Y: dy}
 			if !ds.IsInsideCircle(g.Conf.Border) {
 				continue
 			}
@@ -117,7 +127,7 @@ func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 		}
 
 		for i := 0; i < g.Conf.StrikeLength; i++ {
-			curCell := Offset{pos.X + i*dir.X, pos.Y + i*dir.Y}
+			curCell := Offset{X: pos.X + i*dir.X, Y: pos.Y + i*dir.Y}
 			if !g.Board[curCell].IsOccupiedBy(player) {
 				break
 			}
@@ -126,7 +136,7 @@ func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 		}
 
 		for i := 1; i < g.Conf.StrikeLength; i++ {
-			curCell := Offset{pos.X - i*dir.X, pos.Y - i*dir.Y}
+			curCell := Offset{X: pos.X - i*dir.X, Y: pos.Y - i*dir.Y}
 			if !g.Board[curCell].IsOccupiedBy(player) {
 				break
 			}
@@ -199,7 +209,7 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 
 	// Update board bounding rectangle
 
-	borderOffset := Offset{g.Conf.Border, g.Conf.Border}
+	borderOffset := Offset{X: g.Conf.Border, Y: g.Conf.Border}
 	newCellsBoundingRect := NewRectFromOffsets(pos.Sub(borderOffset), borderOffset.ScaleUp(2).AddXY(1, 1))
 	g.boardBound = g.boardBound.GrowToContainRect(newCellsBoundingRect)
 

@@ -1,7 +1,6 @@
 package gamecli
 
 import (
-	"fmt"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -152,13 +151,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return GameOverModel{m.Game, m.Theme, m.Camera}, nil
 		}
 
-		if m.CurrentPlayer == game.P1 {
-			m.CurrentPlayer = game.P2
-		} else if m.CurrentPlayer == game.P2 {
-			m.CurrentPlayer = game.P1
-		} else {
-			panic(fmt.Sprintf("gameplay model: current player became invalid (of value %d)", m.CurrentPlayer))
-		}
+		m.CurrentPlayer = m.CurrentPlayer.Other()
 
 		m.cameraBound = m.Game.BoardBound()
 		m.Camera = m.Camera.CenterOn(m.Selection).SnapInto(m.cameraBound)
