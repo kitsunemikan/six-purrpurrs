@@ -1,10 +1,10 @@
-package main
+package gamecli
 
 import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var defaultBoardTheme = BoardTheme{
+var DefaultBoardTheme = BoardTheme{
 	PlayerCellStyles: []lipgloss.Style{
 		// SlateBlue1
 		lipgloss.NewStyle().Foreground(lipgloss.Color("99")),

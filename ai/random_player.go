@@ -1,23 +1,26 @@
-package main
+package ai
 
 import (
 	"math/rand"
 	"time"
+
+	"github.com/kitsunemikan/ttt-cli/game"
+	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
 type RandomPlayer struct{}
 
-func NewRandomPlayer() PlayerAgent {
+func NewRandomPlayer() game.PlayerAgent {
 	rand.Seed(time.Now().Unix())
 	return &RandomPlayer{}
 }
 
-func (p *RandomPlayer) MakeMove(g *GameState) Offset {
+func (p *RandomPlayer) MakeMove(g *game.GameState) Offset {
 	time.Sleep(50 * time.Millisecond)
 
 	var validMoves []Offset
 	for cell, state := range g.Board {
-		if state == CellUnoccupied {
+		if state == game.CellUnoccupied {
 			validMoves = append(validMoves, cell)
 		}
 	}

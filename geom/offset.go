@@ -1,4 +1,4 @@
-package main
+package geom
 
 type Offset struct {
 	X, Y int

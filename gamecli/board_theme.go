@@ -1,7 +1,10 @@
-package main
+package gamecli
 
 import (
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/kitsunemikan/ttt-cli/game"
+	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
 type BoardTheme struct {
@@ -31,7 +34,7 @@ func ApplyCyclingStyles(text []string, styles []lipgloss.Style) []string {
 	return styledText
 }
 
-func (ts *BoardTheme) BoardToText(board map[Offset]CellState, camera Rect) map[Offset]string {
+func (ts *BoardTheme) BoardToText(board map[Offset]game.CellState, camera Rect) map[Offset]string {
 	cliBoard := make(map[Offset]string, camera.Area())
 
 	for x := 0; x < camera.W; x++ {
@@ -44,7 +47,7 @@ func (ts *BoardTheme) BoardToText(board map[Offset]CellState, camera Rect) map[O
 				continue
 			}
 
-			if state == CellUnoccupied {
+			if state == game.CellUnoccupied {
 				cliBoard[curCell] = ts.UnoccupiedCell
 				continue
 			}

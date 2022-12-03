@@ -7,11 +7,16 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+
+	"github.com/kitsunemikan/ttt-cli/ai"
+	"github.com/kitsunemikan/ttt-cli/game"
+	"github.com/kitsunemikan/ttt-cli/gamecli"
+	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
-var playerTypeGenerators = map[string]func() PlayerAgent{
-	"local":  NewLocalPlayer,
-	"random": NewRandomPlayer,
+var playerTypeGenerators = map[string]func() game.PlayerAgent{
+	"local":  gamecli.NewLocalPlayer,
+	"random": ai.NewRandomPlayer,
 }
 
 var (
@@ -58,7 +63,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	theme := defaultBoardTheme
+	theme := gamecli.DefaultBoardTheme
 	theme.InvalidCell = avatars[0]
 	theme.UnoccupiedCell = avatars[1]
 	theme.PlayerCells = avatars[2:]
@@ -70,7 +75,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	players := make([]PlayerAgent, 0, len(playerTypes))
+	players := make([]game.PlayerAgent, 0, len(playerTypes))
 	for _, playerType := range playerTypes {
 		if _, exists := playerTypeGenerators[playerType]; !exists {
 			fmt.Fprintf(os.Stderr, "error: invalid player type supplied: '%s'\nnote: available types are: %s\n", playerType, availablePlayerTypes())
@@ -80,21 +85,21 @@ func main() {
 		players = append(players, playerTypeGenerators[playerType]())
 	}
 
-	gameConf := GameOptions{
+	gameConf := game.GameOptions{
 		Border:       int(*borderFlag),
 		StrikeLength: int(*strikeFlag),
 	}
 
-	game := NewGame(gameConf)
+	game := game.NewGame(gameConf)
 
-	modelConf := GameplayModelConfig{
+	modelConf := gamecli.GameplayModelConfig{
 		Game:       game,
 		Players:    players,
 		Theme:      &theme,
-		ScreenSize: Offset{int(*wFlag), int(*hFlag)},
+		ScreenSize: Offset{X: int(*wFlag), Y: int(*hFlag)},
 	}
 
-	p := tea.NewProgram(NewGameplayModel(modelConf))
+	p := tea.NewProgram(gamecli.NewGameplayModel(modelConf))
 	if err := p.Start(); err != nil {
 		fmt.Fprintf(os.Stderr, "internal error: %v\n", err)
 		os.Exit(1)

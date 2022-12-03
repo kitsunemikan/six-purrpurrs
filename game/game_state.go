@@ -1,7 +1,9 @@
-package main
+package game
 
 import (
 	"fmt"
+
+	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
 // CellState has a property of, when positive, being equal

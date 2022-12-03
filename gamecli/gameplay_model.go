@@ -1,4 +1,4 @@
-package main
+package gamecli
 
 import (
 	"fmt"
@@ -6,6 +6,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/kitsunemikan/ttt-cli/game"
+	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
 // A bubbletea event
@@ -14,15 +17,15 @@ type PlayerMoveMsg struct {
 }
 
 type GameplayModelConfig struct {
-	Game    *GameState
-	Players []PlayerAgent
+	Game    *game.GameState
+	Players []game.PlayerAgent
 
 	Theme      *BoardTheme
 	ScreenSize Offset
 }
 
 type GameplayModel struct {
-	Game  *GameState
+	Game  *game.GameState
 	Theme *BoardTheme
 
 	Camera Rect
@@ -30,8 +33,8 @@ type GameplayModel struct {
 	Selection Offset
 
 	MoveCommitted bool
-	CurrentPlayer PlayerID
-	Players       []PlayerAgent
+	CurrentPlayer game.PlayerID
+	Players       []game.PlayerAgent
 
 	cameraBound Rect
 }
@@ -64,11 +67,11 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 		cameraBound: config.Game.BoardBound(),
 
 		Selection:     Offset{0, 0},
-		CurrentPlayer: P1,
+		CurrentPlayer: game.P1,
 	}
 }
 
-func (m *GameplayModel) AwaitMove(player PlayerID) tea.Cmd {
+func (m *GameplayModel) AwaitMove(player game.PlayerID) tea.Cmd {
 	return func() tea.Msg {
 		move := m.Players[player].MakeMove(m.Game)
 		return PlayerMoveMsg{move}
@@ -130,7 +133,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
-			if m.Game.Cell(m.Selection) != CellUnoccupied {
+			if m.Game.Cell(m.Selection) != game.CellUnoccupied {
 				return m, nil
 			}
 
@@ -149,10 +152,10 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return GameOverModel{m.Game, m.Theme, m.Camera}, nil
 		}
 
-		if m.CurrentPlayer == P1 {
-			m.CurrentPlayer = P2
-		} else if m.CurrentPlayer == P2 {
-			m.CurrentPlayer = P1
+		if m.CurrentPlayer == game.P1 {
+			m.CurrentPlayer = game.P2
+		} else if m.CurrentPlayer == game.P2 {
+			m.CurrentPlayer = game.P1
 		} else {
 			panic(fmt.Sprintf("gameplay model: current player became invalid (of value %d)", m.CurrentPlayer))
 		}
@@ -171,7 +174,7 @@ func (m GameplayModel) View() string {
 
 	styledCells := make(map[Offset]lipgloss.Style)
 
-	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == CellUnoccupied {
+	if m.IsLocalPlayerTurn() && m.Game.Cell(m.Selection) == game.CellUnoccupied {
 		candidates := m.Game.CandidateCellsAt(m.Selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
@@ -196,7 +199,7 @@ func (m GameplayModel) View() string {
 		}
 
 		cellState := m.Game.Cell(pos)
-		if cellState == CellUnavailable || cellState == CellUnoccupied {
+		if cellState == game.CellUnavailable || cellState == game.CellUnoccupied {
 			continue
 		}
 
@@ -221,7 +224,7 @@ func (m GameplayModel) View() string {
 				}
 			}
 
-			if m.Game.Cell(curCell) != CellUnoccupied {
+			if m.Game.Cell(curCell) != game.CellUnoccupied {
 				view.WriteString(m.Theme.SelectionInactiveStyle.Render(leftSide))
 				view.WriteString(cliBoard[curCell])
 				view.WriteString(m.Theme.SelectionInactiveStyle.Render(rightSide))

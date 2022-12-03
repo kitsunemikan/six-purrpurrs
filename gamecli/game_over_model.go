@@ -1,4 +1,4 @@
-package main
+package gamecli
 
 import (
 	"fmt"
@@ -6,10 +6,13 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/kitsunemikan/ttt-cli/game"
+	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
 type GameOverModel struct {
-	Game   *GameState
+	Game   *game.GameState
 	Theme  *BoardTheme
 	Camera Rect
 }
@@ -44,7 +47,7 @@ func (m GameOverModel) View() string {
 		}
 
 		cellState := m.Game.Cell(pos)
-		if cellState == CellUnavailable || cellState == CellUnoccupied {
+		if cellState == game.CellUnavailable || cellState == game.CellUnoccupied {
 			continue
 		}
 
@@ -57,7 +60,7 @@ func (m GameOverModel) View() string {
 			curCell := m.Camera.ToWorldXY(x, y)
 
 			view.WriteString(" ")
-			if m.Game.Cell(curCell) != CellUnoccupied {
+			if m.Game.Cell(curCell) != game.CellUnoccupied {
 				view.WriteString(cliBoard[curCell])
 			} else {
 				view.WriteString(m.Theme.UnoccupiedCell)
