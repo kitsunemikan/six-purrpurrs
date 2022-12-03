@@ -27,10 +27,12 @@ type BoardState struct {
 	unoccupiedCells map[Offset]struct{}
 	playerCells     [2]map[Offset]struct{}
 
+	// delta is assumed to be immutable as well as boardDelta values.
+	// So, Clone() will share delta values
 	delta       []boardDelta
 	moveHistory []PlayerMove
 
-	// Precalculated disk offsets
+	// Precalculated disk offsets, immutable
 	circleMask []Offset
 
 	borderWidth int
@@ -69,6 +71,118 @@ func NewBoardState(borderWidth int) *BoardState {
 	}
 
 	return bs
+}
+
+func (bs *BoardState) Clone() *BoardState {
+	newBs := &BoardState{
+		board:           make(map[Offset]CellState, len(bs.board)),
+		unoccupiedCells: make(map[Offset]struct{}, len(bs.unoccupiedCells)),
+
+		delta:       make([]boardDelta, len(bs.delta)),
+		moveHistory: make([]PlayerMove, len(bs.moveHistory)),
+
+		circleMask: bs.circleMask,
+
+		borderWidth: bs.borderWidth,
+		boardBound:  bs.boardBound,
+	}
+
+	bs.playerCells[0] = make(map[Offset]struct{}, len(bs.playerCells[0]))
+	bs.playerCells[1] = make(map[Offset]struct{}, len(bs.playerCells[1]))
+
+	for k, v := range bs.board {
+		newBs.board[k] = v
+	}
+
+	for k, v := range bs.unoccupiedCells {
+		newBs.unoccupiedCells[k] = v
+	}
+
+	for k, v := range bs.playerCells[0] {
+		newBs.playerCells[0][k] = v
+	}
+
+	for k, v := range bs.playerCells[1] {
+		newBs.playerCells[0][k] = v
+	}
+
+	copy(newBs.moveHistory, bs.moveHistory)
+	copy(newBs.delta, bs.delta)
+
+	return newBs
+}
+
+func BoardStatesEqual(a, b *BoardState) bool {
+	if len(a.board) != len(b.board) {
+		return false
+	}
+
+	for pos, acell := range a.board {
+		bcell, exists := b.board[pos]
+		if !exists {
+			return false
+		}
+
+		if acell != bcell {
+			return false
+		}
+	}
+
+	if len(a.unoccupiedCells) != len(b.unoccupiedCells) {
+		return false
+	}
+
+	for pos, acell := range a.unoccupiedCells {
+		bcell, exists := b.unoccupiedCells[pos]
+		if !exists {
+			return false
+		}
+
+		if acell != bcell {
+			return false
+		}
+	}
+
+	if len(a.playerCells[0]) != len(b.playerCells[0]) {
+		return false
+	}
+
+	for pos, acell := range a.playerCells[0] {
+		bcell, exists := b.playerCells[0][pos]
+		if !exists {
+			return false
+		}
+
+		if acell != bcell {
+			return false
+		}
+	}
+
+	if len(a.playerCells[1]) != len(b.playerCells[1]) {
+		return false
+	}
+
+	for pos, acell := range a.playerCells[1] {
+		bcell, exists := b.playerCells[1][pos]
+		if !exists {
+			return false
+		}
+
+		if acell != bcell {
+			return false
+		}
+	}
+
+	// TODO: Use go-testdeep for the whole this thing up there
+	if len(a.delta) != len(b.delta) {
+		return false
+	}
+
+	if len(a.moveHistory) != len(b.moveHistory) {
+		return false
+	}
+
+	return true
 }
 
 // Do not modify the result
@@ -143,6 +257,8 @@ func (bs *BoardState) MarkCell(pos Offset, player PlayerID) {
 	bs.boardBound = bs.boardBound.GrowToContainRect(newCellsBoundingRect)
 	delta.NewBoardBound = bs.boardBound
 
+	bs.delta = append(bs.delta, delta)
+
 	// Create new available cells
 	for _, ds := range bs.circleMask {
 		curCell := pos.Add(ds)
@@ -153,4 +269,33 @@ func (bs *BoardState) MarkCell(pos Offset, player PlayerID) {
 			delta.Cells = append(delta.Cells, cellDelta{curCell, CellUnoccupied})
 		}
 	}
+}
+
+func (bs *BoardState) UndoLastMove() {
+	if bs.MoveCount() == 0 {
+		panic("board state: undo last move: no move to undo")
+	}
+
+	bs.moveHistory = bs.moveHistory[:len(bs.moveHistory)-1]
+
+	lastDelta := bs.delta[len(bs.delta)-1]
+	bs.boardBound = lastDelta.OldBoardBound
+
+	for _, dcell := range lastDelta.Cells {
+		switch dcell.NewState {
+		case CellUnoccupied:
+			delete(bs.board, dcell.Cell)
+			delete(bs.unoccupiedCells, dcell.Cell)
+
+		case CellP1, CellP2:
+			bs.board[dcell.Cell] = CellUnoccupied
+			delete(bs.playerCells[dcell.NewState], dcell.Cell)
+			bs.unoccupiedCells[dcell.Cell] = struct{}{}
+
+		default:
+			panic(fmt.Sprintf("board state: undo last move: invalid cell delta at %v, new state=%v", dcell.Cell, dcell.NewState))
+		}
+	}
+
+	bs.delta = bs.delta[:len(bs.delta)-1]
 }

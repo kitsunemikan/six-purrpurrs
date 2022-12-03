@@ -15,11 +15,9 @@ func NewRandomPlayer() game.PlayerAgent {
 	return &RandomPlayer{}
 }
 
-func (p *RandomPlayer) MakeMove(g *game.GameState) Offset {
-	time.Sleep(50 * time.Millisecond)
-
-	var validMoves []Offset
-	for cell := range g.Board.UnoccupiedCells() {
+func (p *RandomPlayer) MakeMove(b *game.BoardState) Offset {
+	validMoves := make([]Offset, 0, len(b.UnoccupiedCells()))
+	for cell := range b.UnoccupiedCells() {
 		validMoves = append(validMoves, cell)
 	}
 
