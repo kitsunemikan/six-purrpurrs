@@ -66,6 +66,12 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch {
 		case key.Matches(msg, keymap.Replay.Quit):
+
+			for m.nextMove < len(m.moves) {
+				move := m.moves[m.nextMove]
+				m.game.MarkCell(move.Cell, move.ID)
+				m.nextMove++
+			}
 			return m.parent, nil
 
 		case key.Matches(msg, keymap.Replay.Help):
