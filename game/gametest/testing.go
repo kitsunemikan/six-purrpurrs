@@ -22,51 +22,57 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 		return fmt.Errorf("got border width %v, want %v", got.BorderWidth(), want.BorderWidth())
 	}
 
+	diffColor := lipgloss.NewStyle().Foreground(lipgloss.Color("0")).Background(lipgloss.Color("1"))
+
 	boardModel := gamecli.NewBoardModel(got.BoardBound().Dimensions())
 	boardModel.Theme = &gamecli.DefaultBoardTheme
 
-	diffColor := lipgloss.NewStyle().Foreground(lipgloss.Color("0")).Background(lipgloss.Color("1"))
 	boardDiff, same := cellBoardDiff(diffColor, got.AllCells(), want.AllCells())
 	if !same {
-		boardModel.ForcedHighlight = boardDiff
-
-		boardModel.Board = got
-		gotBoard := boardModel.CenterOnBoard().View()
-
-		boardModel.Board = want
-		wantBoard := boardModel.CenterOnBoard().View()
+		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, got.AllCells(), want.AllCells())
 		return fmt.Errorf("compare board states: all cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
-	if !reflect.DeepEqual(got.UnoccupiedCells(), want.UnoccupiedCells()) {
-		return fmt.Errorf("compare board states: unoccupied cell boards are different:\n%v\nand\n%v\n", litter.Sdump(got.UnoccupiedCells()), litter.Sdump(want.UnoccupiedCells()))
+	gotUnoccupied := cellSetToCellBoard(got.UnoccupiedCells(), game.CellUnoccupied)
+	wantUnoccupied := cellSetToCellBoard(want.UnoccupiedCells(), game.CellUnoccupied)
+	boardDiff, same = cellBoardDiff(diffColor, gotUnoccupied, wantUnoccupied)
+	if !same {
+		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, gotUnoccupied, wantUnoccupied)
+		return fmt.Errorf("compare board states: unoccupied cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
-	if !reflect.DeepEqual(got.PlayerCells()[0], want.PlayerCells()[0]) {
-		return fmt.Errorf("compare board states: P1 cell boards are different:\n%v\nand\n%v\n", litter.Sdump(got.PlayerCells()[0]), litter.Sdump(want.PlayerCells()[0]))
+	gotCellsP1 := cellSetToCellBoard(got.PlayerCells()[0], game.CellP1)
+	wantCellsP1 := cellSetToCellBoard(want.PlayerCells()[0], game.CellP1)
+
+	boardDiff, same = cellBoardDiff(diffColor, gotCellsP1, wantCellsP1)
+	if !same {
+		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, gotCellsP1, wantCellsP1)
+		return fmt.Errorf("compare board states: P1 cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
 	gotCellsP2 := cellSetToCellBoard(got.PlayerCells()[1], game.CellP2)
 	wantCellsP2 := cellSetToCellBoard(want.PlayerCells()[1], game.CellP2)
+
 	boardDiff, same = cellBoardDiff(diffColor, gotCellsP2, wantCellsP2)
 	if !same {
-		return fmt.Errorf("compare board states: P2 cell boards are different:\n%v\nand\n%v\n", litter.Sdump(got.PlayerCells()[1]), litter.Sdump(want.PlayerCells()[1]))
+		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, gotCellsP2, wantCellsP2)
+		return fmt.Errorf("compare board states: P2 cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
 	gotDelta := got.Delta()
 	wantDelta := want.Delta()
 	if !reflect.DeepEqual(gotDelta, wantDelta) {
-		return fmt.Errorf("compare board states: deltas are different:\n%v\nand\n%v\n", litter.Sdump(gotDelta), litter.Sdump(wantDelta))
+		return fmt.Errorf("compare board states: deltas are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(gotDelta), litter.Sdump(wantDelta))
 	}
 
 	gotHistory := got.MoveHistoryCopy()
 	wantHistory := want.MoveHistoryCopy()
 	if !reflect.DeepEqual(gotHistory, wantHistory) {
-		return fmt.Errorf("compare board states: deltas are different:\n%v\nand\n%v\n", litter.Sdump(gotHistory), litter.Sdump(wantHistory))
+		return fmt.Errorf("compare board states: deltas are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(gotHistory), litter.Sdump(wantHistory))
 	}
 
 	if !got.BoardBound().IsEqual(want.BoardBound()) {
-		return fmt.Errorf("compare board states: board bounds are different:\n%v\nand\n%v\n", litter.Sdump(got.BoardBound()), litter.Sdump(want.BoardBound()))
+		return fmt.Errorf("compare board states: board bounds are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(got.BoardBound()), litter.Sdump(want.BoardBound()))
 	}
 
 	return nil
@@ -106,4 +112,18 @@ func cellSetToCellBoard(set map[Offset]struct{}, state game.CellState) map[Offse
 	}
 
 	return board
+}
+
+func drawDiffBoards(model gamecli.BoardModel, diff map[Offset]lipgloss.Style, got, want map[Offset]game.CellState) (string, string) {
+	model.ForcedHighlight = diff
+
+	gotBoard := game.NewBoardStateFromCells(1, got)
+	model.Board = gotBoard
+	gotStr := model.CenterOnBoard().View()
+
+	wantBoard := game.NewBoardStateFromCells(1, want)
+	model.Board = wantBoard
+	wantStr := model.CenterOnBoard().View()
+
+	return gotStr, wantStr
 }

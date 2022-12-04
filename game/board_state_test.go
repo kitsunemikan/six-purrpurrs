@@ -14,8 +14,7 @@ func TestBoardStateRevertability(t *testing.T) {
 	randomPlayer := ai.NewRandomPlayer()
 
 	assertion := func(moveCount uint8) bool {
-		// moveCount /= 4
-		moveCount = 20
+		moveCount /= 4
 		if moveCount < 2 {
 			moveCount = 2
 		}

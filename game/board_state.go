@@ -39,12 +39,33 @@ type BoardState struct {
 	boardBound  Rect
 }
 
+func generateCircleMask(radius int) (mask []Offset) {
+	if radius == 0 {
+		return
+	}
+
+	mask = make([]Offset, 0, radius*radius)
+
+	for dx := -radius; dx <= radius; dx++ {
+		for dy := -radius; dy <= radius; dy++ {
+			ds := Offset{X: dx, Y: dy}
+			if !ds.IsInsideCircle(radius) {
+				continue
+			}
+
+			mask = append(mask, ds)
+		}
+	}
+
+	return
+}
+
 func NewBoardState(borderWidth int) *BoardState {
 	bs := &BoardState{
 		board:           make(map[Offset]CellState),
 		unoccupiedCells: make(map[Offset]struct{}),
 
-		circleMask: make([]Offset, 0, borderWidth*borderWidth),
+		circleMask: generateCircleMask(borderWidth),
 
 		borderWidth: borderWidth,
 		boardBound:  Rect{X: -borderWidth, Y: -borderWidth, W: 2*borderWidth + 1, H: 2*borderWidth + 1},
@@ -53,21 +74,45 @@ func NewBoardState(borderWidth int) *BoardState {
 	bs.playerCells[0] = make(map[Offset]struct{})
 	bs.playerCells[1] = make(map[Offset]struct{})
 
-	// Generate circle mask
-	for dx := -borderWidth; dx <= borderWidth; dx++ {
-		for dy := -borderWidth; dy <= borderWidth; dy++ {
-			ds := Offset{X: dx, Y: dy}
-			if !ds.IsInsideCircle(borderWidth) {
-				continue
-			}
-
-			bs.circleMask = append(bs.circleMask, ds)
-		}
-	}
-
 	// Mark initial available cells
 	for _, ds := range bs.circleMask {
 		bs.MarkUnoccupied(ds)
+	}
+
+	return bs
+}
+
+// NewBoardStateFromCells expects a non-zero border width
+func NewBoardStateFromCells(borderWidth int, cells map[Offset]CellState) *BoardState {
+	bs := &BoardState{
+		board: make(map[Offset]CellState, len(cells)),
+		// Size's just a hint, I will trade performance for extra memory consumption
+		// Assuming for one player move there are ~borderWidth*borderWidth new cells
+		// It's basically almost the full len(cells)
+		unoccupiedCells: make(map[Offset]struct{}, len(cells)),
+
+		circleMask: generateCircleMask(borderWidth),
+
+		borderWidth: borderWidth,
+		boardBound:  Rect{X: -borderWidth, Y: -borderWidth, W: 2*borderWidth + 1, H: 2*borderWidth + 1},
+	}
+
+	// Random "intuitive", but substantially smaller hint than full len(cells)
+	bs.playerCells[0] = make(map[Offset]struct{}, len(cells)/borderWidth)
+	bs.playerCells[1] = make(map[Offset]struct{}, len(cells)/borderWidth)
+
+	for cell, state := range cells {
+		bs.board[cell] = state
+		switch state {
+		case CellUnoccupied:
+			bs.unoccupiedCells[cell] = struct{}{}
+		case CellP1:
+			bs.playerCells[0][cell] = struct{}{}
+		case CellP2:
+			bs.playerCells[1][cell] = struct{}{}
+		default:
+			panic(fmt.Sprintf("new board state from cells: encountered an invalid cell at %v (state=%v)", cell, state))
+		}
 	}
 
 	return bs
