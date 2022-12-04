@@ -7,6 +7,7 @@ import (
 	"github.com/kitsunemikan/ttt-cli/ai"
 	"github.com/kitsunemikan/ttt-cli/game"
 	"github.com/kitsunemikan/ttt-cli/game/gametest"
+	"github.com/kitsunemikan/ttt-cli/gamecli"
 	"github.com/sanity-io/litter"
 )
 
@@ -21,7 +22,7 @@ func TestBoardStateRevertability(t *testing.T) {
 
 		board := game.NewBoardState(3)
 
-		boardHistory := make([]*game.BoardState, moveCount)
+		boardHistory := make([]*game.BoardState, moveCount+1)
 
 		player := game.P1
 		for i := 0; i < int(moveCount); i++ {
@@ -32,6 +33,9 @@ func TestBoardStateRevertability(t *testing.T) {
 
 			player = player.Other()
 		}
+
+		// To print parent board if the first undo fails
+		boardHistory[moveCount] = board.Clone()
 
 		if len(board.PlayerCells()[0]) == 0 {
 			t.Logf("case failed: after %d moves: P1 board is empty (player cells array = %v)", moveCount, litter.Sdump(board.PlayerCells()))
@@ -47,7 +51,13 @@ func TestBoardStateRevertability(t *testing.T) {
 			board.UndoLastMove()
 
 			if err := gametest.BoardStatesEqual(board, boardHistory[i]); err != nil {
-				t.Logf("case failed on move %d/%d: %v", i, moveCount, err)
+				boardModel := gamecli.NewBoardModel(boardHistory[i+1].BoardBound().Dimensions())
+				boardModel.Board = boardHistory[i+1]
+				boardModel.Theme = &gamecli.DefaultBoardTheme
+
+				parentBoard := boardModel.CenterOnBoard().View()
+
+				t.Logf("case failed on move %d/%d:\nparent\n%v\n%v", i, moveCount, parentBoard, err)
 				return false
 			}
 		}

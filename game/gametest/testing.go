@@ -30,7 +30,7 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 	boardDiff, same := cellBoardDiff(diffColor, got.AllCells(), want.AllCells())
 	if !same {
 		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, got.AllCells(), want.AllCells())
-		return fmt.Errorf("compare board states: all cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
+		return fmt.Errorf("all-cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
 	gotUnoccupied := cellSetToCellBoard(got.UnoccupiedCells(), game.CellUnoccupied)
@@ -38,7 +38,7 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 	boardDiff, same = cellBoardDiff(diffColor, gotUnoccupied, wantUnoccupied)
 	if !same {
 		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, gotUnoccupied, wantUnoccupied)
-		return fmt.Errorf("compare board states: unoccupied cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
+		return fmt.Errorf("unoccupied cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
 	gotCellsP1 := cellSetToCellBoard(got.PlayerCells()[0], game.CellP1)
@@ -47,7 +47,7 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 	boardDiff, same = cellBoardDiff(diffColor, gotCellsP1, wantCellsP1)
 	if !same {
 		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, gotCellsP1, wantCellsP1)
-		return fmt.Errorf("compare board states: P1 cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
+		return fmt.Errorf("P1 cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
 	gotCellsP2 := cellSetToCellBoard(got.PlayerCells()[1], game.CellP2)
@@ -56,23 +56,23 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 	boardDiff, same = cellBoardDiff(diffColor, gotCellsP2, wantCellsP2)
 	if !same {
 		gotBoard, wantBoard := drawDiffBoards(boardModel, boardDiff, gotCellsP2, wantCellsP2)
-		return fmt.Errorf("compare board states: P2 cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
+		return fmt.Errorf("P2 cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
 
 	gotDelta := got.Delta()
 	wantDelta := want.Delta()
 	if !reflect.DeepEqual(gotDelta, wantDelta) {
-		return fmt.Errorf("compare board states: deltas are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(gotDelta), litter.Sdump(wantDelta))
+		return fmt.Errorf("deltas are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(gotDelta), litter.Sdump(wantDelta))
 	}
 
 	gotHistory := got.MoveHistoryCopy()
 	wantHistory := want.MoveHistoryCopy()
 	if !reflect.DeepEqual(gotHistory, wantHistory) {
-		return fmt.Errorf("compare board states: deltas are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(gotHistory), litter.Sdump(wantHistory))
+		return fmt.Errorf("deltas are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(gotHistory), litter.Sdump(wantHistory))
 	}
 
 	if !got.BoardBound().IsEqual(want.BoardBound()) {
-		return fmt.Errorf("compare board states: board bounds are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(got.BoardBound()), litter.Sdump(want.BoardBound()))
+		return fmt.Errorf("board bounds are different:\ngot\n%v\nwant\n%v\n", litter.Sdump(got.BoardBound()), litter.Sdump(want.BoardBound()))
 	}
 
 	return nil
