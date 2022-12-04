@@ -112,6 +112,14 @@ func (bs *BoardState) Clone() *BoardState {
 	return newBs
 }
 
+func (bs *BoardState) MoveHistoryCopy() []PlayerMove {
+	historyCopy := make([]PlayerMove, len(bs.moveHistory))
+
+	copy(historyCopy, bs.moveHistory)
+
+	return historyCopy
+}
+
 func BoardStatesEqual(a, b *BoardState) bool {
 	if len(a.board) != len(b.board) {
 		return false

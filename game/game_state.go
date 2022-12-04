@@ -88,6 +88,10 @@ func (g *GameState) IsInsideBoard(pos Offset) bool {
 	return true
 }
 
+func (g *GameState) MoveHistoryCopy() []PlayerMove {
+	return g.Board.MoveHistoryCopy()
+}
+
 func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
 	solution := make([]Offset, 0, g.Conf.StrikeLength)
 
