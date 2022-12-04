@@ -87,8 +87,8 @@ func (bs *BoardState) Clone() *BoardState {
 		boardBound:  bs.boardBound,
 	}
 
-	bs.playerCells[0] = make(map[Offset]struct{}, len(bs.playerCells[0]))
-	bs.playerCells[1] = make(map[Offset]struct{}, len(bs.playerCells[1]))
+	newBs.playerCells[0] = make(map[Offset]struct{}, len(bs.playerCells[0]))
+	newBs.playerCells[1] = make(map[Offset]struct{}, len(bs.playerCells[1]))
 
 	for k, v := range bs.board {
 		newBs.board[k] = v
@@ -103,7 +103,7 @@ func (bs *BoardState) Clone() *BoardState {
 	}
 
 	for k, v := range bs.playerCells[1] {
-		newBs.playerCells[0][k] = v
+		newBs.playerCells[1][k] = v
 	}
 
 	copy(newBs.moveHistory, bs.moveHistory)
