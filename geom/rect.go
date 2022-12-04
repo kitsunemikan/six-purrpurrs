@@ -21,23 +21,31 @@ func (r Rect) Move(ds Offset) Rect {
 	return r
 }
 
-func (r *Rect) TopLeft() Offset {
+func (r Rect) TopLeft() Offset {
 	return Offset{r.X, r.Y}
 }
 
-func (r *Rect) ToWorld(local Offset) Offset {
+func (r Rect) Dimensions() Offset {
+	return Offset{r.W, r.H}
+}
+
+func (r Rect) IsEqual(other Rect) bool {
+	return r.X == other.X && r.Y == other.Y && r.W == other.W && r.H == other.H
+}
+
+func (r Rect) ToWorld(local Offset) Offset {
 	return Offset{r.X + local.X, r.Y + local.Y}
 }
 
-func (r *Rect) ToWorldXY(x, y int) Offset {
+func (r Rect) ToWorldXY(x, y int) Offset {
 	return Offset{r.X + x, r.Y + y}
 }
 
-func (r *Rect) ToLocal(world Offset) Offset {
+func (r Rect) ToLocal(world Offset) Offset {
 	return Offset{world.X - r.X, world.Y - r.Y}
 }
 
-func (r *Rect) Area() int {
+func (r Rect) Area() int {
 	return r.W * r.H
 }
 
@@ -50,11 +58,11 @@ func (r Rect) CenterOn(pos Offset) Rect {
 	}
 }
 
-func (r *Rect) Center() Offset {
+func (r Rect) Center() Offset {
 	return Offset{r.X + r.W/2, r.Y + r.H/2}
 }
 
-func (r *Rect) IsInsideRect(other Rect) bool {
+func (r Rect) IsInsideRect(other Rect) bool {
 	return other.X <= r.X && r.X+r.W <= other.X+other.W &&
 		other.Y <= r.Y && r.Y+r.H <= other.Y+other.H
 }
