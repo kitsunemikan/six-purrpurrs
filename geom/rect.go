@@ -54,6 +54,11 @@ func (r *Rect) Center() Offset {
 	return Offset{r.X + r.W/2, r.Y + r.H/2}
 }
 
+func (r *Rect) IsInsideRect(other Rect) bool {
+	return other.X <= r.X && r.X+r.W <= other.X+other.W &&
+		other.Y <= r.Y && r.Y+r.H <= other.Y+other.H
+}
+
 // SnapInto will snap rectangle to the closest boundary of the
 // bound rectangle. If rectangle is inside bound rectangle, the
 // same rectangle is returned. If bound rectangle is smaller than

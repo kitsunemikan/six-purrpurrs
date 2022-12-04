@@ -37,19 +37,19 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Left):
-			m.Board = m.Board.MoveSelectionBy(Offset{X: -1, Y: 0}).CenterOnSelection()
+			m.Board = m.Board.MoveCameraBy(Offset{X: -1, Y: 0})
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Right):
-			m.Board = m.Board.MoveSelectionBy(Offset{X: 1, Y: 0}).CenterOnSelection()
+			m.Board = m.Board.MoveCameraBy(Offset{X: 1, Y: 0})
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Up):
-			m.Board = m.Board.MoveSelectionBy(Offset{X: 0, Y: -1}).CenterOnSelection()
+			m.Board = m.Board.MoveCameraBy(Offset{X: 0, Y: -1})
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Down):
-			m.Board = m.Board.MoveSelectionBy(Offset{X: 0, Y: 1}).CenterOnSelection()
+			m.Board = m.Board.MoveCameraBy(Offset{X: 0, Y: 1})
 			return m, nil
 		}
 	}
