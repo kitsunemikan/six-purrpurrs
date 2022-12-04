@@ -6,12 +6,15 @@ import (
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
+	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/kitsunemikan/ttt-cli/game"
 	"github.com/kitsunemikan/ttt-cli/gamecli/keymap"
 	. "github.com/kitsunemikan/ttt-cli/geom"
 )
+
+type replayModelInitProgressMsg struct{}
 
 type ReplayModelOptions struct {
 	Game   *game.GameState
@@ -26,11 +29,19 @@ type ReplayModel struct {
 	moves    []game.PlayerMove
 	nextMove int
 
-	help   help.Model
-	parent tea.Model
+	help     help.Model
+	progress progress.Model
+	parent   tea.Model
 }
 
 func NewReplayModel(config ReplayModelOptions) ReplayModel {
+	progress := progress.New(
+		progress.WithWidth(config.Board.Camera().W-2), // for "borders" around progress bar
+		progress.WithDefaultGradient(),
+		progress.WithSpringOptions(50, 1),
+		progress.WithoutPercentage(),
+	)
+
 	moveHistory := config.Game.MoveHistoryCopy()
 	return ReplayModel{
 		game:     config.Game,
@@ -38,13 +49,16 @@ func NewReplayModel(config ReplayModelOptions) ReplayModel {
 		moves:    moveHistory,
 		nextMove: len(moveHistory),
 
-		help:   config.Help,
-		parent: config.Parent,
+		help:     config.Help,
+		progress: progress,
+		parent:   config.Parent,
 	}
 }
 
 func (m ReplayModel) Init() tea.Cmd {
-	return nil
+	return func() tea.Msg {
+		return replayModelInitProgressMsg{}
+	}
 }
 
 func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -85,6 +99,9 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			m.board = m.board.MoveSelectionTo(move.Cell).CenterOnSelection()
 
+			cmd := m.progress.SetPercent(float64(m.nextMove) / float64(len(m.moves)))
+			return m, cmd
+
 		case key.Matches(msg, keymap.Replay.Rewind):
 			if m.nextMove == 0 {
 				return m, nil
@@ -93,7 +110,19 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.game.UndoLastMove()
 			m.nextMove--
 			m.board = m.board.CenterOnBoard()
+
+			cmd := m.progress.SetPercent(float64(m.nextMove) / float64(len(m.moves)))
+			return m, cmd
 		}
+
+	case progress.FrameMsg:
+		progressModel, cmd := m.progress.Update(msg)
+		m.progress = progressModel.(progress.Model)
+		return m, cmd
+
+	case replayModelInitProgressMsg:
+		cmd := m.progress.SetPercent(1)
+		return m, cmd
 	}
 
 	return m, nil
@@ -105,6 +134,9 @@ func (m ReplayModel) View() string {
 	view.WriteString(m.board.View())
 	view.WriteString("\n")
 	view.WriteString(fmt.Sprintf("Move %d/%d\n", m.nextMove, len(m.moves)))
+	view.WriteString("[")
+	view.WriteString(m.progress.View())
+	view.WriteString("]")
 	view.WriteString("\n")
 	view.WriteString(m.help.View(keymap.Replay))
 

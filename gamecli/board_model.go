@@ -72,6 +72,10 @@ func (m BoardModel) Selection() Offset {
 	return m.selection
 }
 
+func (m BoardModel) Camera() Rect {
+	return m.camera
+}
+
 func (m BoardModel) View() string {
 	cliBoard := m.Theme.BoardToText(m.Board.AllCells(), m.camera)
 

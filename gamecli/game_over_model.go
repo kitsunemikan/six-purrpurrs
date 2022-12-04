@@ -30,12 +30,15 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 
 		case key.Matches(msg, keymap.GameOver.WatchReplay):
-			return NewReplayModel(ReplayModelOptions{
+			replayModel := NewReplayModel(ReplayModelOptions{
 				Game:   m.Game,
 				Board:  m.Board,
 				Help:   m.Help,
 				Parent: m,
-			}), nil
+			})
+
+			cmd := replayModel.Init()
+			return replayModel, cmd
 		}
 	}
 
