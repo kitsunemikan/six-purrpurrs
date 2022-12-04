@@ -6,6 +6,10 @@ import (
 )
 
 var DefaultBoardTheme = BoardTheme{
+	InvalidCell:    " ",
+	UnoccupiedCell: ".",
+	PlayerCells:    []string{"X", "O"},
+
 	PlayerCellStyles: []lipgloss.Style{
 		// SlateBlue1
 		lipgloss.NewStyle().Foreground(lipgloss.Color("99")),
