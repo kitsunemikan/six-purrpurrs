@@ -5,16 +5,13 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 
 	"github.com/kitsunemikan/ttt-cli/game"
-	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
 type GameOverModel struct {
-	Game   *game.GameState
-	Theme  *BoardTheme
-	Camera Rect
+	Game  *game.GameState
+	Board BoardModel
 }
 
 func (m GameOverModel) Init() tea.Cmd {
@@ -31,50 +28,17 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m GameOverModel) View() string {
-	cliBoard := m.Theme.BoardToText(m.Game.AllCells(), m.Camera)
-
-	styledCells := make(map[Offset]lipgloss.Style)
-
-	for _, cell := range m.Game.Solution() {
-		styledCells[cell] = m.Theme.VictoryCellStyle
-	}
-
-	for pos, str := range cliBoard {
-		style, special := styledCells[pos]
-		if special {
-			cliBoard[pos] = style.Render(str)
-			continue
-		}
-
-		cellState := m.Game.Cell(pos)
-		if cellState == game.CellUnavailable || cellState == game.CellUnoccupied {
-			continue
-		}
-
-		cliBoard[pos] = m.Theme.PlayerCellStyles[cellState].Render(str)
-	}
+	m.Board.SelectionVisible = false
 
 	var view strings.Builder
-	for y := 0; y < m.Camera.H; y++ {
-		for x := 0; x < m.Camera.W; x++ {
-			curCell := m.Camera.ToWorldXY(x, y)
 
-			view.WriteString(" ")
-			if m.Game.Cell(curCell) != game.CellUnoccupied {
-				view.WriteString(cliBoard[curCell])
-			} else {
-				view.WriteString(m.Theme.UnoccupiedCell)
-			}
-		}
-		view.WriteByte('\n')
-	}
-
+	view.WriteString(m.Board.View())
 	view.WriteByte('\n')
 
 	if m.Game.Solution() == nil {
 		view.WriteString("A draw...")
 	} else {
-		view.WriteString(m.Theme.PlayerCells[m.Game.Winner()])
+		view.WriteString(m.Board.Theme.PlayerCells[m.Game.Winner()])
 		view.WriteString(" wins!")
 	}
 

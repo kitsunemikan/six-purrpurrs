@@ -37,6 +37,10 @@ func (a Offset) IsInsideCircle(radius int) bool {
 	return a.X*a.X+a.Y*a.Y <= radius*radius
 }
 
+func (a Offset) IsInsideRect(r Rect) bool {
+	return r.X <= a.X && a.X < r.X+r.W && r.Y <= a.Y && a.Y < r.Y+r.H
+}
+
 func (a Offset) IsEqual(b Offset) bool {
 	return a.X == b.X && a.Y == b.Y
 }
