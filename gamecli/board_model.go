@@ -18,6 +18,8 @@ type BoardModel struct {
 
 	SelectionVisible bool
 	CurrentPlayer    game.PlayerID
+
+	ForcedHighlight map[Offset]lipgloss.Style
 }
 
 func NewBoardModel(cameraSize Offset) BoardModel {
@@ -101,6 +103,11 @@ func (m BoardModel) View() string {
 		styledCells[cell] = m.Theme.VictoryCellStyle
 	}
 
+	// Forced highlights (e.g., for pretty test fail outputs)
+	for cell, style := range m.ForcedHighlight {
+		styledCells[cell] = style
+	}
+
 	// Apply styles
 	for pos, str := range cliBoard {
 		style, special := styledCells[pos]
@@ -144,7 +151,7 @@ func (m BoardModel) View() string {
 				view.WriteString(m.Theme.SelectionInactiveStyle.Render(rightSide))
 			} else {
 				view.WriteString(leftSide)
-				view.WriteString(m.Theme.UnoccupiedCell)
+				view.WriteString(cliBoard[curCell])
 				view.WriteString(rightSide)
 			}
 		}
