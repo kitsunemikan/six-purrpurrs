@@ -60,7 +60,7 @@ func (m BoardModel) View() string {
 		candidates := m.Game.CandidateCellsAt(m.selection, m.CurrentPlayer)
 
 		for _, cell := range candidates {
-			if !m.camera.IsOffsetInside(cell) {
+			if !cell.IsInsideRect(m.camera) {
 				continue
 			}
 

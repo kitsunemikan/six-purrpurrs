@@ -41,10 +41,6 @@ func (r *Rect) Area() int {
 	return r.W * r.H
 }
 
-func (r *Rect) IsOffsetInside(pos Offset) bool {
-	return r.X <= pos.X && pos.X < r.X+r.W && r.Y <= pos.Y && pos.Y < r.Y+r.H
-}
-
 func (r Rect) CenterOn(pos Offset) Rect {
 	return Rect{
 		X: pos.X - r.W/2,
