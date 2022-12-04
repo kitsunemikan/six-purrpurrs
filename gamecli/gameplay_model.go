@@ -53,7 +53,7 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 	}
 
 	board := NewBoardModel(config.ScreenSize)
-	board.Game = config.Game
+	board.Board = config.Game.Board
 	board.Theme = config.Theme
 	board.CurrentPlayer = game.P1
 
@@ -161,7 +161,12 @@ func (m GameplayModel) View() string {
 
 	var view strings.Builder
 
-	view.WriteString(m.board.View())
+	gameModel := GameModel{
+		Game:  m.Game,
+		Board: m.board,
+	}
+
+	view.WriteString(gameModel.View())
 	view.WriteByte('\n')
 
 	if m.IsLocalPlayerTurn() {

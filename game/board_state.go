@@ -234,7 +234,7 @@ func (bs *BoardState) UndoLastMove() {
 
 		case CellP1, CellP2:
 			bs.board[dcell.Cell] = CellUnoccupied
-			// delete(bs.playerCells[dcell.NewState], dcell.Cell)
+			delete(bs.playerCells[dcell.NewState], dcell.Cell)
 			bs.unoccupiedCells[dcell.Cell] = struct{}{}
 
 		default:

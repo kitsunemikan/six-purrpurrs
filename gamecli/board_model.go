@@ -11,7 +11,7 @@ import (
 
 type BoardModel struct {
 	Theme *BoardTheme
-	Game  *game.GameState
+	Board *game.BoardState
 
 	camera    Rect
 	selection Offset
@@ -31,7 +31,7 @@ func NewBoardModel(cameraSize Offset) BoardModel {
 }
 
 func (m BoardModel) MoveSelectionBy(ds Offset) BoardModel {
-	cameraBound := m.Game.BoardBound()
+	cameraBound := m.Board.BoardBound()
 	newSelection := m.selection.Add(ds)
 
 	if newSelection.IsInsideRect(cameraBound) {
@@ -42,7 +42,7 @@ func (m BoardModel) MoveSelectionBy(ds Offset) BoardModel {
 }
 
 func (m BoardModel) MoveSelectionTo(pos Offset) BoardModel {
-	cameraBound := m.Game.BoardBound()
+	cameraBound := m.Board.BoardBound()
 
 	if pos.IsInsideRect(cameraBound) {
 		m.selection = pos
@@ -52,19 +52,19 @@ func (m BoardModel) MoveSelectionTo(pos Offset) BoardModel {
 }
 
 func (m BoardModel) MoveCameraBy(ds Offset) BoardModel {
-	cameraBound := m.Game.BoardBound()
+	cameraBound := m.Board.BoardBound()
 	m.camera = m.camera.Move(ds).SnapInto(cameraBound)
 
 	return m
 }
 
 func (m BoardModel) CenterOnSelection() BoardModel {
-	m.camera = m.camera.CenterOn(m.selection).SnapInto(m.Game.BoardBound())
+	m.camera = m.camera.CenterOn(m.selection).SnapInto(m.Board.BoardBound())
 	return m
 }
 
 func (m BoardModel) CenterOnBoard() BoardModel {
-	m.camera = m.camera.SnapInto(m.Game.BoardBound())
+	m.camera = m.camera.SnapInto(m.Board.BoardBound())
 	return m
 }
 
@@ -73,35 +73,11 @@ func (m BoardModel) Selection() Offset {
 }
 
 func (m BoardModel) View() string {
-	cliBoard := m.Theme.BoardToText(m.Game.AllCells(), m.camera)
+	cliBoard := m.Theme.BoardToText(m.Board.AllCells(), m.camera)
 
 	// Repeated application of lipgloss render will produce incorrect results
 	// Instead, we'll store the exact style for the cell in a map
 	styledCells := make(map[Offset]lipgloss.Style)
-
-	// Highlight candidates, if selection is visible
-	if m.SelectionVisible && m.Game.Cell(m.selection) == game.CellUnoccupied {
-		candidates := m.Game.CandidateCellsAt(m.selection, m.CurrentPlayer)
-
-		for _, cell := range candidates {
-			if !cell.IsInsideRect(m.camera) {
-				continue
-			}
-
-			styledCells[cell] = m.Theme.CandidateCellStyle
-		}
-	}
-
-	// Highlight last enemy cell
-	if m.Game.MoveNumber() > 1 {
-		latestMove := m.Game.LatestMove()
-		styledCells[latestMove.Cell] = m.Theme.LastEnemyCellStyle
-	}
-
-	// Victory cells
-	for _, cell := range m.Game.Solution() {
-		styledCells[cell] = m.Theme.VictoryCellStyle
-	}
 
 	// Forced highlights (e.g., for pretty test fail outputs)
 	for cell, style := range m.ForcedHighlight {
@@ -116,7 +92,7 @@ func (m BoardModel) View() string {
 			continue
 		}
 
-		cellState := m.Game.Cell(pos)
+		cellState := m.Board.Cell(pos)
 		if cellState == game.CellUnavailable || cellState == game.CellUnoccupied {
 			continue
 		}
@@ -145,7 +121,7 @@ func (m BoardModel) View() string {
 				}
 			}
 
-			if m.Game.Cell(curCell) != game.CellUnoccupied {
+			if m.Board.Cell(curCell) != game.CellUnoccupied {
 				view.WriteString(m.Theme.SelectionInactiveStyle.Render(leftSide))
 				view.WriteString(cliBoard[curCell])
 				view.WriteString(m.Theme.SelectionInactiveStyle.Render(rightSide))

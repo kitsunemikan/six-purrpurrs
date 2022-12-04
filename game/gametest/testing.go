@@ -22,18 +22,6 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 		return fmt.Errorf("got border width %v, want %v", got.BorderWidth(), want.BorderWidth())
 	}
 
-	gotGame := game.NewGame(game.GameOptions{
-		Border:       got.BorderWidth(),
-		StrikeLength: 6,
-	})
-	gotGame.Board = got
-
-	wantGame := game.NewGame(game.GameOptions{
-		Border:       want.BorderWidth(),
-		StrikeLength: 6,
-	})
-	wantGame.Board = want
-
 	boardModel := gamecli.NewBoardModel(got.BoardBound().Dimensions())
 	boardModel.Theme = &gamecli.DefaultBoardTheme
 
@@ -42,10 +30,10 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 	if !same {
 		boardModel.ForcedHighlight = boardDiff
 
-		boardModel.Game = gotGame
+		boardModel.Board = got
 		gotBoard := boardModel.CenterOnBoard().View()
 
-		boardModel.Game = wantGame
+		boardModel.Board = want
 		wantBoard := boardModel.CenterOnBoard().View()
 		return fmt.Errorf("compare board states: all cell boards are different:\ngot\n%v\nwant\n%v\n", gotBoard, wantBoard)
 	}
@@ -58,7 +46,10 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 		return fmt.Errorf("compare board states: P1 cell boards are different:\n%v\nand\n%v\n", litter.Sdump(got.PlayerCells()[0]), litter.Sdump(want.PlayerCells()[0]))
 	}
 
-	if !reflect.DeepEqual(got.PlayerCells()[1], want.PlayerCells()[1]) {
+	gotCellsP2 := cellSetToCellBoard(got.PlayerCells()[1], game.CellP2)
+	wantCellsP2 := cellSetToCellBoard(want.PlayerCells()[1], game.CellP2)
+	boardDiff, same = cellBoardDiff(diffColor, gotCellsP2, wantCellsP2)
+	if !same {
 		return fmt.Errorf("compare board states: P2 cell boards are different:\n%v\nand\n%v\n", litter.Sdump(got.PlayerCells()[1]), litter.Sdump(want.PlayerCells()[1]))
 	}
 
