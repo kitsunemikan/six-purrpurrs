@@ -39,19 +39,30 @@ func (m BoardModel) MoveSelectionBy(ds Offset) BoardModel {
 	return m
 }
 
+func (m BoardModel) MoveSelectionTo(pos Offset) BoardModel {
+	cameraBound := m.Game.BoardBound()
+
+	if pos.IsInsideRect(cameraBound) {
+		m.selection = pos
+	}
+
+	return m
+}
+
 func (m BoardModel) MoveCameraBy(ds Offset) BoardModel {
 	cameraBound := m.Game.BoardBound()
-	newCamera := m.camera.Move(ds)
-
-	if newCamera.IsInsideRect(cameraBound) {
-		m.camera = newCamera
-	}
+	m.camera = m.camera.Move(ds).SnapInto(cameraBound)
 
 	return m
 }
 
 func (m BoardModel) CenterOnSelection() BoardModel {
 	m.camera = m.camera.CenterOn(m.selection).SnapInto(m.Game.BoardBound())
+	return m
+}
+
+func (m BoardModel) CenterOnBoard() BoardModel {
+	m.camera = m.camera.SnapInto(m.Game.BoardBound())
 	return m
 }
 
