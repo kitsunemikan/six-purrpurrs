@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/kitsunemikan/ttt-cli/game"
@@ -12,6 +14,7 @@ import (
 type GameOverModel struct {
 	Game  *game.GameState
 	Board BoardModel
+	Help  help.Model
 }
 
 func (m GameOverModel) Init() tea.Cmd {
@@ -19,9 +22,12 @@ func (m GameOverModel) Init() tea.Cmd {
 }
 
 func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg.(type) {
+	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		return m, tea.Quit
+		switch {
+		case key.Matches(msg, GlobalGameOverKeymap.Quit):
+			return m, tea.Quit
+		}
 	}
 
 	return m, nil
@@ -29,6 +35,7 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m GameOverModel) View() string {
 	m.Board.SelectionVisible = false
+	m.Help.ShowAll = false
 
 	var view strings.Builder
 
@@ -42,7 +49,10 @@ func (m GameOverModel) View() string {
 		view.WriteString(" wins!")
 	}
 
-	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\nPress any key to exit...\n", m.Game.MoveNumber()-1))
+	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\n", m.Game.MoveNumber()-1))
+
+	view.WriteString(m.Help.View(GlobalGameOverKeymap))
+	view.WriteByte('\n')
 
 	return view.String()
 }

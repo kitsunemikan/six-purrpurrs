@@ -3,6 +3,8 @@ package gamecli
 import (
 	"strings"
 
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/kitsunemikan/ttt-cli/game"
@@ -25,6 +27,7 @@ type GameplayModelConfig struct {
 type GameplayModel struct {
 	Game  *game.GameState
 	board BoardModel
+	help  help.Model
 
 	MoveCommitted bool
 	CurrentPlayer game.PlayerID
@@ -53,10 +56,13 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 	board.Theme = config.Theme
 	board.CurrentPlayer = game.P1
 
+	help := help.New()
+	help.Styles = HelpStyle
 	return GameplayModel{
 		Game:    config.Game,
 		Players: config.Players,
 		board:   board,
+		help:    help,
 
 		CurrentPlayer: game.P1,
 	}
@@ -80,9 +86,16 @@ func (m GameplayModel) Init() tea.Cmd {
 
 func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		// If we set a width on the help menu it can it can gracefully truncate
+		// its view as needed
+		m.help.Width = msg.Width
+
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
+		switch {
+		case key.Matches(msg, GlobalGameplayKeymap.Help):
+			m.help.ShowAll = !m.help.ShowAll
+		case key.Matches(msg, GlobalGameplayKeymap.Quit):
 			return m, tea.Quit
 		}
 
@@ -90,24 +103,24 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			break
 		}
 
-		switch msg.String() {
-		case "left", "h":
+		switch {
+		case key.Matches(msg, GlobalGameplayKeymap.Left):
 			m.board = m.board.MoveSelectionBy(Offset{X: -1, Y: 0}).CenterOnSelection()
 			return m, nil
 
-		case "right", "l":
+		case key.Matches(msg, GlobalGameplayKeymap.Right):
 			m.board = m.board.MoveSelectionBy(Offset{X: 1, Y: 0}).CenterOnSelection()
 			return m, nil
 
-		case "up", "k":
+		case key.Matches(msg, GlobalGameplayKeymap.Up):
 			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: -1}).CenterOnSelection()
 			return m, nil
 
-		case "down", "j":
+		case key.Matches(msg, GlobalGameplayKeymap.Down):
 			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: 1}).CenterOnSelection()
 			return m, nil
 
-		case "enter", " ":
+		case key.Matches(msg, GlobalGameplayKeymap.Select):
 			if m.MoveCommitted {
 				return m, nil
 			}
@@ -128,7 +141,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.MoveCommitted = false
 
 		if m.Game.Over() {
-			return GameOverModel{m.Game, m.board}, nil
+			return GameOverModel{Game: m.Game, Board: m.board, Help: m.help}, nil
 		}
 
 		m.CurrentPlayer = m.CurrentPlayer.Other()
@@ -160,6 +173,9 @@ func (m GameplayModel) View() string {
 	}
 
 	// view.WriteString(fmt.Sprintf("\nCamera bound: %v | Camera: %v", m.cameraBound, m.Camera))
+	view.WriteString("\n\n")
+
+	view.WriteString(m.help.View(GlobalGameplayKeymap))
 	view.WriteByte('\n')
 
 	return view.String()
