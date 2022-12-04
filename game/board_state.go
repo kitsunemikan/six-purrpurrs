@@ -94,12 +94,19 @@ func NewBoardStateFromCells(borderWidth int, cells map[Offset]CellState) *BoardS
 		circleMask: generateCircleMask(borderWidth),
 
 		borderWidth: borderWidth,
-		boardBound:  Rect{X: -borderWidth, Y: -borderWidth, W: 2*borderWidth + 1, H: 2*borderWidth + 1},
 	}
 
 	// Random "intuitive", but substantially smaller hint than full len(cells)
 	bs.playerCells[0] = make(map[Offset]struct{}, len(cells)/borderWidth)
 	bs.playerCells[1] = make(map[Offset]struct{}, len(cells)/borderWidth)
+
+	// A questionable... I guess... way to get any element from a map
+	minX, minY, maxX, maxY := 0, 0, 0, 0
+	for cell := range cells {
+		minX, maxX = cell.X, cell.Y
+		minY, maxY = cell.Y, cell.Y
+		break
+	}
 
 	for cell, state := range cells {
 		bs.board[cell] = state
@@ -113,7 +120,21 @@ func NewBoardStateFromCells(borderWidth int, cells map[Offset]CellState) *BoardS
 		default:
 			panic(fmt.Sprintf("new board state from cells: encountered an invalid cell at %v (state=%v)", cell, state))
 		}
+
+		if cell.X < minX {
+			minX = cell.X
+		} else if cell.X > maxX {
+			maxX = cell.X
+		}
+
+		if cell.Y < minY {
+			minY = cell.Y
+		} else if cell.Y > maxY {
+			maxY = cell.Y
+		}
 	}
+
+	bs.boardBound = Rect{X: minX, Y: minY, W: maxX - minX + 1, H: maxY - minY + 1}
 
 	return bs
 }
