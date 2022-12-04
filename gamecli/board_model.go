@@ -72,8 +72,8 @@ func (m BoardModel) Selection() Offset {
 	return m.selection
 }
 
-func (m BoardModel) Camera() Rect {
-	return m.camera
+func (m BoardModel) ModelDimensions() Offset {
+	return Offset{X: 2 * m.camera.W, Y: 2 * m.camera.H}
 }
 
 func (m BoardModel) View() string {

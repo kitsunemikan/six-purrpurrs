@@ -36,7 +36,7 @@ type ReplayModel struct {
 
 func NewReplayModel(config ReplayModelOptions) ReplayModel {
 	progress := progress.New(
-		progress.WithWidth(config.Board.Camera().W-2), // for "borders" around progress bar
+		progress.WithWidth(config.Board.ModelDimensions().X),
 		progress.WithDefaultGradient(),
 		progress.WithSpringOptions(50, 1),
 		progress.WithoutPercentage(),
@@ -145,10 +145,8 @@ func (m ReplayModel) View() string {
 	view.WriteString(gameModel.View())
 	view.WriteString("\n")
 	view.WriteString(fmt.Sprintf("Move %d/%d\n", m.nextMove, len(m.moves)))
-	view.WriteString("[")
 	view.WriteString(m.progress.View())
-	view.WriteString("]")
-	view.WriteString("\n")
+	view.WriteString("\n\n")
 	view.WriteString(m.help.View(keymap.Replay))
 
 	return view.String()
