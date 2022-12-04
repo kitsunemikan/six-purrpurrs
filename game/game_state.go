@@ -184,6 +184,11 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	}
 }
 
+func (g *GameState) UndoLastMove() {
+	g.Board.UndoLastMove()
+	g.solution = nil
+}
+
 func (g *GameState) Winner() PlayerID {
 	return g.winner
 }

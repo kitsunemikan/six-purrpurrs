@@ -265,8 +265,6 @@ func (bs *BoardState) MarkCell(pos Offset, player PlayerID) {
 	bs.boardBound = bs.boardBound.GrowToContainRect(newCellsBoundingRect)
 	delta.NewBoardBound = bs.boardBound
 
-	bs.delta = append(bs.delta, delta)
-
 	// Create new available cells
 	for _, ds := range bs.circleMask {
 		curCell := pos.Add(ds)
@@ -277,6 +275,8 @@ func (bs *BoardState) MarkCell(pos Offset, player PlayerID) {
 			delta.Cells = append(delta.Cells, cellDelta{curCell, CellUnoccupied})
 		}
 	}
+
+	bs.delta = append(bs.delta, delta)
 }
 
 func (bs *BoardState) UndoLastMove() {
@@ -287,6 +287,8 @@ func (bs *BoardState) UndoLastMove() {
 	bs.moveHistory = bs.moveHistory[:len(bs.moveHistory)-1]
 
 	lastDelta := bs.delta[len(bs.delta)-1]
+	bs.delta = bs.delta[:len(bs.delta)-1]
+
 	bs.boardBound = lastDelta.OldBoardBound
 
 	for _, dcell := range lastDelta.Cells {
@@ -304,6 +306,4 @@ func (bs *BoardState) UndoLastMove() {
 			panic(fmt.Sprintf("board state: undo last move: invalid cell delta at %v, new state=%v", dcell.Cell, dcell.NewState))
 		}
 	}
-
-	bs.delta = bs.delta[:len(bs.delta)-1]
 }
