@@ -9,6 +9,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/kitsunemikan/ttt-cli/game"
+	"github.com/kitsunemikan/ttt-cli/gamecli/keymap"
 )
 
 type GameOverModel struct {
@@ -25,7 +26,7 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
-		case key.Matches(msg, GlobalGameOverKeymap.Quit):
+		case key.Matches(msg, keymap.GameOver.Quit):
 			return m, tea.Quit
 		}
 	}
@@ -51,7 +52,7 @@ func (m GameOverModel) View() string {
 
 	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\n", m.Game.MoveNumber()-1))
 
-	view.WriteString(m.Help.View(GlobalGameOverKeymap))
+	view.WriteString(m.Help.View(keymap.GameOver))
 	view.WriteByte('\n')
 
 	return view.String()

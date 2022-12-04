@@ -8,6 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/kitsunemikan/ttt-cli/game"
+	"github.com/kitsunemikan/ttt-cli/gamecli/keymap"
 	. "github.com/kitsunemikan/ttt-cli/geom"
 )
 
@@ -93,9 +94,9 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch {
-		case key.Matches(msg, GlobalGameplayKeymap.Help):
+		case key.Matches(msg, keymap.Gameplay.Help):
 			m.help.ShowAll = !m.help.ShowAll
-		case key.Matches(msg, GlobalGameplayKeymap.Quit):
+		case key.Matches(msg, keymap.Gameplay.Quit):
 			return m, tea.Quit
 		}
 
@@ -104,23 +105,23 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		switch {
-		case key.Matches(msg, GlobalGameplayKeymap.Left):
+		case key.Matches(msg, keymap.Gameplay.Left):
 			m.board = m.board.MoveSelectionBy(Offset{X: -1, Y: 0}).CenterOnSelection()
 			return m, nil
 
-		case key.Matches(msg, GlobalGameplayKeymap.Right):
+		case key.Matches(msg, keymap.Gameplay.Right):
 			m.board = m.board.MoveSelectionBy(Offset{X: 1, Y: 0}).CenterOnSelection()
 			return m, nil
 
-		case key.Matches(msg, GlobalGameplayKeymap.Up):
+		case key.Matches(msg, keymap.Gameplay.Up):
 			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: -1}).CenterOnSelection()
 			return m, nil
 
-		case key.Matches(msg, GlobalGameplayKeymap.Down):
+		case key.Matches(msg, keymap.Gameplay.Down):
 			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: 1}).CenterOnSelection()
 			return m, nil
 
-		case key.Matches(msg, GlobalGameplayKeymap.Select):
+		case key.Matches(msg, keymap.Gameplay.Select):
 			if m.MoveCommitted {
 				return m, nil
 			}
@@ -175,7 +176,7 @@ func (m GameplayModel) View() string {
 	// view.WriteString(fmt.Sprintf("\nCamera bound: %v | Camera: %v", m.cameraBound, m.Camera))
 	view.WriteString("\n\n")
 
-	view.WriteString(m.help.View(GlobalGameplayKeymap))
+	view.WriteString(m.help.View(keymap.Gameplay))
 	view.WriteByte('\n')
 
 	return view.String()
