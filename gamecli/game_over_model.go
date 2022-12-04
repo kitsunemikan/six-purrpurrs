@@ -51,7 +51,12 @@ func (m GameOverModel) View() string {
 
 	var view strings.Builder
 
-	view.WriteString(m.Board.View())
+	gameModel := GameModel{
+		Game:  m.Game,
+		Board: m.Board,
+	}
+
+	view.WriteString(gameModel.View())
 	view.WriteByte('\n')
 
 	if m.Game.Solution() == nil {

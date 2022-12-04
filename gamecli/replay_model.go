@@ -137,7 +137,12 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m ReplayModel) View() string {
 	var view strings.Builder
 
-	view.WriteString(m.board.View())
+	gameModel := GameModel{
+		Game:  m.game,
+		Board: m.board,
+	}
+
+	view.WriteString(gameModel.View())
 	view.WriteString("\n")
 	view.WriteString(fmt.Sprintf("Move %d/%d\n", m.nextMove, len(m.moves)))
 	view.WriteString("[")
