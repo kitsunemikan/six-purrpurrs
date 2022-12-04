@@ -36,6 +36,19 @@ var (
 		key.WithKeys("enter", " ", "q", "esc", "ctrl+c"),
 		key.WithHelp("enter/q", "quit"),
 	)
+
+	WatchReplay = key.NewBinding(
+		key.WithKeys("r"),
+		key.WithHelp("r", "watch replay"),
+	)
+	Forward = key.NewBinding(
+		key.WithKeys("shift+right", "f"),
+		key.WithHelp("f/shift+→", "forward"),
+	)
+	Rewind = key.NewBinding(
+		key.WithKeys("shift+left", "r"),
+		key.WithHelp("r/shift+←", "rewind"),
+	)
 )
 
 var Gameplay = GameplayModel{
@@ -49,5 +62,17 @@ var Gameplay = GameplayModel{
 }
 
 var GameOver = GameOverModel{
-	Quit: QuitOrSelect,
+	WatchReplay: WatchReplay,
+	Quit:        QuitOrSelect,
+}
+
+var Replay = ReplayModel{
+	Left:    Left,
+	Right:   Right,
+	Up:      Up,
+	Down:    Down,
+	Forward: Forward,
+	Rewind:  Rewind,
+	Help:    Help,
+	Quit:    Quit,
 }

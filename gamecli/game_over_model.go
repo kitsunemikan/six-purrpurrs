@@ -28,6 +28,15 @@ func (m GameOverModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch {
 		case key.Matches(msg, keymap.GameOver.Quit):
 			return m, tea.Quit
+
+		case key.Matches(msg, keymap.GameOver.WatchReplay):
+			return ReplayModel{
+				Game:   m.Game,
+				Board:  m.Board,
+				Moves:  m.Game.MoveHistoryCopy(),
+				Help:   m.Help,
+				Parent: m,
+			}, nil
 		}
 	}
 
