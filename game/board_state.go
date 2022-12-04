@@ -112,85 +112,20 @@ func (bs *BoardState) Clone() *BoardState {
 	return newBs
 }
 
+func (bs *BoardState) BorderWidth() int {
+	return bs.borderWidth
+}
+
+func (bs *BoardState) Delta() []boardDelta {
+	return bs.delta
+}
+
 func (bs *BoardState) MoveHistoryCopy() []PlayerMove {
 	historyCopy := make([]PlayerMove, len(bs.moveHistory))
 
 	copy(historyCopy, bs.moveHistory)
 
 	return historyCopy
-}
-
-func BoardStatesEqual(a, b *BoardState) bool {
-	if len(a.board) != len(b.board) {
-		return false
-	}
-
-	for pos, acell := range a.board {
-		bcell, exists := b.board[pos]
-		if !exists {
-			return false
-		}
-
-		if acell != bcell {
-			return false
-		}
-	}
-
-	if len(a.unoccupiedCells) != len(b.unoccupiedCells) {
-		return false
-	}
-
-	for pos, acell := range a.unoccupiedCells {
-		bcell, exists := b.unoccupiedCells[pos]
-		if !exists {
-			return false
-		}
-
-		if acell != bcell {
-			return false
-		}
-	}
-
-	if len(a.playerCells[0]) != len(b.playerCells[0]) {
-		return false
-	}
-
-	for pos, acell := range a.playerCells[0] {
-		bcell, exists := b.playerCells[0][pos]
-		if !exists {
-			return false
-		}
-
-		if acell != bcell {
-			return false
-		}
-	}
-
-	if len(a.playerCells[1]) != len(b.playerCells[1]) {
-		return false
-	}
-
-	for pos, acell := range a.playerCells[1] {
-		bcell, exists := b.playerCells[1][pos]
-		if !exists {
-			return false
-		}
-
-		if acell != bcell {
-			return false
-		}
-	}
-
-	// TODO: Use go-testdeep for the whole this thing up there
-	if len(a.delta) != len(b.delta) {
-		return false
-	}
-
-	if len(a.moveHistory) != len(b.moveHistory) {
-		return false
-	}
-
-	return true
 }
 
 // Do not modify the result
@@ -299,7 +234,7 @@ func (bs *BoardState) UndoLastMove() {
 
 		case CellP1, CellP2:
 			bs.board[dcell.Cell] = CellUnoccupied
-			delete(bs.playerCells[dcell.NewState], dcell.Cell)
+			// delete(bs.playerCells[dcell.NewState], dcell.Cell)
 			bs.unoccupiedCells[dcell.Cell] = struct{}{}
 
 		default:
