@@ -73,6 +73,8 @@ func (m BoardModel) Selection() Offset {
 }
 
 func (m BoardModel) ModelDimensions() Offset {
+	// 2 * camera dimensions, because we artificially stretch
+	// the board, so that it appears more square when rendered
 	return Offset{X: 2 * m.camera.W, Y: 2 * m.camera.H}
 }
 
