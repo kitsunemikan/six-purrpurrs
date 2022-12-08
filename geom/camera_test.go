@@ -110,18 +110,6 @@ func TestCameraNudging(t *testing.T) {
 			},
 		},
 		{
-			"Point inside inner view doesn't change camera",
-			geom.Camera{
-				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
-				TrackDepth: 2,
-			},
-			geom.Offset{X: 2, Y: 2},
-			geom.Camera{
-				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
-				TrackDepth: 2,
-			},
-		},
-		{
 			"Point to the left of inner view",
 			geom.Camera{
 				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},

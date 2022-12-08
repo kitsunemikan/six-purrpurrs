@@ -33,17 +33,13 @@ func (c Camera) NudgeTo(pos Offset) Camera {
 
 	if pos.X < inner.X {
 		c.View.X -= inner.X - pos.X
-	}
-
-	if pos.X >= inner.X+inner.W {
+	} else if pos.X >= inner.X+inner.W {
 		c.View.X += pos.X - (inner.X + inner.W) + 1
 	}
 
 	if pos.Y < inner.Y {
 		c.View.Y -= inner.Y - pos.Y
-	}
-
-	if pos.Y >= inner.Y+inner.H {
+	} else if pos.Y >= inner.Y+inner.H {
 		c.View.Y += pos.Y - (inner.Y + inner.H) + 1
 	}
 

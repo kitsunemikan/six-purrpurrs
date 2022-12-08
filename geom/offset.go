@@ -1,5 +1,7 @@
 package geom
 
+import "fmt"
+
 type Offset struct {
 	X, Y int
 }
@@ -47,4 +49,24 @@ func (a Offset) IsEqual(b Offset) bool {
 
 func (a Offset) IsZero() bool {
 	return a.X == 0 && a.Y == 0
+}
+
+func (a Offset) SnapIntoRect(r Rect) Offset {
+	if a.X < r.X {
+		a.X = r.X
+	} else if a.X >= r.X+r.W {
+		a.X = r.X + r.W - 1
+	}
+
+	if a.Y < r.Y {
+		a.Y = r.Y
+	} else if a.Y >= r.Y+r.H {
+		a.Y = r.Y + r.H - 1
+	}
+
+	return a
+}
+
+func (a Offset) String() string {
+	return fmt.Sprintf("(%v;%v)", a.X, a.Y)
 }
