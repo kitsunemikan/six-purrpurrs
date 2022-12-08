@@ -1,7 +1,7 @@
 package game
 
 import (
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 type PlayerAgent interface {

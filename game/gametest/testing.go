@@ -7,9 +7,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/termenv"
 
-	"github.com/kitsunemikan/ttt-cli/game"
-	"github.com/kitsunemikan/ttt-cli/gamecli"
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	"github.com/kitsunemikan/six-purrpurrs/game"
+	"github.com/kitsunemikan/six-purrpurrs/gamecli"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 	"github.com/sanity-io/litter"
 )
 

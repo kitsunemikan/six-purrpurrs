@@ -9,9 +9,9 @@ import (
 	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/kitsunemikan/ttt-cli/game"
-	"github.com/kitsunemikan/ttt-cli/gamecli/keymap"
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	"github.com/kitsunemikan/six-purrpurrs/game"
+	"github.com/kitsunemikan/six-purrpurrs/gamecli/keymap"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 type replayModelInitProgressMsg struct{}

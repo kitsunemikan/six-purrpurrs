@@ -3,7 +3,7 @@ package geom_test
 import (
 	"testing"
 
-	"github.com/kitsunemikan/ttt-cli/geom"
+	"github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 func TestOffsetSnapIntoRect(t *testing.T) {
