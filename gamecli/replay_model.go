@@ -103,7 +103,7 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.game.MarkCell(move.Cell, move.ID)
 			m.nextMove++
 
-			m.board = m.board.MoveSelectionTo(move.Cell).CenterOnSelection()
+			m.board = m.board.MoveSelectionTo(move.Cell).NudgeToSelection()
 
 			cmd := m.progress.SetPercent(float64(m.nextMove) / float64(len(m.moves)))
 			return m, cmd

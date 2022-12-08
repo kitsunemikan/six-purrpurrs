@@ -13,7 +13,7 @@ type BoardModel struct {
 	Theme *BoardTheme
 	Board *game.BoardState
 
-	camera    Rect
+	camera    Camera
 	selection Offset
 
 	SelectionVisible bool
@@ -24,9 +24,12 @@ type BoardModel struct {
 
 func NewBoardModel(cameraSize Offset) BoardModel {
 	return BoardModel{
-		// Board extends to negative integers, so board's center is at (0,0),
-		// and not (screenWidth/2, screenHeight/2)
-		camera: NewRectFromOffsets(cameraSize.ScaleDown(-2), cameraSize),
+		camera: Camera{
+			// Board extends to negative integers, so board's center is at (0,0),
+			// and not (screenWidth/2, screenHeight/2)
+			View:       NewRectFromOffsets(cameraSize.ScaleDown(-2), cameraSize),
+			TrackDepth: 4,
+		},
 	}
 }
 
@@ -52,19 +55,18 @@ func (m BoardModel) MoveSelectionTo(pos Offset) BoardModel {
 }
 
 func (m BoardModel) MoveCameraBy(ds Offset) BoardModel {
-	cameraBound := m.Board.BoardBound()
-	m.camera = m.camera.Move(ds).SnapInto(cameraBound)
+	m.camera = m.camera.Move(ds).SnapIntoRect(m.Board.BoardBound())
 
 	return m
 }
 
-func (m BoardModel) CenterOnSelection() BoardModel {
-	m.camera = m.camera.CenterOn(m.selection).SnapInto(m.Board.BoardBound())
+func (m BoardModel) NudgeToSelection() BoardModel {
+	m.camera = m.camera.NudgeTo(m.selection).SnapIntoRect(m.Board.BoardBound())
 	return m
 }
 
 func (m BoardModel) CenterOnBoard() BoardModel {
-	m.camera = m.camera.SnapInto(m.Board.BoardBound())
+	m.camera = m.camera.SnapIntoRect(m.Board.BoardBound())
 	return m
 }
 
@@ -75,11 +77,11 @@ func (m BoardModel) Selection() Offset {
 func (m BoardModel) ModelDimensions() Offset {
 	// 2 * camera dimensions, because we artificially stretch
 	// the board, so that it appears more square when rendered
-	return Offset{X: 2 * m.camera.W, Y: 2 * m.camera.H}
+	return Offset{X: 2 * m.camera.View.W, Y: 2 * m.camera.View.H}
 }
 
 func (m BoardModel) View() string {
-	cliBoard := m.Theme.BoardToText(m.Board.AllCells(), m.camera)
+	cliBoard := m.Theme.BoardToText(m.Board.AllCells(), m.camera.View)
 
 	// Repeated application of lipgloss render will produce incorrect results
 	// Instead, we'll store the exact style for the cell in a map
@@ -107,9 +109,9 @@ func (m BoardModel) View() string {
 	}
 
 	var view strings.Builder
-	for y := 0; y < m.camera.H; y++ {
-		for x := 0; x < m.camera.W; x++ {
-			curCell := m.camera.ToWorldXY(x, y)
+	for y := 0; y < m.camera.View.H; y++ {
+		for x := 0; x < m.camera.View.W; x++ {
+			curCell := m.camera.View.ToWorldXY(x, y)
 
 			leftSide := " "
 			rightSide := ""

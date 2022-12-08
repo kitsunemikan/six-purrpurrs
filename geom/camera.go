@@ -46,6 +46,18 @@ func (c Camera) NudgeTo(pos Offset) Camera {
 	return c
 }
 
+func (c Camera) SnapIntoRect(r Rect) Camera {
+	c.View = c.View.SnapInto(r)
+
+	return c
+}
+
+func (c Camera) Move(ds Offset) Camera {
+	c.View = c.View.Move(ds)
+
+	return c
+}
+
 func (c Camera) String() string {
 	return fmt.Sprintf("%v (inner: %v)", c.View, c.InnerView())
 }

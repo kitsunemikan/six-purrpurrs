@@ -106,19 +106,19 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch {
 		case key.Matches(msg, keymap.Gameplay.Left):
-			m.board = m.board.MoveSelectionBy(Offset{X: -1, Y: 0}).CenterOnSelection()
+			m.board = m.board.MoveSelectionBy(Offset{X: -1, Y: 0}).NudgeToSelection()
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Right):
-			m.board = m.board.MoveSelectionBy(Offset{X: 1, Y: 0}).CenterOnSelection()
+			m.board = m.board.MoveSelectionBy(Offset{X: 1, Y: 0}).NudgeToSelection()
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Up):
-			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: -1}).CenterOnSelection()
+			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: -1}).NudgeToSelection()
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Down):
-			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: 1}).CenterOnSelection()
+			m.board = m.board.MoveSelectionBy(Offset{X: 0, Y: 1}).NudgeToSelection()
 			return m, nil
 
 		case key.Matches(msg, keymap.Gameplay.Select):
@@ -148,7 +148,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.CurrentPlayer = m.CurrentPlayer.Other()
 		m.board.CurrentPlayer = m.CurrentPlayer
 
-		m.board = m.board.CenterOnSelection()
+		m.board = m.board.NudgeToSelection()
 
 		return m, m.AwaitMove(m.CurrentPlayer)
 	}
