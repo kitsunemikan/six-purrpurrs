@@ -29,11 +29,27 @@ func (c Camera) InnerView() Rect {
 }
 
 func (c Camera) NudgeTo(pos Offset) Camera {
-	// inner := c.InnerView()
+	inner := c.InnerView()
+
+	if pos.X < inner.X {
+		c.View.X -= inner.X - pos.X
+	}
+
+	if pos.X >= inner.X+inner.W {
+		c.View.X += pos.X - (inner.X + inner.W) + 1
+	}
+
+	if pos.Y < inner.Y {
+		c.View.Y -= inner.Y - pos.Y
+	}
+
+	if pos.Y >= inner.Y+inner.H {
+		c.View.Y += pos.Y - (inner.Y + inner.H) + 1
+	}
 
 	return c
 }
 
 func (c Camera) String() string {
-	return fmt.Sprintf("(camera %v; depth: %v)", c.View, c.TrackDepth)
+	return fmt.Sprintf("%v (inner: %v)", c.View, c.InnerView())
 }

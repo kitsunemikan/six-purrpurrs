@@ -1,6 +1,7 @@
 package geom_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/kitsunemikan/ttt-cli/geom"
@@ -84,6 +85,146 @@ func TestCameraInnerView(t *testing.T) {
 
 			if !got.IsEqual(test.Want) {
 				t.Errorf("for camera %v: got %v, want %v", test.Camera, got, test.Want)
+			}
+		})
+	}
+}
+
+func TestCameraNudging(t *testing.T) {
+	cases := []struct {
+		Desc   string
+		Camera geom.Camera
+		Point  geom.Offset
+		Want   geom.Camera
+	}{
+		{
+			"Point inside inner view doesn't change camera",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 2, Y: 2},
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point inside inner view doesn't change camera",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 2, Y: 2},
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the left of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 1, Y: 2},
+			geom.Camera{
+				View:       geom.Rect{X: -1, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the right of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 5, Y: 2},
+			geom.Camera{
+				View:       geom.Rect{X: 1, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the top of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 3, Y: 1},
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: -1, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the bottom of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 3, Y: 3},
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 1, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the top-left of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 1, Y: 1},
+			geom.Camera{
+				View:       geom.Rect{X: -1, Y: -1, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the top-right of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 5, Y: 1},
+			geom.Camera{
+				View:       geom.Rect{X: 1, Y: -1, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the bottom-right of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 5, Y: 3},
+			geom.Camera{
+				View:       geom.Rect{X: 1, Y: 1, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+		{
+			"Point to the bottom-right of inner view",
+			geom.Camera{
+				View:       geom.Rect{X: 0, Y: 0, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+			geom.Offset{X: 1, Y: 3},
+			geom.Camera{
+				View:       geom.Rect{X: -1, Y: 1, W: 7, H: 5},
+				TrackDepth: 2,
+			},
+		},
+	}
+
+	for _, test := range cases {
+		t.Run(test.Desc, func(t *testing.T) {
+			got := test.Camera.NudgeTo(test.Point)
+
+			if !reflect.DeepEqual(got, test.Want) {
+				t.Errorf("got camera %v, want %v, original %v nudged to point %v", got, test.Want, test.Camera, test.Point)
 			}
 		})
 	}
