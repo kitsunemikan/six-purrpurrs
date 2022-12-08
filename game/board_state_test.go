@@ -51,7 +51,7 @@ func TestBoardStateRevertability(t *testing.T) {
 			board.UndoLastMove()
 
 			if err := gametest.BoardStatesEqual(board, boardHistory[i]); err != nil {
-				boardModel := gamecli.NewBoardModel(boardHistory[i+1].BoardBound().Dimensions())
+				boardModel := gamecli.NewBoardModel(boardHistory[i+1].BoardBound().Dimensions(), 0)
 				boardModel.Board = boardHistory[i+1]
 				boardModel.Theme = &gamecli.DefaultBoardTheme
 

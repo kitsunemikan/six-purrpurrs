@@ -22,13 +22,13 @@ type BoardModel struct {
 	ForcedHighlight map[Offset]lipgloss.Style
 }
 
-func NewBoardModel(cameraSize Offset) BoardModel {
+func NewBoardModel(cameraSize Offset, trackDepth int) BoardModel {
 	return BoardModel{
 		camera: Camera{
 			// Board extends to negative integers, so board's center is at (0,0),
 			// and not (screenWidth/2, screenHeight/2)
 			View:       NewRectFromOffsets(cameraSize.ScaleDown(-2), cameraSize),
-			TrackDepth: 4,
+			TrackDepth: trackDepth,
 		},
 	}
 }

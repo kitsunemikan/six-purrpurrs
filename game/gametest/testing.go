@@ -24,7 +24,7 @@ func BoardStatesEqual(got, want *game.BoardState) error {
 
 	diffColor := lipgloss.NewStyle().Foreground(lipgloss.Color("0")).Background(lipgloss.Color("1"))
 
-	boardModel := gamecli.NewBoardModel(got.BoardBound().Dimensions())
+	boardModel := gamecli.NewBoardModel(got.BoardBound().Dimensions(), 0)
 	boardModel.Theme = &gamecli.DefaultBoardTheme
 
 	boardDiff, same := cellBoardDiff(diffColor, got.AllCells(), want.AllCells())

@@ -26,6 +26,7 @@ var (
 	hFlag           = flag.Uint("h", 20, "screen height")
 	borderFlag      = flag.Uint("border", 7, "the width of a border around marked cells where players can make a move")
 	strikeFlag      = flag.Uint("strike", 6, "the number of marks in a row to win the game")
+	trackDepthFlag  = flag.Uint("trackDepth", 20, "The width of camera borders in % after which to follow player moves")
 )
 
 func availablePlayerTypes() (list string) {
@@ -92,11 +93,19 @@ func main() {
 
 	game := game.NewGame(gameConf)
 
+	w, h := int(*wFlag), int(*hFlag)
+	minDim := w
+	if h < minDim {
+		minDim = h
+	}
+
+	trackDepth := int(*trackDepthFlag) * minDim / 100
 	modelConf := gamecli.GameplayModelConfig{
 		Game:       game,
 		Players:    players,
 		Theme:      &theme,
-		ScreenSize: Offset{X: int(*wFlag), Y: int(*hFlag)},
+		ScreenSize: Offset{X: w, Y: h},
+		TrackDepth: trackDepth,
 	}
 
 	p := tea.NewProgram(gamecli.NewGameplayModel(modelConf))

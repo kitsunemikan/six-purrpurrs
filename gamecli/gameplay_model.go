@@ -23,6 +23,7 @@ type GameplayModelConfig struct {
 
 	Theme      *BoardTheme
 	ScreenSize Offset
+	TrackDepth int
 }
 
 type GameplayModel struct {
@@ -52,7 +53,7 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 		panic("new gameplay model: zero screen size")
 	}
 
-	board := NewBoardModel(config.ScreenSize)
+	board := NewBoardModel(config.ScreenSize, config.TrackDepth)
 	board.Board = config.Game.Board
 	board.Theme = config.Theme
 	board.CurrentPlayer = game.P1
