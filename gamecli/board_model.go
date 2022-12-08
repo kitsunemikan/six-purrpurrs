@@ -60,6 +60,17 @@ func (m BoardModel) MoveCameraBy(ds Offset) BoardModel {
 	return m
 }
 
+func (m BoardModel) NudgeCameraTo(pos Offset) BoardModel {
+	m.camera = m.camera.NudgeTo(pos)
+	return m
+}
+
+func (m BoardModel) SnapSelectionIntoCamera() BoardModel {
+	m.selection = m.selection.SnapIntoRect(m.camera.InnerView())
+
+	return m
+}
+
 func (m BoardModel) NudgeToSelection() BoardModel {
 	m.camera = m.camera.NudgeTo(m.selection).SnapIntoRect(m.Board.BoardBound())
 	return m

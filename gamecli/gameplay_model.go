@@ -148,7 +148,7 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.CurrentPlayer = m.CurrentPlayer.Other()
 		m.board.CurrentPlayer = m.CurrentPlayer
 
-		m.board = m.board.NudgeToSelection()
+		m.board = m.board.NudgeCameraTo(msg.ChosenCell).SnapSelectionIntoCamera()
 
 		return m, m.AwaitMove(m.CurrentPlayer)
 	}
