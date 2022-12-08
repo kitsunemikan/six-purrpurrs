@@ -8,8 +8,8 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/kitsunemikan/ttt-cli/game"
-	"github.com/kitsunemikan/ttt-cli/gamecli/keymap"
+	"github.com/kitsunemikan/six-purrpurrs/game"
+	"github.com/kitsunemikan/six-purrpurrs/gamecli/keymap"
 )
 
 type GameOverModel struct {

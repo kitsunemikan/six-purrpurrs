@@ -8,10 +8,10 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/kitsunemikan/ttt-cli/ai"
-	"github.com/kitsunemikan/ttt-cli/game"
-	"github.com/kitsunemikan/ttt-cli/gamecli"
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	"github.com/kitsunemikan/six-purrpurrs/ai"
+	"github.com/kitsunemikan/six-purrpurrs/game"
+	"github.com/kitsunemikan/six-purrpurrs/gamecli"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 var playerTypeGenerators = map[string]func() game.PlayerAgent{

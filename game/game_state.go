@@ -3,7 +3,7 @@ package game
 import (
 	"fmt"
 
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 // CellState has a property of, when positive, being equal

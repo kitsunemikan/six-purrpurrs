@@ -1,8 +1,8 @@
 package gamecli
 
 import (
-	"github.com/kitsunemikan/ttt-cli/game"
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	"github.com/kitsunemikan/six-purrpurrs/game"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 type LocalPlayer struct {

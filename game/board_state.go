@@ -3,7 +3,7 @@ package game
 import (
 	"fmt"
 
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
 // We use the fact that the only deltas possible are:
