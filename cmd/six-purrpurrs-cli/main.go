@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 
@@ -14,19 +13,36 @@ import (
 	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
-var playerTypeGenerators = map[string]func() game.PlayerAgent{
-	"local":  gamecli.NewLocalPlayer,
-	"random": ai.NewRandomPlayer,
+func NewAIPlayer(id game.PlayerID) game.PlayerAgent {
+	return ai.NewDefaultAIPlayer(id)
+}
+
+func NewLocalPlayer(id game.PlayerID) game.PlayerAgent {
+	return gamecli.NewLocalPlayer()
+}
+
+func NewRandomPlayer(id game.PlayerID) game.PlayerAgent {
+	return ai.NewRandomPlayer()
+}
+
+var playerTypeGenerators = map[string]func(game.PlayerID) game.PlayerAgent{
+	"local":  NewLocalPlayer,
+	"random": NewRandomPlayer,
+	"ai":     NewAIPlayer,
 }
 
 var (
-	avatarsFlag     = flag.String("avatars", " ,.,X,O", "a list of strings used as player board marks, including unavailable and empty cell")
-	playerTypesFlag = flag.String("playertypes", "local,random", fmt.Sprintf("specifies logic for each player (available options: %s)", availablePlayerTypes()))
-	wFlag           = flag.Uint("w", 40, "screen width")
-	hFlag           = flag.Uint("h", 20, "screen height")
-	borderFlag      = flag.Uint("border", 7, "the width of a border around marked cells where players can make a move")
-	strikeFlag      = flag.Uint("strike", 6, "the number of marks in a row to win the game")
-	trackDepthFlag  = flag.Uint("trackDepth", 20, "The width of camera borders in % after which to follow player moves")
+	unavailableCellFlag = flag.String("unavailablecell", " ", "a character to denote a yet locked cell")
+	availableCellFlag   = flag.String("availablecell", ".", "a character to denote a cell available for a move")
+	p1CellFlag          = flag.String("p1avatar", "X", "a character to denote the first player on the board")
+	p2CellFlag          = flag.String("p2avatar", "O", "a character to denote the second player on the board")
+	p1TypeFlag          = flag.String("p1", "local", fmt.Sprintf("specifies logic for the first player (available: %s)", availablePlayerTypes()))
+	p2TypeFlag          = flag.String("p2", "random", fmt.Sprintf("specifies logic for the second player (available: %s)", availablePlayerTypes()))
+	wFlag               = flag.Uint("w", 40, "screen width")
+	hFlag               = flag.Uint("h", 20, "screen height")
+	borderFlag          = flag.Uint("border", 7, "the width of a border around marked cells where players can make a move")
+	strikeFlag          = flag.Uint("strike", 6, "the number of marks in a row to win the game")
+	trackDepthFlag      = flag.Uint("trackDepth", 20, "The width of camera borders in % after which to follow player moves")
 )
 
 func availablePlayerTypes() (list string) {
@@ -42,49 +58,28 @@ func availablePlayerTypes() (list string) {
 	return
 }
 
-func CommaListUnfiltered(s string) []string {
-	return strings.FieldsFunc(s, func(c rune) bool { return c == ',' })
-}
-
-func CommaList(s string) []string {
-	fields := CommaListUnfiltered(s)
-	for i, dirty := range fields {
-		fields[i] = strings.TrimSpace(dirty)
-	}
-
-	return fields
-}
-
 func main() {
 	flag.Parse()
 
-	avatars := CommaListUnfiltered(*avatarsFlag)
-	if len(avatars) < 3 {
-		fmt.Fprintf(os.Stderr, "error: at least 3 avatars must be provided (for unavailable, unoccupied and first player cells). Provided %d\n", len(avatars))
-		os.Exit(1)
-	}
-
 	theme := gamecli.DefaultBoardTheme
-	theme.InvalidCell = avatars[0]
-	theme.UnoccupiedCell = avatars[1]
-	theme.PlayerCells = avatars[2:]
+	theme.InvalidCell = *unavailableCellFlag
+	theme.UnoccupiedCell = *availableCellFlag
+	theme.PlayerCells = []string{*p1CellFlag, *p2CellFlag}
 
 	// Create players
-	playerTypes := CommaList(*playerTypesFlag)
-	if len(theme.PlayerCells) != len(playerTypes) {
-		fmt.Fprintf(os.Stderr, "error: mismatch between number of player avatars (%d) and number of player types (%d) specified\nnote: avatars: %s\nnote: player types: %s\n", len(theme.PlayerCells), len(playerTypes), *avatarsFlag, *playerTypesFlag)
+	players := make([]game.PlayerAgent, 2)
+	if _, exists := playerTypeGenerators[*p1TypeFlag]; !exists {
+		fmt.Fprintf(os.Stderr, "error: invalid player type supplied: '%s'\nnote: available types are: %s\n", *p1TypeFlag, availablePlayerTypes())
 		os.Exit(1)
 	}
 
-	players := make([]game.PlayerAgent, 0, len(playerTypes))
-	for _, playerType := range playerTypes {
-		if _, exists := playerTypeGenerators[playerType]; !exists {
-			fmt.Fprintf(os.Stderr, "error: invalid player type supplied: '%s'\nnote: available types are: %s\n", playerType, availablePlayerTypes())
-			os.Exit(1)
-		}
-
-		players = append(players, playerTypeGenerators[playerType]())
+	if _, exists := playerTypeGenerators[*p2TypeFlag]; !exists {
+		fmt.Fprintf(os.Stderr, "error: invalid player type supplied: '%s'\nnote: available types are: %s\n", *p2TypeFlag, availablePlayerTypes())
+		os.Exit(1)
 	}
+
+	players[0] = playerTypeGenerators[*p1TypeFlag](game.P1)
+	players[1] = playerTypeGenerators[*p2TypeFlag](game.P2)
 
 	gameConf := game.GameOptions{
 		Border:       int(*borderFlag),
