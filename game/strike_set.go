@@ -1,17 +1,22 @@
 package game
 
-import "github.com/kitsunemikan/six-purrpurrs/geom"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/kitsunemikan/six-purrpurrs/geom"
+)
 
 type StrikeDir geom.Offset
 
 var (
-	StrikeUpRight   = StrikeDir{X: 1, Y: -1}
+	StrikeRightUp   = StrikeDir{X: 1, Y: -1}
 	StrikeRight     = StrikeDir{X: 1, Y: 0}
-	StrikeDownRight = StrikeDir{X: 1, Y: 1}
+	StrikeRightDown = StrikeDir{X: 1, Y: 1}
 	StrikeDown      = StrikeDir{X: 0, Y: 1}
 )
 
-var StrikeDirs = []StrikeDir{StrikeUpRight, StrikeRight, StrikeDownRight, StrikeDown}
+var StrikeDirs = []StrikeDir{StrikeRightUp, StrikeRight, StrikeRightDown, StrikeDown}
 
 type Strike struct {
 	Player           PlayerID
@@ -49,7 +54,7 @@ func (s *StrikeSet) Strikes() []Strike {
 		{
 			Player:           P1,
 			Start:            geom.Offset{X: 0, Y: 0},
-			Dir:              StrikeUpRight,
+			Dir:              StrikeRightUp,
 			Len:              1,
 			ExtendableBefore: true,
 			ExtendableAfter:  true,
@@ -57,7 +62,7 @@ func (s *StrikeSet) Strikes() []Strike {
 		{
 			Player:           P1,
 			Start:            geom.Offset{X: 0, Y: 0},
-			Dir:              StrikeDownRight,
+			Dir:              StrikeRightDown,
 			Len:              1,
 			ExtendableBefore: true,
 			ExtendableAfter:  true,
@@ -71,4 +76,26 @@ func (s *StrikeSet) Strikes() []Strike {
 			ExtendableAfter:  true,
 		},
 	}
+}
+
+func (dir StrikeDir) String() string {
+	var str strings.Builder
+
+	if dir.X >= 1 {
+		str.WriteString("Right")
+	} else if dir.X <= -1 {
+		str.WriteString("Left")
+	}
+
+	if dir.Y >= 1 {
+		str.WriteString("Down")
+	} else if dir.Y <= -1 {
+		str.WriteString("Up")
+	}
+
+	if dir.X < -1 || dir.X > 1 || dir.Y < -1 || dir.Y > 1 {
+		str.WriteString(fmt.Sprint(geom.Offset{X: dir.X, Y: dir.Y}))
+	}
+
+	return str.String()
 }
