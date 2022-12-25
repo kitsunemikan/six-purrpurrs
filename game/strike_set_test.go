@@ -1,11 +1,12 @@
 package game_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/kitsunemikan/six-purrpurrs/game"
 	"github.com/kitsunemikan/six-purrpurrs/geom"
+
+	"github.com/maxatome/go-testdeep/td"
 )
 
 // TODO: test
@@ -65,8 +66,6 @@ func TestStrikeSet(t *testing.T) {
 			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
 		}
 
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("got %v, want %v", got, want)
-		}
+		td.Cmp(t, got, td.Bag(td.Flatten(want)))
 	})
 }
