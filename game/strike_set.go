@@ -51,6 +51,15 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 					s.strikes[strikeID].Len++
 				}
 			}
+		} else if strikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
+			for _, strikeID := range strikes {
+				if s.strikes[strikeID].Dir.IsEqual(dir) {
+					// Found
+					s.board[move.Cell] = append(s.board[move.Cell], strikeID)
+					s.strikes[strikeID].Start = move.Cell
+					s.strikes[strikeID].Len++
+				}
+			}
 		} else {
 			s.strikes = append(s.strikes, Strike{
 				Player:           move.ID,

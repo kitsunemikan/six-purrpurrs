@@ -90,7 +90,7 @@ func TestStrikeSet(t *testing.T) {
 		td.Cmp(t, got, td.Bag(td.Flatten(want)))
 	})
 
-	t.Run("twe P1 cells making a 2-len strike to the right", func(t *testing.T) {
+	t.Run("twe P1 cells making a 2-len strike going right", func(t *testing.T) {
 		set := game.NewStrikeSet()
 		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1})
 		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P1})
@@ -109,6 +109,30 @@ func TestStrikeSet(t *testing.T) {
 
 			// Mutual 2-len strike
 			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".XX."),
+		}
+
+		td.Cmp(t, got, td.Bag(td.Flatten(want)))
+	})
+
+	t.Run("twe P1 cells making a 2-len strike going up", func(t *testing.T) {
+		set := game.NewStrikeSet()
+		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1})
+		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: -1}, ID: game.P1})
+
+		got := set.Strikes()
+		want := []game.Strike{
+			// Singular strikes for the first move
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+
+			// Singluar strikes for the second move
+			StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRightUp, ".X."),
+			StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRight, ".X."),
+			StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRightDown, ".X."),
+
+			// Mutual 2-len strike
+			StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeDown, ".XX."),
 		}
 
 		td.Cmp(t, got, td.Bag(td.Flatten(want)))
