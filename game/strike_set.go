@@ -46,6 +46,7 @@ func NewStrikeSet() *StrikeSet {
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	for _, dir := range StrikeDirs {
+		// Create reference arary, if it's a new cell
 		if _, ok := s.board[move.Cell]; !ok {
 			strikeRef := make([]int, len(StrikeDirs))
 			for i := range strikeRef {
@@ -56,6 +57,9 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 		}
 
 		if beforeStrikes, ok := s.board[move.Cell.Sub(dir.Offset())]; ok {
+			// Try to find a strike in the opposite direction
+			// In this case, the strike we find will have its length extended by one
+
 			if strikeID := beforeStrikes[dir.fixedID]; strikeID != -1 {
 				// Found
 				s.board[move.Cell][dir.fixedID] = strikeID
@@ -63,6 +67,10 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 
 			}
 		} else if afterStrikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
+			// Try to find a strike in the strike direction
+			// In this case, we will become a new starting cell for the strike
+			// and the length will be extended
+
 			if strikeID := afterStrikes[dir.fixedID]; strikeID != -1 {
 				// Found
 				s.board[move.Cell][dir.fixedID] = strikeID
@@ -71,6 +79,8 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 
 			}
 		} else {
+			// In case there's no already existing strikes nearby, create a new strike
+
 			s.strikes = append(s.strikes, Strike{
 				Player:           move.ID,
 				Start:            move.Cell,
