@@ -33,17 +33,36 @@ type StrikeSet struct {
 	board map[geom.Offset][]int
 }
 
+func NewStrikeSet() *StrikeSet {
+	return &StrikeSet{
+		strikes: nil,
+		board:   make(map[geom.Offset][]int),
+	}
+}
+
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	for _, dir := range StrikeDirs {
-		s.strikes = append(s.strikes, Strike{
-			Player:           move.ID,
-			Start:            move.Cell,
-			Len:              1,
-			Dir:              dir,
-			ExtendableBefore: true,
-			ExtendableAfter:  true,
-		})
+		if strikes, ok := s.board[move.Cell.Sub(dir.Offset())]; ok {
+			for _, strikeID := range strikes {
+				if s.strikes[strikeID].Dir.IsEqual(dir) {
+					// Found
+					s.board[move.Cell] = append(s.board[move.Cell], strikeID)
+					s.strikes[strikeID].Len++
+				}
+			}
+		} else {
+			s.strikes = append(s.strikes, Strike{
+				Player:           move.ID,
+				Start:            move.Cell,
+				Len:              1,
+				Dir:              dir,
+				ExtendableBefore: true,
+				ExtendableAfter:  true,
+			})
+
+			s.board[move.Cell] = append(s.board[move.Cell], len(s.strikes)-1)
+		}
 	}
 
 	return nil
@@ -73,4 +92,12 @@ func (dir StrikeDir) String() string {
 	}
 
 	return str.String()
+}
+
+func (dir StrikeDir) Offset() geom.Offset {
+	return geom.Offset(dir)
+}
+
+func (dir StrikeDir) IsEqual(other StrikeDir) bool {
+	return dir.Offset().IsEqual(other.Offset())
 }
