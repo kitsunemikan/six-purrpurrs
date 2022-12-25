@@ -4,23 +4,36 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/kitsunemikan/ttt-cli/game"
-	. "github.com/kitsunemikan/ttt-cli/geom"
+	"github.com/kitsunemikan/six-purrpurrs/game"
+	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
+// TODO: test if accounting for free-standing 1-lengths does anything
+type RankMetric struct {
+	Length     int
+	Extensions int
+}
+
+type RankLessThanForP1Func func(a *BoardRank, b *BoardRank) bool
+
 type BoardRank struct {
-	Me   []int
-	Them []int
+	P1 map[RankMetric]int
+	P2 map[RankMetric]int
+}
+
+func (a BoardRank) IsWorseThan(b BoardRank, player game.PlayerID) bool {
+	return true
 }
 
 type moveOutcome struct {
-	Cell     Offset
-	BestRank BoardRank
+	Cell Offset
+	Rank BoardRank
 }
 
 type AIPlayer struct {
 	id   game.PlayerID
 	rand *rand.Rand
+	cmp  RankLessThanForP1Func
 }
 
 func NewDefaultAIPlayer(id game.PlayerID) game.PlayerAgent {
@@ -30,29 +43,32 @@ func NewDefaultAIPlayer(id game.PlayerID) game.PlayerAgent {
 	}
 }
 
-func (p *AIPlayer) minimax(g *game.BoardState, player game.PlayerID, depth int) moveOutcome {
-	// TODO: add UnoccupiedCells method
-	validMoves := make([]Offset, 0, len(g.AllCells()))
-	for cell, state := range g.AllCells() {
-		if state == game.CellUnoccupied {
-			validMoves = append(validMoves, cell)
-		}
-	}
+func (p *AIPlayer) minimax(g *game.BoardState, player game.PlayerID, depth int) (BoardRank, Offset) {
+	outcomes := make([]moveOutcome, 0, len(g.UnoccupiedCells()))
+	for move := range g.UnoccupiedCells() {
+		g.MarkCell(move, player)
 
-	ranks := make([]moveOutcome, len(validMoves))
-	for i, move := range validMoves {
+		var rank BoardRank
 		if depth == 1 {
 			// Calculate rank with move
+			rank = computeRank(g)
 		} else {
-			// Change g
-			g.MarkCell(move, player)
-			ranks[i] = p.minimax(g, player.Other(), depth-1)
+			rank, _ = p.minimax(g, player.Other(), depth-1)
+		}
+
+		outcomes = append(outcomes, moveOutcome{move, rank})
+
+		g.UndoLastMove()
+	}
+
+	bestOutcome := outcomes[0]
+	for i := 1; i < len(outcomes); i++ {
+		if p.cmp(&bestOutcome.Rank, &outcomes[i].Rank) {
+			bestOutcome = outcomes[i]
 		}
 	}
 
-	return moveOutcome{
-		Cell: Offset{X: 0, Y: 0},
-	}
+	return bestOutcome.Rank, bestOutcome.Cell
 }
 
 func (p *AIPlayer) MakeMove(b *game.BoardState) Offset {
@@ -61,11 +77,13 @@ func (p *AIPlayer) MakeMove(b *game.BoardState) Offset {
 		board[k] = v
 	}
 
-	// TODO: we don't need some stuff in GameState, refactor into BoardState
-	// TODO: clone method
 	boardCopy := b.Clone()
 
-	bestMove := p.minimax(boardCopy, p.id, 4)
+	_, bestCell := p.minimax(boardCopy, p.id, 4)
 
-	return bestMove.Cell
+	return bestCell
+}
+
+func computeRank(g *game.BoardState) BoardRank {
+	return BoardRank{}
 }
