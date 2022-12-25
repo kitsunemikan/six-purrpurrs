@@ -68,4 +68,25 @@ func TestStrikeSet(t *testing.T) {
 
 		td.Cmp(t, got, td.Bag(td.Flatten(want)))
 	})
+
+	t.Run("twe cells far apart result in 8 strikes", func(t *testing.T) {
+		set := &game.StrikeSet{}
+		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P2})
+		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 3, Y: 3}, ID: game.P1})
+
+		got := set.Strikes()
+		want := []game.Strike{
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".O."),
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".O."),
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".O."),
+			StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".O."),
+
+			StrikeFromStr(geom.Offset{X: 3, Y: 3}, game.StrikeRightUp, ".X."),
+			StrikeFromStr(geom.Offset{X: 3, Y: 3}, game.StrikeRight, ".X."),
+			StrikeFromStr(geom.Offset{X: 3, Y: 3}, game.StrikeRightDown, ".X."),
+			StrikeFromStr(geom.Offset{X: 3, Y: 3}, game.StrikeDown, ".X."),
+		}
+
+		td.Cmp(t, got, td.Bag(td.Flatten(want)))
+	})
 }
