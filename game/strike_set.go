@@ -7,13 +7,16 @@ import (
 	"github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
-type StrikeDir geom.Offset
+type StrikeDir struct {
+	X, Y    int
+	fixedID int
+}
 
 var (
-	StrikeRightUp   = StrikeDir{X: 1, Y: -1}
-	StrikeRight     = StrikeDir{X: 1, Y: 0}
-	StrikeRightDown = StrikeDir{X: 1, Y: 1}
-	StrikeDown      = StrikeDir{X: 0, Y: 1}
+	StrikeRightUp   = StrikeDir{X: 1, Y: -1, fixedID: 0}
+	StrikeRight     = StrikeDir{X: 1, Y: 0, fixedID: 1}
+	StrikeRightDown = StrikeDir{X: 1, Y: 1, fixedID: 2}
+	StrikeDown      = StrikeDir{X: 0, Y: 1, fixedID: 3}
 )
 
 var StrikeDirs = []StrikeDir{StrikeRightUp, StrikeRight, StrikeRightDown, StrikeDown}
@@ -43,22 +46,29 @@ func NewStrikeSet() *StrikeSet {
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	for _, dir := range StrikeDirs {
-		if strikes, ok := s.board[move.Cell.Sub(dir.Offset())]; ok {
-			for _, strikeID := range strikes {
-				if s.strikes[strikeID].Dir.IsEqual(dir) {
-					// Found
-					s.board[move.Cell] = append(s.board[move.Cell], strikeID)
-					s.strikes[strikeID].Len++
-				}
+		if _, ok := s.board[move.Cell]; !ok {
+			strikeRef := make([]int, len(StrikeDirs))
+			for i := range strikeRef {
+				strikeRef[i] = -1
 			}
-		} else if strikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
-			for _, strikeID := range strikes {
-				if s.strikes[strikeID].Dir.IsEqual(dir) {
-					// Found
-					s.board[move.Cell] = append(s.board[move.Cell], strikeID)
-					s.strikes[strikeID].Start = move.Cell
-					s.strikes[strikeID].Len++
-				}
+
+			s.board[move.Cell] = strikeRef
+		}
+
+		if beforeStrikes, ok := s.board[move.Cell.Sub(dir.Offset())]; ok {
+			if strikeID := beforeStrikes[dir.fixedID]; strikeID != -1 {
+				// Found
+				s.board[move.Cell][dir.fixedID] = strikeID
+				s.strikes[strikeID].Len++
+
+			}
+		} else if afterStrikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
+			if strikeID := afterStrikes[dir.fixedID]; strikeID != -1 {
+				// Found
+				s.board[move.Cell][dir.fixedID] = strikeID
+				s.strikes[strikeID].Start = move.Cell
+				s.strikes[strikeID].Len++
+
 			}
 		} else {
 			s.strikes = append(s.strikes, Strike{
@@ -70,7 +80,7 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 				ExtendableAfter:  true,
 			})
 
-			s.board[move.Cell] = append(s.board[move.Cell], len(s.strikes)-1)
+			s.board[move.Cell][dir.fixedID] = len(s.strikes) - 1
 		}
 	}
 
@@ -104,9 +114,9 @@ func (dir StrikeDir) String() string {
 }
 
 func (dir StrikeDir) Offset() geom.Offset {
-	return geom.Offset(dir)
+	return geom.Offset{X: dir.X, Y: dir.Y}
 }
 
 func (dir StrikeDir) IsEqual(other StrikeDir) bool {
-	return dir.Offset().IsEqual(other.Offset())
+	return dir.X == other.X && dir.Y == other.Y && dir.fixedID == other.fixedID
 }
