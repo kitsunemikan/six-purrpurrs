@@ -56,29 +56,36 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			s.board[move.Cell] = strikeRef
 		}
 
+		beforeStrikeID := -1
 		if beforeStrikes, ok := s.board[move.Cell.Sub(dir.Offset())]; ok {
-			// Try to find a strike in the opposite direction
+			beforeStrikeID = beforeStrikes[dir.fixedID]
+		}
+
+		afterStrikeID := -1
+		if afterStrikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
+			afterStrikeID = afterStrikes[dir.fixedID]
+		}
+
+		switch {
+		case beforeStrikeID != -1 && afterStrikeID == -1:
+			// There's only one strike in the opposite direction
 			// In this case, the strike we find will have its length extended by one
 
-			if strikeID := beforeStrikes[dir.fixedID]; strikeID != -1 {
-				// Found
-				s.board[move.Cell][dir.fixedID] = strikeID
-				s.strikes[strikeID].Len++
+			s.board[move.Cell][dir.fixedID] = beforeStrikeID
+			s.strikes[beforeStrikeID].Len++
 
-			}
-		} else if afterStrikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
-			// Try to find a strike in the strike direction
+		case beforeStrikeID == -1 && afterStrikeID != -1:
+			// There's only one strike in the strike direction
 			// In this case, we will become a new starting cell for the strike
 			// and the length will be extended
 
-			if strikeID := afterStrikes[dir.fixedID]; strikeID != -1 {
-				// Found
-				s.board[move.Cell][dir.fixedID] = strikeID
-				s.strikes[strikeID].Start = move.Cell
-				s.strikes[strikeID].Len++
+			s.board[move.Cell][dir.fixedID] = afterStrikeID
+			s.strikes[afterStrikeID].Start = move.Cell
+			s.strikes[afterStrikeID].Len++
 
-			}
-		} else {
+		case beforeStrikeID != -1 && afterStrikeID != -1:
+
+		case beforeStrikeID == -1 && afterStrikeID == -1:
 			// In case there's no already existing strikes nearby, create a new strike
 
 			s.strikes = append(s.strikes, Strike{
