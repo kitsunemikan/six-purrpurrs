@@ -28,54 +28,29 @@ type Strike struct {
 }
 
 type StrikeSet struct {
-	moveCount int
+	strikes []Strike
+
+	board map[geom.Offset][]int
 }
 
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
-	s.moveCount++
+	for _, dir := range StrikeDirs {
+		s.strikes = append(s.strikes, Strike{
+			Player:           move.ID,
+			Start:            move.Cell,
+			Len:              1,
+			Dir:              dir,
+			ExtendableBefore: true,
+			ExtendableAfter:  true,
+		})
+	}
+
 	return nil
 }
 
 func (s *StrikeSet) Strikes() []Strike {
-	if s.moveCount == 0 {
-		return nil
-	}
-
-	return []Strike{
-		{
-			Player:           P1,
-			Start:            geom.Offset{X: 0, Y: 0},
-			Dir:              StrikeRight,
-			Len:              1,
-			ExtendableBefore: true,
-			ExtendableAfter:  true,
-		},
-		{
-			Player:           P1,
-			Start:            geom.Offset{X: 0, Y: 0},
-			Dir:              StrikeRightUp,
-			Len:              1,
-			ExtendableBefore: true,
-			ExtendableAfter:  true,
-		},
-		{
-			Player:           P1,
-			Start:            geom.Offset{X: 0, Y: 0},
-			Dir:              StrikeRightDown,
-			Len:              1,
-			ExtendableBefore: true,
-			ExtendableAfter:  true,
-		},
-		{
-			Player:           P1,
-			Start:            geom.Offset{X: 0, Y: 0},
-			Dir:              StrikeDown,
-			Len:              1,
-			ExtendableBefore: true,
-			ExtendableAfter:  true,
-		},
-	}
+	return s.strikes
 }
 
 func (dir StrikeDir) String() string {
