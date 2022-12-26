@@ -84,6 +84,22 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			s.strikes[afterStrikeID].Len++
 
 		case beforeStrikeID != -1 && afterStrikeID != -1:
+			s.strikes[beforeStrikeID].Len += s.strikes[afterStrikeID].Len + 1
+
+			s.board[move.Cell][dir.fixedID] = beforeStrikeID
+
+			// Route after strike cells to the new extended beforeStrike
+			// Note that there will be no references to the after strike after this
+			// in the board map
+			afterStrike := s.strikes[afterStrikeID]
+			for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i++ {
+				s.board[cell][dir.fixedID] = beforeStrikeID
+			}
+
+			// We shouldn't literally remove strike from the strikes array,
+			// since we'll need to update all map strike references, which is expensive.
+			// Instead we'll make its length 0, meaning it's an invalid strike
+			s.strikes[afterStrikeID].Len = 0
 
 		case beforeStrikeID == -1 && afterStrikeID == -1:
 			// In case there's no already existing strikes nearby, create a new strike
@@ -104,8 +120,25 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	return nil
 }
 
-func (s *StrikeSet) Strikes() []Strike {
+func (s *StrikeSet) StrikesUnfiltered() []Strike {
 	return s.strikes
+}
+
+func (s *StrikeSet) Strikes() []Strike {
+	if len(s.strikes) == 0 {
+		return nil
+	}
+
+	strikes := make([]Strike, 0, len(s.strikes))
+	for i := range s.strikes {
+		if s.strikes[i].Len == 0 {
+			continue
+		}
+
+		strikes = append(strikes, s.strikes[i])
+	}
+
+	return strikes
 }
 
 func (dir StrikeDir) String() string {
