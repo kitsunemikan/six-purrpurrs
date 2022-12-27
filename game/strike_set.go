@@ -1,6 +1,7 @@
 package game
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -33,18 +34,26 @@ type Strike struct {
 type StrikeSet struct {
 	strikes []Strike
 
-	board map[geom.Offset][]int
+	board   map[geom.Offset][]int
+	players map[geom.Offset]PlayerID
 }
 
 func NewStrikeSet() *StrikeSet {
 	return &StrikeSet{
 		strikes: nil,
 		board:   make(map[geom.Offset][]int),
+		players: make(map[geom.Offset]PlayerID),
 	}
 }
 
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
+	if _, exists := s.players[move.Cell]; exists {
+		return errors.New("strike set: make move: move already done")
+	}
+
+	s.players[move.Cell] = move.ID
+
 	for _, dir := range StrikeDirs {
 		// Create reference arary, if it's a new cell
 		if _, ok := s.board[move.Cell]; !ok {
@@ -56,14 +65,26 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			s.board[move.Cell] = strikeRef
 		}
 
+		enemyBefore := false
 		beforeStrikeID := -1
-		if beforeStrikes, ok := s.board[move.Cell.Sub(dir.Offset())]; ok {
-			beforeStrikeID = beforeStrikes[dir.fixedID]
+		beforeCell := move.Cell.Sub(dir.Offset())
+		if p, ok := s.players[beforeCell]; ok {
+			if p == move.ID {
+				beforeStrikeID = s.board[beforeCell][dir.fixedID]
+			} else if p == move.ID.Other() {
+				enemyBefore = true
+			}
 		}
 
+		enemyAfter := false
 		afterStrikeID := -1
-		if afterStrikes, ok := s.board[move.Cell.Add(dir.Offset())]; ok {
-			afterStrikeID = afterStrikes[dir.fixedID]
+		afterCell := move.Cell.Add(dir.Offset())
+		if p, ok := s.players[afterCell]; ok {
+			if p == move.ID {
+				afterStrikeID = s.board[afterCell][dir.fixedID]
+			} else if p == move.ID.Other() {
+				enemyAfter = true
+			}
 		}
 
 		switch {
@@ -114,6 +135,21 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			})
 
 			s.board[move.Cell][dir.fixedID] = len(s.strikes) - 1
+		}
+
+		assignedStrikeID := s.board[move.Cell][dir.fixedID]
+		if enemyBefore {
+			s.strikes[assignedStrikeID].ExtendableBefore = false
+
+			beforeStrikeID := s.board[beforeCell][dir.fixedID]
+			s.strikes[beforeStrikeID].ExtendableAfter = false
+		}
+
+		if enemyAfter {
+			s.strikes[assignedStrikeID].ExtendableAfter = false
+
+			afterStrikeID := s.board[afterCell][dir.fixedID]
+			s.strikes[afterStrikeID].ExtendableBefore = false
 		}
 	}
 

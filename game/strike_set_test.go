@@ -256,6 +256,26 @@ func TestStrikeSet(t *testing.T) {
 				StrikeFromStr(geom.Offset{X: 6, Y: 0}, game.StrikeRightDown, ".X."),
 			},
 		},
+		{
+			"Singular P1 and P2 beside each other",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P2},
+			},
+			[]game.Strike{
+				// P1
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X"),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+
+				// P2
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRight, "O."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRightDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeDown, ".O."),
+			},
+		},
 	}
 
 	for _, test := range tests {
