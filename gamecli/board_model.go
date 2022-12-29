@@ -61,7 +61,7 @@ func (m BoardModel) MoveCameraBy(ds Offset) BoardModel {
 }
 
 func (m BoardModel) NudgeCameraTo(pos Offset) BoardModel {
-	m.camera = m.camera.NudgeTo(pos)
+	m.camera = m.camera.NudgeTo(pos).SnapIntoRect(m.Board.BoardBound())
 	return m
 }
 
