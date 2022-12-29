@@ -65,25 +65,25 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			s.board[move.Cell] = strikeRef
 		}
 
-		enemyBefore := false
+		enemyBeforeStrikeID := -1
 		beforeStrikeID := -1
 		beforeCell := move.Cell.Sub(dir.Offset())
 		if p, ok := s.players[beforeCell]; ok {
 			if p == move.ID {
 				beforeStrikeID = s.board[beforeCell][dir.fixedID]
 			} else if p == move.ID.Other() {
-				enemyBefore = true
+				enemyBeforeStrikeID = s.board[beforeCell][dir.fixedID]
 			}
 		}
 
-		enemyAfter := false
+		enemyAfterStrikeID := -1
 		afterStrikeID := -1
 		afterCell := move.Cell.Add(dir.Offset())
 		if p, ok := s.players[afterCell]; ok {
 			if p == move.ID {
 				afterStrikeID = s.board[afterCell][dir.fixedID]
 			} else if p == move.ID.Other() {
-				enemyAfter = true
+				enemyAfterStrikeID = s.board[afterCell][dir.fixedID]
 			}
 		}
 
@@ -138,18 +138,16 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 		}
 
 		assignedStrikeID := s.board[move.Cell][dir.fixedID]
-		if enemyBefore {
+		if enemyBeforeStrikeID != -1 {
 			s.strikes[assignedStrikeID].ExtendableBefore = false
 
-			beforeStrikeID := s.board[beforeCell][dir.fixedID]
-			s.strikes[beforeStrikeID].ExtendableAfter = false
+			s.strikes[enemyBeforeStrikeID].ExtendableAfter = false
 		}
 
-		if enemyAfter {
+		if enemyAfterStrikeID != -1 {
 			s.strikes[assignedStrikeID].ExtendableAfter = false
 
-			afterStrikeID := s.board[afterCell][dir.fixedID]
-			s.strikes[afterStrikeID].ExtendableBefore = false
+			s.strikes[enemyAfterStrikeID].ExtendableBefore = false
 		}
 	}
 
