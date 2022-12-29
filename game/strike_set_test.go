@@ -276,6 +276,131 @@ func TestStrikeSet(t *testing.T) {
 				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeDown, ".O."),
 			},
 		},
+		{
+			"Two 2-len P1 and P2 strikes beside each other and extended after restriction",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -1}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 1}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -2}, ID: game.P2},
+			},
+			[]game.Strike{
+				// P1
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 1}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 1}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 1}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, "XX."),
+
+				// P2
+				StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRight, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeRight, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRightDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeRightDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeDown, ".OO"),
+			},
+		},
+		{
+			"Two 2-len P1 and P2 strikes beside each other and extended before restriction",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 1}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -2}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -1}, ID: game.P2},
+			},
+			[]game.Strike{
+				// P1
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 1}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 1}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 1}, game.StrikeRightDown, ".X."),
+
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, "XX."),
+
+				// P2
+				StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRight, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeRight, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -1}, game.StrikeRightDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeRightDown, ".O."),
+
+				StrikeFromStr(geom.Offset{X: 0, Y: -2}, game.StrikeDown, ".OO"),
+			},
+		},
+		{
+			"Completely restrict a 2-len strike",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: -1, Y: -1}, ID: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 1}, ID: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 2}, ID: game.P2},
+			},
+			[]game.Strike{
+				// P1
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 1}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 1}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 1}, game.StrikeDown, ".X."),
+
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, "XX"),
+
+				// P2
+				StrikeFromStr(geom.Offset{X: -1, Y: -1}, game.StrikeRight, ".O."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeRight, ".O."),
+				StrikeFromStr(geom.Offset{X: -1, Y: -1}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: -1, Y: -1}, game.StrikeDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeDown, ".O."),
+
+				StrikeFromStr(geom.Offset{X: -1, Y: -1}, game.StrikeRightDown, ".O"),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeRightDown, "O."),
+			},
+		},
+		{
+			"Merge 2 restricted 1-len strikes",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: -1, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: -2, Y: 0}, ID: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 0}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+			},
+			[]game.Strike{
+				// P1
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeDown, ".X."),
+
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeRight, "XXX"),
+
+				// P2
+				StrikeFromStr(geom.Offset{X: -2, Y: 0}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 0}, game.StrikeRightUp, ".O."),
+				StrikeFromStr(geom.Offset{X: -2, Y: 0}, game.StrikeRightDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 0}, game.StrikeRightDown, ".O."),
+				StrikeFromStr(geom.Offset{X: -2, Y: 0}, game.StrikeDown, ".O."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 0}, game.StrikeDown, ".O."),
+
+				StrikeFromStr(geom.Offset{X: -2, Y: 0}, game.StrikeRight, ".O"),
+				StrikeFromStr(geom.Offset{X: 2, Y: 0}, game.StrikeRight, "O."),
+			},
+		},
+		// Case: merge strikes with restricted extensibility
 	}
 
 	for _, test := range tests {

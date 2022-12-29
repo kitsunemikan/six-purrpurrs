@@ -106,6 +106,7 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 
 		case beforeStrikeID != -1 && afterStrikeID != -1:
 			s.strikes[beforeStrikeID].Len += s.strikes[afterStrikeID].Len + 1
+			s.strikes[beforeStrikeID].ExtendableAfter = s.strikes[afterStrikeID].ExtendableAfter
 
 			s.board[move.Cell][dir.fixedID] = beforeStrikeID
 
