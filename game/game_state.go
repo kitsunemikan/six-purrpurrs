@@ -1,8 +1,6 @@
 package game
 
 import (
-	"fmt"
-
 	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
@@ -19,7 +17,9 @@ type GameState struct {
 
 	Board    *BoardState
 	solution []Offset
-	winner   PlayerID
+
+	winner       PlayerID
+	winnerMoveID int
 }
 
 func NewGame(conf GameOptions) *GameState {
@@ -133,21 +133,22 @@ func (g *GameState) BoardBound() Rect {
 }
 
 func (g *GameState) MarkCell(pos Offset, player PlayerID) {
-	if g.solution != nil {
-		panic(fmt.Sprintf("Trying to mark a cell at %#v, when the game is already over", pos))
-	}
-
 	g.Board.MarkCell(pos, player)
 
 	g.solution = g.CheckSolutionsAt(pos, player)
 	if g.solution != nil {
 		g.winner = player
+		g.winnerMoveID = g.Board.MoveCount() - 1
 	}
 }
 
 func (g *GameState) UndoLastMove() {
 	g.Board.UndoLastMove()
-	g.solution = nil
+
+	if g.Board.MoveCount() == g.winnerMoveID {
+		g.solution = nil
+		g.winnerMoveID = 0
+	}
 }
 
 func (g *GameState) Winner() PlayerID {
