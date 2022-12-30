@@ -47,6 +47,7 @@ func NewStrikeSet() *StrikeSet {
 }
 
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
+// TODO: add error handling
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	if _, exists := s.players[move.Cell]; exists {
 		return errors.New("strike set: make move: move already done")
@@ -153,6 +154,10 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	}
 
 	return nil
+}
+
+func (s *StrikeSet) UndoMove(cell geom.Offset) {
+	s.strikes = nil
 }
 
 func (s *StrikeSet) StrikesUnfiltered() []Strike {

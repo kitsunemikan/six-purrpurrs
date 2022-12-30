@@ -44,9 +44,9 @@ func StrikeFromStr(start geom.Offset, dir game.StrikeDir, desc string) (strike g
 	return
 }
 
-func TestStrikeSet(t *testing.T) {
+func TestStrikeSetMakeMove(t *testing.T) {
 	t.Run("empty strike set returns nil strike slice", func(t *testing.T) {
-		set := &game.StrikeSet{}
+		set := game.NewStrikeSet()
 
 		got := set.Strikes()
 		if got != nil {
@@ -416,4 +416,38 @@ func TestStrikeSet(t *testing.T) {
 			td.Cmp(t, got, td.Bag(td.Flatten(test.want)))
 		})
 	}
+}
+
+func TestStrikeSetUndoMove(t *testing.T) {
+	t.Run("undoing a single move results in no strikes", func(t *testing.T) {
+		set := game.NewStrikeSet()
+
+		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1})
+		set.UndoMove(geom.Offset{X: 0, Y: 0})
+
+		got := set.Strikes()
+		if got != nil {
+			t.Errorf("got %v, wanted nil", got)
+		}
+	})
+
+	/*
+		tests := []struct {
+			description string
+			moves       []game.PlayerMove
+			want        []game.Strike
+		}{
+			{
+				"single cell results in 4 strikes",
+				[]game.PlayerMove{
+					{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				},
+				[]game.Strike{
+					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+				},
+			},
+	*/
 }
