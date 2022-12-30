@@ -16,15 +16,14 @@ func NewRandomPlayer() game.PlayerAgent {
 }
 
 func (p *RandomPlayer) MakeMove(b *game.BoardState) Offset {
-	validMoves := make([]Offset, 0, len(b.UnoccupiedCells()))
+	moveID := rand.Intn(len(b.UnoccupiedCells()))
 	for cell := range b.UnoccupiedCells() {
-		validMoves = append(validMoves, cell)
+		if moveID == 0 {
+			return cell
+		}
+
+		moveID--
 	}
 
-	if len(validMoves) == 0 {
-		panic("RandomPlayer: no unoccupied cells left")
-	}
-
-	moveID := rand.Intn(len(validMoves))
-	return validMoves[moveID]
+	panic("random player: exhausted all unoccupied cells")
 }
