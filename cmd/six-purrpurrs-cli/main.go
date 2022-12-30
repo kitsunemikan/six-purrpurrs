@@ -25,10 +25,15 @@ func NewRandomPlayer(id game.PlayerID) game.PlayerAgent {
 	return ai.NewRandomPlayer()
 }
 
+func NewObstructingPlayer(id game.PlayerID) game.PlayerAgent {
+	return ai.NewObstructingPlayer(id)
+}
+
 var playerTypeGenerators = map[string]func(game.PlayerID) game.PlayerAgent{
-	"local":  NewLocalPlayer,
-	"random": NewRandomPlayer,
-	"ai":     NewAIPlayer,
+	"local":       NewLocalPlayer,
+	"random":      NewRandomPlayer,
+	"ai":          NewAIPlayer,
+	"obstructing": NewObstructingPlayer,
 }
 
 var (
