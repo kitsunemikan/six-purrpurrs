@@ -2,6 +2,7 @@ package gamecli
 
 import (
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
@@ -34,6 +35,8 @@ type GameplayModel struct {
 	MoveCommitted bool
 	CurrentPlayer game.PlayerID
 	Players       []game.PlayerAgent
+
+	gameStartedAt time.Time
 }
 
 func NewGameplayModel(config GameplayModelConfig) GameplayModel {
@@ -67,6 +70,8 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 		help:    help,
 
 		CurrentPlayer: game.P1,
+
+		gameStartedAt: time.Now(),
 	}
 }
 
@@ -89,7 +94,7 @@ func (m GameplayModel) Init() tea.Cmd {
 func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		// If we set a width on the help menu it can it can gracefully truncate
+		// If we set a width on the help menu it can gracefully truncate
 		// its view as needed
 		m.help.Width = msg.Width
 
@@ -143,7 +148,12 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.MoveCommitted = false
 
 		if m.Game.Over() {
-			return GameOverModel{Game: m.Game, Board: m.board, Help: m.help}, nil
+			return GameOverModel{
+				Game:     m.Game,
+				Board:    m.board,
+				Help:     m.help,
+				GameTime: time.Now().Sub(m.gameStartedAt),
+			}, nil
 		}
 
 		m.CurrentPlayer = m.CurrentPlayer.Other()
