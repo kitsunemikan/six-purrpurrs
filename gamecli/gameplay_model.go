@@ -147,6 +147,11 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.Game.MarkCell(msg.ChosenCell, m.CurrentPlayer)
 		m.MoveCommitted = false
 
+		m.CurrentPlayer = m.CurrentPlayer.Other()
+		m.board.CurrentPlayer = m.CurrentPlayer
+
+		m.board = m.board.NudgeCameraTo(msg.ChosenCell).SnapSelectionIntoCamera()
+
 		if m.Game.Over() {
 			return GameOverModel{
 				Game:     m.Game,
@@ -155,11 +160,6 @@ func (m GameplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				GameTime: time.Now().Sub(m.gameStartedAt),
 			}, nil
 		}
-
-		m.CurrentPlayer = m.CurrentPlayer.Other()
-		m.board.CurrentPlayer = m.CurrentPlayer
-
-		m.board = m.board.NudgeCameraTo(msg.ChosenCell).SnapSelectionIntoCamera()
 
 		return m, m.AwaitMove(m.CurrentPlayer)
 	}
