@@ -3,6 +3,7 @@ package gamecli
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
@@ -13,9 +14,10 @@ import (
 )
 
 type GameOverModel struct {
-	Game  *game.GameState
-	Board BoardModel
-	Help  help.Model
+	Game     *game.GameState
+	Board    BoardModel
+	Help     help.Model
+	GameTime time.Duration
 }
 
 func (m GameOverModel) Init() tea.Cmd {
@@ -66,7 +68,7 @@ func (m GameOverModel) View() string {
 		view.WriteString(" wins!")
 	}
 
-	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\n\n", m.Game.MoveNumber()-1))
+	view.WriteString(fmt.Sprintf("\n\nTotal number of moves made: %d\nTotal time: %v\n\n", m.Game.MoveNumber()-1, m.GameTime))
 
 	view.WriteString(m.Help.View(keymap.GameOver))
 	view.WriteByte('\n')

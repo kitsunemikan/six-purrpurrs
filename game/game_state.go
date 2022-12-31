@@ -1,51 +1,10 @@
 package game
 
 import (
-	"fmt"
-
 	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
-// CellState has a property of, when positive, being equal
-// to a correct PlayerID that occupies it. Special meanings
-// are negative. This way, CellState can be used for indexing
-// slices related to players without any additional manipulation
-type CellState int
-
-const (
-	CellUnavailable CellState = iota - 2
-	CellUnoccupied
-	CellP1
-	CellP2
-)
-
-func (cs CellState) IsOccupiedBy(player PlayerID) bool {
-	return cs >= 0 && PlayerID(cs) == player
-}
-
-type PlayerID int
-
-const (
-	P1 PlayerID = iota
-	P2
-)
-
-func (p PlayerID) Other() PlayerID {
-	if p == P1 {
-		return P2
-	} else if p == P2 {
-		return P1
-	}
-
-	panic(fmt.Sprintf("PlayerID: get other player: player is invalid (value=%d)", p))
-}
-
 var solutionOffsets = []Offset{{X: 1, Y: 0}, {X: 1, Y: 1}, {X: 0, Y: 1}, {X: 1, Y: -1}}
-
-type PlayerMove struct {
-	Cell Offset
-	ID   PlayerID
-}
 
 type GameOptions struct {
 	Border       int
@@ -58,7 +17,9 @@ type GameState struct {
 
 	Board    *BoardState
 	solution []Offset
-	winner   PlayerID
+
+	winner       PlayerID
+	winnerMoveID int
 }
 
 func NewGame(conf GameOptions) *GameState {
@@ -172,21 +133,22 @@ func (g *GameState) BoardBound() Rect {
 }
 
 func (g *GameState) MarkCell(pos Offset, player PlayerID) {
-	if g.solution != nil {
-		panic(fmt.Sprintf("Trying to mark a cell at %#v, when the game is already over", pos))
-	}
-
 	g.Board.MarkCell(pos, player)
 
 	g.solution = g.CheckSolutionsAt(pos, player)
 	if g.solution != nil {
 		g.winner = player
+		g.winnerMoveID = g.Board.MoveCount() - 1
 	}
 }
 
 func (g *GameState) UndoLastMove() {
 	g.Board.UndoLastMove()
-	g.solution = nil
+
+	if g.Board.MoveCount() == g.winnerMoveID {
+		g.solution = nil
+		g.winnerMoveID = 0
+	}
 }
 
 func (g *GameState) Winner() PlayerID {
