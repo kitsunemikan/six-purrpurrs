@@ -156,8 +156,22 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	return nil
 }
 
-func (s *StrikeSet) UndoMove(cell geom.Offset) {
-	s.strikes = nil
+func (s *StrikeSet) UndoMove(cell geom.Offset) error {
+	affectedStrikes, exists := s.board[cell]
+	if !exists {
+		return fmt.Errorf("no move was made at %v", cell)
+	}
+
+	for i, strikeID := range affectedStrikes {
+		if strikeID != -1 {
+			s.strikes[strikeID].Len = 0
+			affectedStrikes[i] = -1
+		}
+	}
+
+	delete(s.players, cell)
+
+	return nil
 }
 
 func (s *StrikeSet) StrikesUnfiltered() []Strike {
@@ -165,10 +179,6 @@ func (s *StrikeSet) StrikesUnfiltered() []Strike {
 }
 
 func (s *StrikeSet) Strikes() []Strike {
-	if len(s.strikes) == 0 {
-		return nil
-	}
-
 	strikes := make([]Strike, 0, len(s.strikes))
 	for i := range s.strikes {
 		if s.strikes[i].Len == 0 {
@@ -176,6 +186,10 @@ func (s *StrikeSet) Strikes() []Strike {
 		}
 
 		strikes = append(strikes, s.strikes[i])
+	}
+
+	if len(strikes) == 0 {
+		return nil
 	}
 
 	return strikes

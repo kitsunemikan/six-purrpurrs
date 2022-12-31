@@ -400,7 +400,6 @@ func TestStrikeSetMakeMove(t *testing.T) {
 				StrikeFromStr(geom.Offset{X: 2, Y: 0}, game.StrikeRight, "O."),
 			},
 		},
-		// Case: merge strikes with restricted extensibility
 	}
 
 	for _, test := range tests {
@@ -431,17 +430,32 @@ func TestStrikeSetUndoMove(t *testing.T) {
 		}
 	})
 
-	/*
-		tests := []struct {
-			description string
-			moves       []game.PlayerMove
-			want        []game.Strike
-		}{
+	tests := []struct {
+		description          string
+		moves                []game.PlayerMove
+		finalAndRevertedMove game.PlayerMove
+		want                 []game.Strike
+	}{
+		{
+			"remove a lone 1-len strike",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+			},
+			game.PlayerMove{Cell: geom.Offset{X: 2, Y: 2}, ID: game.P1},
+			[]game.Strike{
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+			},
+		},
+		/*
 			{
-				"single cell results in 4 strikes",
+				"derestrict a 1-len strike from a single opponent move",
 				[]game.PlayerMove{
 					{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
 				},
+				game.PlayerMove{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P2},
 				[]game.Strike{
 					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
 					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
@@ -449,5 +463,23 @@ func TestStrikeSetUndoMove(t *testing.T) {
 					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
 				},
 			},
-	*/
+		*/
+	}
+
+	for _, test := range tests {
+		t.Run(test.description, func(t *testing.T) {
+			set := game.NewStrikeSet()
+
+			for _, move := range test.moves {
+				set.MakeMove(move)
+			}
+
+			set.MakeMove(test.finalAndRevertedMove)
+			set.UndoMove(test.finalAndRevertedMove.Cell)
+
+			got := set.Strikes()
+
+			td.Cmp(t, got, td.Bag(td.Flatten(test.want)))
+		})
+	}
 }
