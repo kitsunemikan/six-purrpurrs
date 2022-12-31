@@ -8,20 +8,20 @@ import (
 	"github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
-type ObstructingPlayer struct {
+type ObstructivePlayer struct {
 	Me   game.PlayerID
 	rand *rand.Rand
 }
 
-func NewObstructingPlayer(id game.PlayerID) game.PlayerAgent {
+func NewObstructivePlayer(id game.PlayerID) game.PlayerAgent {
 	source := rand.NewSource(time.Now().UnixMicro())
-	return &ObstructingPlayer{
+	return &ObstructivePlayer{
 		Me:   id,
 		rand: rand.New(source),
 	}
 }
 
-func (p *ObstructingPlayer) MakeMove(b *game.BoardState) geom.Offset {
+func (p *ObstructivePlayer) MakeMove(b *game.BoardState) geom.Offset {
 	// Collect shifts
 	dirs := make([]int, len(game.StrikeDirs))
 	for i := range dirs {
