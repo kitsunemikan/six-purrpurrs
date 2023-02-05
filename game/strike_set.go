@@ -178,6 +178,28 @@ func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
 		strikeID := s.board[cell][dir.fixedID]
 		s.board[cell][dir.fixedID] = -1
 
+		// Derestrict oponent strikes if any
+		if afterPlayer, moveExists := s.players[cell.Add(dir.Offset())]; moveExists {
+			if afterPlayer.Other() == s.players[cell] {
+				afterCell := cell.Add(dir.Offset())
+				enemyAfterStrikeID := s.board[afterCell][dir.fixedID]
+
+				s.strikes[enemyAfterStrikeID].ExtendableBefore = true
+			}
+		}
+
+		if beforePlayer, moveExists := s.players[cell.Sub(dir.Offset())]; moveExists {
+			if beforePlayer.Other() == s.players[cell] {
+				beforeCell := cell.Sub(dir.Offset())
+				enemyBeforeStrikeID := s.board[beforeCell][dir.fixedID]
+
+				s.strikes[enemyBeforeStrikeID].ExtendableAfter = true
+			}
+		}
+
+		// Determine the index of the cell to be removed inside the strike
+		// We will handle different cases depending whether it's located on the sides
+		// or somewhere in the middle
 		ds := cell.Sub(s.strikes[strikeID].Start)
 		shift := 0
 		if shift < ds.X {
