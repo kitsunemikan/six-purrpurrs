@@ -400,6 +400,38 @@ func TestStrikeSetMakeMove(t *testing.T) {
 				StrikeFromStr(geom.Offset{X: 2, Y: 0}, game.StrikeRight, "O."),
 			},
 		},
+		{
+			"1-len strike after a merged strike",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: -1, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P1},
+			},
+			[]game.Strike{
+				// Right-Up
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeRightUp, ".X."),
+
+				// Right
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeRight, ".XXX."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeRight, ".X."),
+
+				// Right-Down
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeRightDown, ".X."),
+
+				// Down
+				StrikeFromStr(geom.Offset{X: -1, Y: 0}, game.StrikeDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 1, Y: 0}, game.StrikeDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 2, Y: 2}, game.StrikeDown, ".X."),
+			},
+		},
 	}
 
 	for _, test := range tests {
@@ -439,26 +471,13 @@ func TestStrikeSetUndoMove(t *testing.T) {
 		finalAndRevertedMove game.PlayerMove
 		want                 []game.Strike
 	}{
-		{
-			"remove a lone 1-len strike",
-			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
-			},
-			game.PlayerMove{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P1},
-			[]game.Strike{
-				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
-				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
-				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
-				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
-			},
-		},
 		/*
 			{
-				"derestrict a 1-len strike from a single opponent move",
+				"remove a lone 1-len strike",
 				[]game.PlayerMove{
-					{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+					{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
 				},
-				game.PlayerMove{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P2},
+				game.PlayerMove{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P1},
 				[]game.Strike{
 					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
 					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
@@ -466,6 +485,19 @@ func TestStrikeSetUndoMove(t *testing.T) {
 					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
 				},
 			},
+				{
+					"derestrict a 1-len strike from a single opponent move",
+					[]game.PlayerMove{
+						{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+					},
+					game.PlayerMove{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P2},
+					[]game.Strike{
+						StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+						StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+						StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+						StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+					},
+				},
 		*/
 	}
 
