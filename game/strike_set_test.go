@@ -62,7 +62,7 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"single cell results in 4 strikes",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
 			},
 			[]game.Strike{
 				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
@@ -74,8 +74,8 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"two cells far apart result in 8 strikes",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P2},
-				{Cell: geom.Offset{X: 3, Y: 3}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P2},
+				{Cell: geom.Offset{X: 3, Y: 3}, Player: game.P1},
 			},
 			[]game.Strike{
 				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".O."),
@@ -92,8 +92,8 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"two P1 cells making a 2-len strike going right",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P1},
 			},
 			[]game.Strike{
 				// Singular strikes for the first move
@@ -113,8 +113,8 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"two P1 cells making a 2-len strike going up",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 0, Y: -1}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -1}, Player: game.P1},
 			},
 			[]game.Strike{
 				// Singular strikes for the first move
@@ -134,9 +134,9 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"three P1 cells making a 3-len strike by joining two single cells in right down direction",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 2, Y: 2}, ID: game.P1},
-				{Cell: geom.Offset{X: 1, Y: 1}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 1}, Player: game.P1},
 			},
 			[]game.Strike{
 				// Singular strikes for the first move
@@ -164,23 +164,23 @@ func TestStrikeSetMakeMove(t *testing.T) {
 				// O.O
 				// ...
 				// O.O
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P2},
-				{Cell: geom.Offset{X: 2, Y: 0}, ID: game.P2},
-				{Cell: geom.Offset{X: 2, Y: 2}, ID: game.P2},
-				{Cell: geom.Offset{X: 0, Y: 2}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P2},
+				{Cell: geom.Offset{X: 2, Y: 0}, Player: game.P2},
+				{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 2}, Player: game.P2},
 
 				// OOO
 				// O.O
 				// OOO
-				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P2},
-				{Cell: geom.Offset{X: 2, Y: 1}, ID: game.P2},
-				{Cell: geom.Offset{X: 1, Y: 2}, ID: game.P2},
-				{Cell: geom.Offset{X: 0, Y: 1}, ID: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P2},
+				{Cell: geom.Offset{X: 2, Y: 1}, Player: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 2}, Player: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 1}, Player: game.P2},
 
 				// OOO
 				// OOO
 				// OOO
-				{Cell: geom.Offset{X: 1, Y: 1}, ID: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 1}, Player: game.P2},
 			},
 			[]game.Strike{
 				// Vertical strikes
@@ -212,17 +212,17 @@ func TestStrikeSetMakeMove(t *testing.T) {
 			"create 2 3-len strikes by combining two singular cells, and then combine those",
 			[]game.PlayerMove{
 				// X.X.X.X
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 2, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 4, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 6, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 4, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 6, Y: 0}, Player: game.P1},
 
 				// xxx.xxx
-				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 5, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 5, Y: 0}, Player: game.P1},
 
 				// XXXXXXX
-				{Cell: geom.Offset{X: 3, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 3, Y: 0}, Player: game.P1},
 			},
 			[]game.Strike{
 				// Vertical strikes
@@ -259,8 +259,8 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"Singular P1 and P2 beside each other",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P2},
 			},
 			[]game.Strike{
 				// P1
@@ -279,10 +279,10 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"Two 2-len P1 and P2 strikes beside each other and extended after restriction",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 0, Y: -1}, ID: game.P2},
-				{Cell: geom.Offset{X: 0, Y: 1}, ID: game.P1},
-				{Cell: geom.Offset{X: 0, Y: -2}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -1}, Player: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 1}, Player: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -2}, Player: game.P2},
 			},
 			[]game.Strike{
 				// P1
@@ -307,10 +307,10 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"Two 2-len P1 and P2 strikes beside each other and extended before restriction",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 1}, ID: game.P1},
-				{Cell: geom.Offset{X: 0, Y: -2}, ID: game.P2},
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 0, Y: -1}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 1}, Player: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -2}, Player: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 0, Y: -1}, Player: game.P2},
 			},
 			[]game.Strike{
 				// P1
@@ -337,10 +337,10 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"Completely restrict a 2-len strike",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: -1, Y: -1}, ID: game.P2},
-				{Cell: geom.Offset{X: 1, Y: 1}, ID: game.P1},
-				{Cell: geom.Offset{X: 2, Y: 2}, ID: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: -1, Y: -1}, Player: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 1}, Player: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P2},
 			},
 			[]game.Strike{
 				// P1
@@ -368,11 +368,11 @@ func TestStrikeSetMakeMove(t *testing.T) {
 		{
 			"Merge 2 restricted 1-len strikes",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: -1, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: -2, Y: 0}, ID: game.P2},
-				{Cell: geom.Offset{X: 1, Y: 0}, ID: game.P1},
-				{Cell: geom.Offset{X: 2, Y: 0}, ID: game.P2},
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: -1, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: -2, Y: 0}, Player: game.P2},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 2, Y: 0}, Player: game.P2},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
 			},
 			[]game.Strike{
 				// P1
@@ -421,8 +421,11 @@ func TestStrikeSetUndoMove(t *testing.T) {
 	t.Run("undoing a single move results in no strikes", func(t *testing.T) {
 		set := game.NewStrikeSet()
 
-		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1})
-		set.UndoMove(geom.Offset{X: 0, Y: 0})
+		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1})
+		err := set.UndoLastMove()
+		if err != nil {
+			t.Errorf("got error [%v], want none", err)
+		}
 
 		got := set.Strikes()
 		if got != nil {
@@ -439,9 +442,9 @@ func TestStrikeSetUndoMove(t *testing.T) {
 		{
 			"remove a lone 1-len strike",
 			[]game.PlayerMove{
-				{Cell: geom.Offset{X: 0, Y: 0}, ID: game.P1},
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
 			},
-			game.PlayerMove{Cell: geom.Offset{X: 2, Y: 2}, ID: game.P1},
+			game.PlayerMove{Cell: geom.Offset{X: 2, Y: 2}, Player: game.P1},
 			[]game.Strike{
 				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
 				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
@@ -475,7 +478,7 @@ func TestStrikeSetUndoMove(t *testing.T) {
 			}
 
 			set.MakeMove(test.finalAndRevertedMove)
-			set.UndoMove(test.finalAndRevertedMove.Cell)
+			set.UndoLastMove()
 
 			got := set.Strikes()
 
