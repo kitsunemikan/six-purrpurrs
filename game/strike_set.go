@@ -118,6 +118,7 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			// in the board map
 			afterStrike := s.strikes[afterStrikeID]
 			for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i++ {
+				// TODO: buggg!!! cell is not updated!
 				s.board[cell][dir.fixedID] = beforeStrikeID
 			}
 
@@ -168,15 +169,76 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 }
 
 func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
-	if _, occupied := s.players[cell]; occupied {
+	if _, occupied := s.players[cell]; !occupied {
 		// TODO: proper error
 		return errors.New("strike set: mark unoccupied: cell is already unoccupied")
 	}
 
-	return nil
-}
+	for _, dir := range StrikeDirs {
+		strikeID := s.board[cell][dir.fixedID]
+		s.board[cell][dir.fixedID] = -1
 
-func (s *StrikeSet) UndoLastMove() error {
+		ds := cell.Sub(s.strikes[strikeID].Start)
+		shift := 0
+		if shift < ds.X {
+			shift = ds.X
+		}
+
+		if shift < ds.Y {
+			shift = ds.Y
+		}
+
+		atStart := shift == 0
+		atEnd := shift == s.strikes[strikeID].Len-1
+
+		switch {
+		case atStart && atEnd:
+			// Removing a 1-len strike
+			s.strikes[strikeID].Len = 0
+			s.deletedStrikes = append(s.deletedStrikes, strikeID)
+
+		case atStart && !atEnd:
+			s.strikes[strikeID].Start = cell.Add(dir.Offset())
+			s.strikes[strikeID].Len--
+			s.strikes[strikeID].ExtendableBefore = true
+
+		case !atStart && atEnd:
+			s.strikes[strikeID].Len--
+			s.strikes[strikeID].ExtendableAfter = true
+
+		case !atStart && !atEnd:
+			// NOTE: since this function can mark any cell as unoccupied,
+			// it's not necessarily the case that we will have some spare deleted strikes.
+			// E.g., we have a strike that was constructed by appending cells one after another
+			// and then we "cut it in half" by calling this function
+			newStrikeID := len(s.strikes)
+			if len(s.deletedStrikes) > 0 {
+				newStrikeID = s.deletedStrikes[len(s.deletedStrikes)-1]
+				s.deletedStrikes = s.deletedStrikes[:len(s.deletedStrikes)-1]
+			} else {
+				s.strikes = append(s.strikes, Strike{})
+			}
+
+			// Route second half of the strike to the newly created strike
+			for i := 1; i < s.strikes[strikeID].Len-shift; i++ {
+				rerouteCell := cell.Add(dir.Offset().ScaleUp(i))
+				s.board[rerouteCell][dir.fixedID] = newStrikeID
+			}
+
+			s.strikes[newStrikeID].Start = cell.Add(dir.Offset())
+			s.strikes[newStrikeID].Len = s.strikes[strikeID].Len - shift - 1
+			s.strikes[newStrikeID].Dir = dir
+			s.strikes[newStrikeID].ExtendableBefore = true
+			s.strikes[newStrikeID].ExtendableAfter = s.strikes[strikeID].ExtendableAfter
+
+			s.strikes[strikeID].Len = shift
+			s.strikes[strikeID].ExtendableAfter = true
+		}
+	}
+
+	// Make unoccupied
+	delete(s.players, cell)
+
 	return nil
 }
 
