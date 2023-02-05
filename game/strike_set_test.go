@@ -565,22 +565,34 @@ func TestStrikeSetMarkUnoccupied(t *testing.T) {
 				StrikeFromStr(geom.Offset{X: 1, Y: -1}, game.StrikeDown, ".X."),
 			},
 		},
-		/*
-			{
-				"derestrict a 1-len strike from a single opponent move",
-				[]game.PlayerMove{
-					{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
-					{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P2},
-				},
-				geom.Offset{X: 1, Y: 0},
-				[]game.Strike{
-					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
-					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
-					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
-					StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
-				},
+		{
+			"derestrict a 1-len strike from a single opponent move from the beginning",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: -1, Y: 0}, Player: game.P2},
 			},
-		*/
+			geom.Offset{X: -1, Y: 0},
+			[]game.Strike{
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+			},
+		},
+		{
+			"derestrict a 1-len strike from a single opponent move from the end",
+			[]game.PlayerMove{
+				{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1},
+				{Cell: geom.Offset{X: 1, Y: 0}, Player: game.P2},
+			},
+			geom.Offset{X: 1, Y: 0},
+			[]game.Strike{
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightUp, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRight, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeRightDown, ".X."),
+				StrikeFromStr(geom.Offset{X: 0, Y: 0}, game.StrikeDown, ".X."),
+			},
+		},
 	}
 
 	for _, test := range tests {
