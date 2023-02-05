@@ -50,10 +50,11 @@ func NewStrikeSet() *StrikeSet {
 // TODO: add error handling
 func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	if _, exists := s.players[move.Cell]; exists {
+		// TODO: add test for the error + make sentinel + wrap error
 		return errors.New("strike set: make move: move already done")
 	}
 
-	s.players[move.Cell] = move.ID
+	s.players[move.Cell] = move.Player
 
 	for _, dir := range StrikeDirs {
 		// Create reference arary, if it's a new cell
@@ -70,9 +71,9 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 		beforeStrikeID := -1
 		beforeCell := move.Cell.Sub(dir.Offset())
 		if p, ok := s.players[beforeCell]; ok {
-			if p == move.ID {
+			if p == move.Player {
 				beforeStrikeID = s.board[beforeCell][dir.fixedID]
-			} else if p == move.ID.Other() {
+			} else if p == move.Player.Other() {
 				enemyBeforeStrikeID = s.board[beforeCell][dir.fixedID]
 			}
 		}
@@ -81,9 +82,9 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 		afterStrikeID := -1
 		afterCell := move.Cell.Add(dir.Offset())
 		if p, ok := s.players[afterCell]; ok {
-			if p == move.ID {
+			if p == move.Player {
 				afterStrikeID = s.board[afterCell][dir.fixedID]
-			} else if p == move.ID.Other() {
+			} else if p == move.Player.Other() {
 				enemyAfterStrikeID = s.board[afterCell][dir.fixedID]
 			}
 		}
@@ -128,7 +129,7 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			// In case there's no already existing strikes nearby, create a new strike
 
 			s.strikes = append(s.strikes, Strike{
-				Player:           move.ID,
+				Player:           move.Player,
 				Start:            move.Cell,
 				Len:              1,
 				Dir:              dir,
@@ -156,21 +157,7 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 	return nil
 }
 
-func (s *StrikeSet) UndoMove(cell geom.Offset) error {
-	affectedStrikes, exists := s.board[cell]
-	if !exists {
-		return fmt.Errorf("no move was made at %v", cell)
-	}
-
-	for i, strikeID := range affectedStrikes {
-		if strikeID != -1 {
-			s.strikes[strikeID].Len = 0
-			affectedStrikes[i] = -1
-		}
-	}
-
-	delete(s.players, cell)
-
+func (s *StrikeSet) UndoLastMove() error {
 	return nil
 }
 

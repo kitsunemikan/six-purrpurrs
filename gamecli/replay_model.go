@@ -69,7 +69,7 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			for m.nextMove < len(m.moves) {
 				move := m.moves[m.nextMove]
-				m.game.MarkCell(move.Cell, move.ID)
+				m.game.MarkCell(move.Cell, move.Player)
 				m.nextMove++
 			}
 			return m.parent, nil
@@ -100,7 +100,7 @@ func (m ReplayModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			move := m.moves[m.nextMove]
-			m.game.MarkCell(move.Cell, move.ID)
+			m.game.MarkCell(move.Cell, move.Player)
 			m.nextMove++
 
 			m.board = m.board.MoveSelectionTo(move.Cell).NudgeToSelection()
