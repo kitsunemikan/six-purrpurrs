@@ -32,7 +32,8 @@ type Strike struct {
 }
 
 type StrikeSet struct {
-	strikes []Strike
+	strikes        []Strike
+	deletedStrikes []int
 
 	board   map[geom.Offset][]int
 	players map[geom.Offset]PlayerID
@@ -124,20 +125,29 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			// since we'll need to update all map strike references, which is expensive.
 			// Instead we'll make its length 0, meaning it's an invalid strike
 			s.strikes[afterStrikeID].Len = 0
+			s.deletedStrikes = append(s.deletedStrikes, afterStrikeID)
 
 		case beforeStrikeID == -1 && afterStrikeID == -1:
 			// In case there's no already existing strikes nearby, create a new strike
 
-			s.strikes = append(s.strikes, Strike{
+			newStrikeID := len(s.strikes)
+			if len(s.deletedStrikes) == 0 {
+				s.strikes = append(s.strikes, Strike{})
+			} else {
+				newStrikeID = s.deletedStrikes[len(s.deletedStrikes)-1]
+				s.deletedStrikes = s.deletedStrikes[:len(s.deletedStrikes)-1]
+			}
+
+			s.strikes[newStrikeID] = Strike{
 				Player:           move.Player,
 				Start:            move.Cell,
 				Len:              1,
 				Dir:              dir,
 				ExtendableBefore: true,
 				ExtendableAfter:  true,
-			})
+			}
 
-			s.board[move.Cell][dir.fixedID] = len(s.strikes) - 1
+			s.board[move.Cell][dir.fixedID] = newStrikeID
 		}
 
 		assignedStrikeID := s.board[move.Cell][dir.fixedID]
@@ -152,6 +162,15 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 
 			s.strikes[enemyAfterStrikeID].ExtendableBefore = false
 		}
+	}
+
+	return nil
+}
+
+func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
+	if _, occupied := s.players[cell]; occupied {
+		// TODO: proper error
+		return errors.New("strike set: mark unoccupied: cell is already unoccupied")
 	}
 
 	return nil
