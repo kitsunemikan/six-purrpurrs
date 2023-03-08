@@ -72,7 +72,7 @@ func (g *GameState) CandidateCellsAt(cell Offset, player PlayerID) []Offset {
 	for _, dir := range StrikeDirs {
 		// Forward direction
 		afterCell := cell.Add(dir.Offset())
-		afterStrike := g.strikeStat.StrikesThrough(afterCell)[dir.fixedID]
+		afterStrike := g.strikeStat.StrikesThrough(afterCell)[dir.FixedID]
 		if afterStrike.Player == player {
 			cells := afterStrike.AsCells()
 			candidates = append(candidates, cells...)
@@ -80,7 +80,7 @@ func (g *GameState) CandidateCellsAt(cell Offset, player PlayerID) []Offset {
 
 		// Backward direction
 		beforeCell := cell.Sub(dir.Offset())
-		beforeStrike := g.strikeStat.StrikesThrough(beforeCell)[dir.fixedID]
+		beforeStrike := g.strikeStat.StrikesThrough(beforeCell)[dir.FixedID]
 		if beforeStrike.Player == player {
 			cells := beforeStrike.AsCells()
 			candidates = append(candidates, cells...)

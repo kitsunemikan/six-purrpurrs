@@ -611,3 +611,37 @@ func TestStrikeSetMarkUnoccupied(t *testing.T) {
 		})
 	}
 }
+
+func TestStrikeSetStrikesThrough(t *testing.T) {
+	set := game.NewStrikeSet()
+
+	// 21CB <- Strike merge
+	// 3..A
+	// 4..9
+	// 5678
+	set.MakeMove(geom.Offset{X: 2, Y: 0}, game.P1)
+	set.MakeMove(geom.Offset{X: 3, Y: 0}, game.P1)
+	set.MakeMove(geom.Offset{X: 3, Y: 1}, game.P1)
+	set.MakeMove(geom.Offset{X: 3, Y: 2}, game.P1)
+	set.MakeMove(geom.Offset{X: 3, Y: 3}, game.P1)
+	set.MakeMove(geom.Offset{X: 2, Y: 3}, game.P1)
+	set.MakeMove(geom.Offset{X: 1, Y: 3}, game.P1)
+	set.MakeMove(geom.Offset{X: 0, Y: 3}, game.P1)
+	set.MakeMove(geom.Offset{X: 0, Y: 2}, game.P1)
+	set.MakeMove(geom.Offset{X: 0, Y: 1}, game.P1)
+	set.MakeMove(geom.Offset{X: 0, Y: 0}, game.P1)
+	set.MakeMove(geom.Offset{X: 1, Y: 0}, game.P1)
+
+	strikes := set.StrikesThrough(geom.Offset{X: 3, Y: 0})
+	gotStrike := strikes[game.StrikeRight.FixedID]
+	wantStrike := game.Strike{
+		Player:           game.P1,
+		Dir:              game.StrikeRight,
+		Start:            geom.Offset{X: 0, Y: 0},
+		Len:              4,
+		ExtendableBefore: true,
+		ExtendableAfter:  true,
+	}
+
+	td.Cmp(t, gotStrike, wantStrike)
+}
