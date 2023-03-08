@@ -76,7 +76,7 @@ func NewBoardState(borderWidth int) *BoardState {
 
 	// Mark initial available cells
 	for _, ds := range bs.circleMask {
-		bs.MarkUnoccupied(ds)
+		bs.markUnoccupied(ds)
 	}
 
 	return bs
@@ -139,6 +139,7 @@ func NewBoardStateFromCells(borderWidth int, cells map[Offset]CellState) *BoardS
 	return bs
 }
 
+// TODO: do we need this?
 func (bs *BoardState) Clone() *BoardState {
 	newBs := &BoardState{
 		board:           make(map[Offset]CellState, len(bs.board)),
@@ -234,7 +235,7 @@ func (bs *BoardState) LatestMove() PlayerMove {
 
 // Will turn an unavailable cell into an unoccupied cell.
 // Panics if cell is already available.
-func (bs *BoardState) MarkUnoccupied(pos Offset) {
+func (bs *BoardState) markUnoccupied(pos Offset) {
 	previousState, exists := bs.board[pos]
 	if exists {
 		panic(fmt.Sprintf("board state: add unoccupied cell at %v: the cell is already present (state=%d)", pos, previousState))
@@ -272,7 +273,7 @@ func (bs *BoardState) MarkCell(pos Offset, player PlayerID) {
 
 		_, available := bs.board[curCell]
 		if !available {
-			bs.MarkUnoccupied(curCell)
+			bs.markUnoccupied(curCell)
 			delta.Cells = append(delta.Cells, cellDelta{curCell, CellUnoccupied})
 		}
 	}

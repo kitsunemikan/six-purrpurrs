@@ -15,8 +15,9 @@ type GameState struct {
 	// TODO: make private
 	Conf GameOptions
 
-	Board    *BoardState
-	solution []Offset
+	Board      *BoardState
+	strikeStat *StrikeSet
+	solution   []Offset
 
 	winner       PlayerID
 	winnerMoveID int
@@ -24,8 +25,9 @@ type GameState struct {
 
 func NewGame(conf GameOptions) *GameState {
 	g := &GameState{
-		Conf:  conf,
-		Board: NewBoardState(conf.Border),
+		Conf:       conf,
+		Board:      NewBoardState(conf.Border),
+		strikeStat: NewStrikeSet(),
 	}
 
 	return g
@@ -53,66 +55,35 @@ func (g *GameState) MoveHistoryCopy() []PlayerMove {
 	return g.Board.MoveHistoryCopy()
 }
 
-func (g *GameState) CheckSolutionsAt(pos Offset, player PlayerID) []Offset {
-	solution := make([]Offset, 0, g.Conf.StrikeLength)
+func (g *GameState) CheckSolutionsAt(pos Offset) []Offset {
+	strikes := g.strikeStat.StrikesThrough(pos)
 
-	for _, dir := range solutionOffsets {
-		solution = solution[:0]
-
-		if len(solution) != 0 {
-			panic(42)
-		}
-
-		for i := 0; i < g.Conf.StrikeLength; i++ {
-			curCell := Offset{X: pos.X + i*dir.X, Y: pos.Y + i*dir.Y}
-			if !g.Board.Cell(curCell).IsOccupiedBy(player) {
-				break
-			}
-
-			solution = append(solution, curCell)
-		}
-
-		for i := 1; i < g.Conf.StrikeLength; i++ {
-			curCell := Offset{X: pos.X - i*dir.X, Y: pos.Y - i*dir.Y}
-			if !g.Board.Cell(curCell).IsOccupiedBy(player) {
-				break
-			}
-
-			solution = append(solution, curCell)
-		}
-
-		if len(solution) >= g.Conf.StrikeLength {
-			return solution
+	for strikeID := range strikes {
+		if strikes[strikeID].Len >= g.Conf.StrikeLength {
+			return strikes[strikeID].AsCells()
 		}
 	}
-
 	return nil
 }
 
-func (g *GameState) CandidateCellsAt(pos Offset, player PlayerID) []Offset {
-	candidates := make([]Offset, 0, 2*len(solutionOffsets)*(g.Conf.StrikeLength-1)+1)
+func (g *GameState) CandidateCellsAt(cell Offset, player PlayerID) []Offset {
+	var candidates []Offset
 
-	if g.Board.Cell(pos).IsOccupiedBy(player) {
-		candidates = append(candidates, pos)
-	}
-
-	for _, dir := range solutionOffsets {
-		for i := 1; i < g.Conf.StrikeLength; i++ {
-			curCell := pos.Add(dir.ScaleUp(i))
-			if g.Board.Cell(curCell).IsOccupiedBy(player) {
-				candidates = append(candidates, curCell)
-			} else {
-				break
-			}
+	for _, dir := range StrikeDirs {
+		// Forward direction
+		afterCell := cell.Add(dir.Offset())
+		afterStrike := g.strikeStat.StrikesThrough(afterCell)[dir.fixedID]
+		if afterStrike.Player == player {
+			cells := afterStrike.AsCells()
+			candidates = append(candidates, cells...)
 		}
 
-		for i := 1; i < g.Conf.StrikeLength; i++ {
-			curCell := pos.Add(dir.ScaleUp(-i))
-			if g.Board.Cell(curCell).IsOccupiedBy(player) {
-				candidates = append(candidates, curCell)
-			} else {
-				break
-			}
+		// Backward direction
+		beforeCell := cell.Sub(dir.Offset())
+		beforeStrike := g.strikeStat.StrikesThrough(beforeCell)[dir.fixedID]
+		if beforeStrike.Player == player {
+			cells := beforeStrike.AsCells()
+			candidates = append(candidates, cells...)
 		}
 	}
 
@@ -134,8 +105,9 @@ func (g *GameState) BoardBound() Rect {
 
 func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	g.Board.MarkCell(pos, player)
+	g.strikeStat.MakeMove(pos, player)
 
-	g.solution = g.CheckSolutionsAt(pos, player)
+	g.solution = g.CheckSolutionsAt(pos)
 	if g.solution != nil {
 		g.winner = player
 		g.winnerMoveID = g.Board.MoveCount() - 1
@@ -143,6 +115,9 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 }
 
 func (g *GameState) UndoLastMove() {
+	lastMove := g.Board.LatestMove()
+	g.strikeStat.MarkUnoccupied(lastMove.Cell)
+
 	g.Board.UndoLastMove()
 
 	if g.Board.MoveCount() == g.winnerMoveID {
