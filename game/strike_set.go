@@ -10,14 +10,14 @@ import (
 
 type StrikeDir struct {
 	X, Y    int
-	fixedID int
+	FixedID int
 }
 
 var (
-	StrikeRightUp   = StrikeDir{X: 1, Y: -1, fixedID: 0}
-	StrikeRight     = StrikeDir{X: 1, Y: 0, fixedID: 1}
-	StrikeRightDown = StrikeDir{X: 1, Y: 1, fixedID: 2}
-	StrikeDown      = StrikeDir{X: 0, Y: 1, fixedID: 3}
+	StrikeRightUp   = StrikeDir{X: 1, Y: -1, FixedID: 0}
+	StrikeRight     = StrikeDir{X: 1, Y: 0, FixedID: 1}
+	StrikeRightDown = StrikeDir{X: 1, Y: 1, FixedID: 2}
+	StrikeDown      = StrikeDir{X: 0, Y: 1, FixedID: 3}
 )
 
 var StrikeDirs = []StrikeDir{StrikeRightUp, StrikeRight, StrikeRightDown, StrikeDown}
@@ -85,9 +85,9 @@ func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
 		beforeCell := move.Cell.Sub(dir.Offset())
 		if p, ok := s.players[beforeCell]; ok {
 			if p == move.Player {
-				beforeStrikeID = s.board[beforeCell][dir.fixedID]
+				beforeStrikeID = s.board[beforeCell][dir.FixedID]
 			} else if p == move.Player.Other() {
-				enemyBeforeStrikeID = s.board[beforeCell][dir.fixedID]
+				enemyBeforeStrikeID = s.board[beforeCell][dir.FixedID]
 			}
 		}
 
@@ -96,9 +96,9 @@ func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
 		afterCell := move.Cell.Add(dir.Offset())
 		if p, ok := s.players[afterCell]; ok {
 			if p == move.Player {
-				afterStrikeID = s.board[afterCell][dir.fixedID]
+				afterStrikeID = s.board[afterCell][dir.FixedID]
 			} else if p == move.Player.Other() {
-				enemyAfterStrikeID = s.board[afterCell][dir.fixedID]
+				enemyAfterStrikeID = s.board[afterCell][dir.FixedID]
 			}
 		}
 
@@ -107,7 +107,7 @@ func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
 			// There's only one strike in the opposite direction
 			// In this case, the strike we find will have its length extended by one
 
-			s.board[move.Cell][dir.fixedID] = beforeStrikeID
+			s.board[move.Cell][dir.FixedID] = beforeStrikeID
 			s.strikes[beforeStrikeID].Len++
 
 		case beforeStrikeID == -1 && afterStrikeID != -1:
@@ -115,7 +115,7 @@ func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
 			// In this case, we will become a new starting cell for the strike
 			// and the length will be extended
 
-			s.board[move.Cell][dir.fixedID] = afterStrikeID
+			s.board[move.Cell][dir.FixedID] = afterStrikeID
 			s.strikes[afterStrikeID].Start = move.Cell
 			s.strikes[afterStrikeID].Len++
 
@@ -123,16 +123,15 @@ func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
 			s.strikes[beforeStrikeID].Len += s.strikes[afterStrikeID].Len + 1
 			s.strikes[beforeStrikeID].ExtendableAfter = s.strikes[afterStrikeID].ExtendableAfter
 
-			s.board[move.Cell][dir.fixedID] = beforeStrikeID
+			s.board[move.Cell][dir.FixedID] = beforeStrikeID
 
 			// Route after strike cells to the new extended beforeStrike
 			// Note that there will be no references to the after strike after this
 			// in the board map
 			afterStrike := s.strikes[afterStrikeID]
-			for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i++ {
-				// for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i, cell = i+1, cell.Add(dir.Offset()) {
+			for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i, cell = i+1, cell.Add(dir.Offset()) {
 				// TODO: buggg!!! cell is not updated!
-				s.board[cell][dir.fixedID] = beforeStrikeID
+				s.board[cell][dir.FixedID] = beforeStrikeID
 			}
 
 			// We shouldn't literally remove strike from the strikes array,
@@ -161,10 +160,10 @@ func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
 				ExtendableAfter:  true,
 			}
 
-			s.board[move.Cell][dir.fixedID] = newStrikeID
+			s.board[move.Cell][dir.FixedID] = newStrikeID
 		}
 
-		assignedStrikeID := s.board[move.Cell][dir.fixedID]
+		assignedStrikeID := s.board[move.Cell][dir.FixedID]
 		if enemyBeforeStrikeID != -1 {
 			s.strikes[assignedStrikeID].ExtendableBefore = false
 
@@ -188,14 +187,14 @@ func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
 	}
 
 	for _, dir := range StrikeDirs {
-		strikeID := s.board[cell][dir.fixedID]
-		s.board[cell][dir.fixedID] = -1
+		strikeID := s.board[cell][dir.FixedID]
+		s.board[cell][dir.FixedID] = -1
 
 		// Derestrict oponent strikes if any
 		if afterPlayer, moveExists := s.players[cell.Add(dir.Offset())]; moveExists {
 			if afterPlayer.Other() == s.players[cell] {
 				afterCell := cell.Add(dir.Offset())
-				enemyAfterStrikeID := s.board[afterCell][dir.fixedID]
+				enemyAfterStrikeID := s.board[afterCell][dir.FixedID]
 
 				s.strikes[enemyAfterStrikeID].ExtendableBefore = true
 			}
@@ -204,7 +203,7 @@ func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
 		if beforePlayer, moveExists := s.players[cell.Sub(dir.Offset())]; moveExists {
 			if beforePlayer.Other() == s.players[cell] {
 				beforeCell := cell.Sub(dir.Offset())
-				enemyBeforeStrikeID := s.board[beforeCell][dir.fixedID]
+				enemyBeforeStrikeID := s.board[beforeCell][dir.FixedID]
 
 				s.strikes[enemyBeforeStrikeID].ExtendableAfter = true
 			}
@@ -257,7 +256,7 @@ func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
 			// Route second half of the strike to the newly created strike
 			for i := 1; i < s.strikes[strikeID].Len-shift; i++ {
 				rerouteCell := cell.Add(dir.Offset().ScaleUp(i))
-				s.board[rerouteCell][dir.fixedID] = newStrikeID
+				s.board[rerouteCell][dir.FixedID] = newStrikeID
 			}
 
 			s.strikes[newStrikeID].Start = cell.Add(dir.Offset())
@@ -341,5 +340,5 @@ func (dir StrikeDir) Offset() geom.Offset {
 }
 
 func (dir StrikeDir) IsEqual(other StrikeDir) bool {
-	return dir.X == other.X && dir.Y == other.Y && dir.fixedID == other.fixedID
+	return dir.X == other.X && dir.Y == other.Y && dir.FixedID == other.FixedID
 }
