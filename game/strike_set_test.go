@@ -439,7 +439,7 @@ func TestStrikeSetMakeMove(t *testing.T) {
 			set := game.NewStrikeSet()
 
 			for _, move := range test.moves {
-				set.MakeMove(move)
+				set.MakeMove(move.Cell, move.Player)
 			}
 
 			got := set.Strikes()
@@ -453,7 +453,7 @@ func TestStrikeSetMarkUnoccupied(t *testing.T) {
 	t.Run("undoing a single move results in no strikes", func(t *testing.T) {
 		set := game.NewStrikeSet()
 
-		set.MakeMove(game.PlayerMove{Cell: geom.Offset{X: 0, Y: 0}, Player: game.P1})
+		set.MakeMove(geom.Offset{X: 0, Y: 0}, game.P1)
 		err := set.MarkUnoccupied(geom.Offset{X: 0, Y: 0})
 		if err != nil {
 			t.Errorf("got error [%v], want none", err)
@@ -600,7 +600,7 @@ func TestStrikeSetMarkUnoccupied(t *testing.T) {
 			set := game.NewStrikeSet()
 
 			for _, move := range test.moves {
-				set.MakeMove(move)
+				set.MakeMove(move.Cell, move.Player)
 			}
 
 			set.MarkUnoccupied(test.toRevert)

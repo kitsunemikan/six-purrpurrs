@@ -31,6 +31,16 @@ type Strike struct {
 	ExtendableAfter  bool
 }
 
+func (s *Strike) AsCells() []geom.Offset {
+	cells := make([]geom.Offset, s.Len)
+
+	for i, cell := 0, s.Start; i < s.Len; i, cell = i+1, cell.Add(s.Dir.Offset()) {
+		cells[i] = cell
+	}
+
+	return cells
+}
+
 type StrikeSet struct {
 	strikes        []Strike
 	deletedStrikes []int
@@ -49,7 +59,9 @@ func NewStrikeSet() *StrikeSet {
 
 // It is assumed that the board is filled only with unoccupied cells, and invalid cells don't exist
 // TODO: add error handling
-func (s *StrikeSet) MakeMove(move PlayerMove) error {
+func (s *StrikeSet) MakeMove(atCell geom.Offset, as PlayerID) error {
+	move := PlayerMove{Cell: atCell, Player: as}
+
 	if _, exists := s.players[move.Cell]; exists {
 		// TODO: add test for the error + make sentinel + wrap error
 		return errors.New("strike set: make move: move already done")
@@ -118,6 +130,7 @@ func (s *StrikeSet) MakeMove(move PlayerMove) error {
 			// in the board map
 			afterStrike := s.strikes[afterStrikeID]
 			for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i++ {
+				// for cell, i := afterStrike.Start, 0; i < afterStrike.Len; i, cell = i+1, cell.Add(dir.Offset()) {
 				// TODO: buggg!!! cell is not updated!
 				s.board[cell][dir.fixedID] = beforeStrikeID
 			}
@@ -262,6 +275,22 @@ func (s *StrikeSet) MarkUnoccupied(cell geom.Offset) error {
 	delete(s.players, cell)
 
 	return nil
+}
+
+func (s *StrikeSet) StrikesThrough(cell geom.Offset) [4]Strike {
+	var strikes [4]Strike
+
+	strikeRefs := s.board[cell]
+	for i, strikeID := range strikeRefs {
+		if strikeID == -1 {
+			// strikes[i].Len will be 0
+			continue
+		}
+
+		strikes[i] = s.strikes[strikeID]
+	}
+
+	return strikes
 }
 
 func (s *StrikeSet) StrikesUnfiltered() []Strike {
