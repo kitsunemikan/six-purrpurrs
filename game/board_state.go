@@ -139,6 +139,11 @@ func NewBoardStateFromCells(borderWidth int, cells map[Offset]CellState) *BoardS
 	return bs
 }
 
+func (bs *BoardState) SetBorderWidth(newWidth int) {
+	bs.borderWidth = newWidth
+	bs.circleMask = generateCircleMask(newWidth)
+}
+
 // TODO: do we need this?
 func (bs *BoardState) Clone() *BoardState {
 	newBs := &BoardState{
@@ -246,7 +251,8 @@ func (bs *BoardState) markUnoccupied(pos Offset) {
 }
 
 func (bs *BoardState) MarkCell(pos Offset, player PlayerID) {
-	if bs.board[pos] != CellUnoccupied {
+	// XXX: is this okkkkk?
+	if state, ok := bs.board[pos]; ok && state != CellUnoccupied {
 		panic(fmt.Sprintf("Trying to mark an occupied cell at %#v", pos))
 	}
 

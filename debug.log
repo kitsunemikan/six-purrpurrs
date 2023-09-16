@@ -1,0 +1,1091 @@
+debug 2023/07/08 09:47:27 P1: chose move (-2;2)
+debug 2023/07/08 09:47:28 P2: chose move (-3;3)
+debug 2023/07/08 09:47:28 P1: chose move (-1;3)
+debug 2023/07/08 09:47:29 P2: chose move (-3;4)
+debug 2023/07/08 09:47:29 P1: chose move (0;4)
+debug 2023/07/08 09:47:31 P2: chose move (-3;1)
+debug 2023/07/08 09:47:31 P1: chose move (-3;2)
+debug 2023/07/08 09:47:32 P2: chose move (-4;2)
+debug 2023/07/08 09:50:35 P1: level 1 cell count: 25
+debug 2023/07/08 09:50:35 P1: chose move (-1;-2)
+debug 2023/07/08 09:50:35 
+debug 2023/07/08 09:50:35 P2: level 1 cell count: 37
+debug 2023/07/08 09:50:35 P2: chose move (-1;0)
+debug 2023/07/08 09:50:35 
+debug 2023/07/08 09:50:35 P1: level 1 cell count: 38
+debug 2023/07/08 09:50:35 P1: chose move (-1;-3)
+debug 2023/07/08 09:50:35 
+debug 2023/07/08 09:50:35 P2: level 1 cell count: 42
+debug 2023/07/08 09:50:36 P2: chose move (-2;-1)
+debug 2023/07/08 09:50:36 
+debug 2023/07/08 09:50:36 P1: level 1 cell count: 46
+debug 2023/07/08 09:50:36 P1: chose move (-1;-4)
+debug 2023/07/08 09:50:36 
+debug 2023/07/08 09:50:36 P2: level 1 cell count: 50
+debug 2023/07/08 09:50:37 P2: chose move (-1;-1)
+debug 2023/07/08 09:50:37 
+debug 2023/07/08 09:50:37 P1: level 1 cell count: 49
+debug 2023/07/08 09:50:37 P1: chose move (0;0)
+debug 2023/07/08 09:50:37 
+debug 2023/07/08 09:50:37 P2: level 1 cell count: 48
+debug 2023/07/08 09:50:38 P2: chose move (1;-1)
+debug 2023/07/08 09:50:38 
+debug 2023/07/08 09:50:38 P1: level 1 cell count: 53
+debug 2023/07/08 09:50:38 P1: chose move (-3;-1)
+debug 2023/07/08 09:50:38 
+debug 2023/07/08 09:50:38 P2: level 1 cell count: 57
+debug 2023/07/08 09:50:40 P2: chose move (-4;-3)
+debug 2023/07/08 09:50:40 
+debug 2023/07/08 09:50:40 P1: level 1 cell count: 65
+debug 2023/07/08 09:50:40 P1: chose move (0;1)
+debug 2023/07/08 09:50:40 
+debug 2023/07/08 09:50:40 P2: level 1 cell count: 69
+debug 2023/07/08 09:50:43 P2: chose move (0;-1)
+debug 2023/07/08 09:50:43 
+debug 2023/07/08 09:50:43 P1: level 1 cell count: 68
+debug 2023/07/08 09:50:43 P1: chose move (-2;-6)
+debug 2023/07/08 09:50:43 
+debug 2023/07/08 09:50:43 P2: level 1 cell count: 78
+debug 2023/07/08 09:50:47 P2: chose move (-3;-2)
+debug 2023/07/08 09:50:47 
+debug 2023/07/08 09:50:47 P1: level 1 cell count: 77
+debug 2023/07/08 09:50:47 P1: chose move (-1;-8)
+debug 2023/07/08 09:50:47 
+debug 2023/07/08 09:50:47 P2: level 1 cell count: 88
+debug 2023/07/08 09:50:53 P2: chose move (-6;-5)
+debug 2023/07/08 09:50:53 
+debug 2023/07/08 09:50:53 P1: level 1 cell count: 101
+debug 2023/07/08 09:50:53 P1: chose move (-7;-4)
+debug 2023/07/08 09:50:53 
+debug 2023/07/08 09:50:53 P2: level 1 cell count: 107
+debug 2023/07/08 09:51:04 P2: chose move (-5;-4)
+debug 2023/07/08 09:51:04 
+debug 2023/07/08 09:52:12 P1: level 1 cell count: 25
+debug 2023/07/08 09:52:12 P1: chose move (-1;2)
+debug 2023/07/08 09:52:12 P1: rec depth  1034
+debug 2023/07/08 09:52:12 
+debug 2023/07/08 09:52:12 P2: level 1 cell count: 37
+debug 2023/07/08 09:52:12 P2: chose move (-1;1)
+debug 2023/07/08 09:52:12 P2: rec depth  105337
+debug 2023/07/08 09:52:12 
+debug 2023/07/08 09:52:12 P1: level 1 cell count: 37
+debug 2023/07/08 09:52:12 P1: chose move (0;1)
+debug 2023/07/08 09:52:12 P1: rec depth  2116
+debug 2023/07/08 09:52:12 
+debug 2023/07/08 09:52:12 P2: level 1 cell count: 37
+debug 2023/07/08 09:52:13 P2: chose move (-1;0)
+debug 2023/07/08 09:52:13 P2: rec depth  109163
+debug 2023/07/08 09:52:13 
+debug 2023/07/08 09:52:13 P1: level 1 cell count: 37
+debug 2023/07/08 09:52:13 P1: chose move (1;0)
+debug 2023/07/08 09:52:13 P1: rec depth  2078
+debug 2023/07/08 09:52:13 
+debug 2023/07/08 09:52:13 P2: level 1 cell count: 41
+debug 2023/07/08 09:52:13 P2: chose move (-2;3)
+debug 2023/07/08 09:52:13 P2: rec depth  164925
+debug 2023/07/08 09:52:13 
+debug 2023/07/08 09:52:13 P1: level 1 cell count: 49
+debug 2023/07/08 09:52:13 P1: chose move (-2;2)
+debug 2023/07/08 09:52:13 P1: rec depth  3353
+debug 2023/07/08 09:52:13 
+debug 2023/07/08 09:52:13 P2: level 1 cell count: 49
+debug 2023/07/08 09:52:14 P2: chose move (-3;2)
+debug 2023/07/08 09:52:14 P2: rec depth  202912
+debug 2023/07/08 09:52:14 
+debug 2023/07/08 09:52:14 P1: level 1 cell count: 53
+debug 2023/07/08 09:52:14 P1: chose move (-2;-2)
+debug 2023/07/08 09:52:14 P1: rec depth  3778
+debug 2023/07/08 09:52:14 
+debug 2023/07/08 09:52:14 P2: level 1 cell count: 64
+debug 2023/07/08 09:52:16 P2: chose move (-2;1)
+debug 2023/07/08 09:52:16 P2: rec depth  381762
+debug 2023/07/08 09:52:16 
+debug 2023/07/08 09:52:16 P1: level 1 cell count: 63
+debug 2023/07/08 09:52:16 P1: chose move (-4;3)
+debug 2023/07/08 09:52:16 P1: rec depth  5049
+debug 2023/07/08 09:52:16 
+debug 2023/07/08 09:52:16 P2: level 1 cell count: 68
+debug 2023/07/08 09:52:19 P2: chose move (0;-1)
+debug 2023/07/08 09:52:19 P2: rec depth  461461
+debug 2023/07/08 09:52:19 
+debug 2023/07/08 09:52:19 P1: level 1 cell count: 69
+debug 2023/07/08 09:52:19 P1: chose move (2;-3)
+debug 2023/07/08 09:52:19 P1: rec depth  6132
+debug 2023/07/08 09:52:19 
+debug 2023/07/08 09:52:19 P2: level 1 cell count: 81
+debug 2023/07/08 09:52:23 P2: chose move (2;-1)
+debug 2023/07/08 09:52:23 P2: rec depth  741824
+debug 2023/07/08 09:52:23 
+debug 2023/07/08 09:52:23 P1: level 1 cell count: 82
+debug 2023/07/08 09:52:23 P1: chose move (3;-1)
+debug 2023/07/08 09:52:23 P1: rec depth  7440
+debug 2023/07/08 09:52:23 
+debug 2023/07/08 09:52:23 P2: level 1 cell count: 86
+debug 2023/07/08 09:52:28 P2: chose move (-3;-1)
+debug 2023/07/08 09:52:28 P2: rec depth  874923
+debug 2023/07/08 09:52:28 
+debug 2023/07/08 09:52:28 P1: level 1 cell count: 88
+debug 2023/07/08 09:52:28 P1: chose move (1;-5)
+debug 2023/07/08 09:52:28 P1: rec depth  9655
+debug 2023/07/08 09:52:28 
+debug 2023/07/08 09:52:28 P2: level 1 cell count: 98
+debug 2023/07/08 09:52:37 P2: chose move (-3;1)
+debug 2023/07/08 09:52:37 P2: rec depth  1316453
+debug 2023/07/08 09:52:37 
+debug 2023/07/08 09:52:37 P1: level 1 cell count: 97
+debug 2023/07/08 09:52:37 P1: chose move (-3;-2)
+debug 2023/07/08 09:52:37 P1: rec depth  11703
+debug 2023/07/08 09:52:37 
+debug 2023/07/08 09:52:37 P2: level 1 cell count: 97
+debug 2023/07/08 09:52:45 P2: chose move (-5;1)
+debug 2023/07/08 09:52:45 P2: rec depth  1258109
+debug 2023/07/08 09:52:45 
+debug 2023/07/08 09:52:45 P1: level 1 cell count: 103
+debug 2023/07/08 09:52:45 P1: chose move (-6;1)
+debug 2023/07/08 09:52:45 P1: rec depth  12247
+debug 2023/07/08 09:52:45 
+debug 2023/07/08 09:52:45 P2: level 1 cell count: 107
+debug 2023/07/08 09:52:56 P2: chose move (-3;0)
+debug 2023/07/08 09:52:56 P2: rec depth  1576650
+debug 2023/07/08 09:52:56 
+debug 2023/07/08 09:52:56 P1: level 1 cell count: 106
+debug 2023/07/08 09:52:57 P1: chose move (-3;4)
+debug 2023/07/08 09:52:57 P1: rec depth  13268
+debug 2023/07/08 09:52:57 
+debug 2023/07/08 09:52:57 P2: level 1 cell count: 110
+debug 2023/07/08 09:53:09 P2: chose move (-2;-1)
+debug 2023/07/08 09:53:09 P2: rec depth  1724699
+debug 2023/07/08 09:53:09 
+debug 2023/07/08 09:53:09 P1: level 1 cell count: 109
+debug 2023/07/08 09:53:09 P1: chose move (-5;2)
+debug 2023/07/08 09:53:09 P1: rec depth  13981
+debug 2023/07/08 09:53:09 
+debug 2023/07/08 09:53:09 P2: level 1 cell count: 109
+debug 2023/07/08 09:53:22 P2: chose move (1;-1)
+debug 2023/07/08 09:53:22 P2: rec depth  1715315
+debug 2023/07/08 09:53:22 
+debug 2023/07/08 09:53:22 P1: level 1 cell count: 108
+debug 2023/07/08 09:53:22 P1: chose move (-4;-1)
+debug 2023/07/08 09:53:22 P1: rec depth  13762
+debug 2023/07/08 09:53:22 
+debug 2023/07/08 09:53:22 P2: level 1 cell count: 109
+debug 2023/07/08 09:53:35 P2: chose move (-6;-1)
+debug 2023/07/08 09:53:35 P2: rec depth  1743285
+debug 2023/07/08 09:53:35 
+debug 2023/07/08 09:53:35 P1: level 1 cell count: 112
+debug 2023/07/08 09:53:35 P1: chose move (-1;-1)
+debug 2023/07/08 09:53:35 P1: rec depth  14543
+debug 2023/07/08 09:53:35 
+debug 2023/07/08 09:53:35 P2: level 1 cell count: 111
+debug 2023/07/08 09:53:44 P1: level 1 cell count: 25
+debug 2023/07/08 09:53:44 P1: chose move (-2;-2)
+debug 2023/07/08 09:53:44 P1: rec depth  1027
+debug 2023/07/08 09:53:44 
+debug 2023/07/08 09:53:44 P2: level 1 cell count: 40
+debug 2023/07/08 09:53:44 P2: chose move (0;-4)
+debug 2023/07/08 09:53:44 P2: rec depth  2130
+debug 2023/07/08 09:53:44 
+debug 2023/07/08 09:53:44 P1: level 1 cell count: 53
+debug 2023/07/08 09:53:45 P1: chose move (-3;-3)
+debug 2023/07/08 09:53:45 P1: rec depth  4075
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 59
+debug 2023/07/08 09:53:45 P2: chose move (-1;-4)
+debug 2023/07/08 09:53:45 P2: rec depth  4851
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 59
+debug 2023/07/08 09:53:45 P1: chose move (-4;-4)
+debug 2023/07/08 09:53:45 P1: rec depth  5115
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 65
+debug 2023/07/08 09:53:45 P2: chose move (-1;-1)
+debug 2023/07/08 09:53:45 P2: rec depth  5805
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 65
+debug 2023/07/08 09:53:45 P1: chose move (-2;-4)
+debug 2023/07/08 09:53:45 P1: rec depth  5620
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 64
+debug 2023/07/08 09:53:45 P2: chose move (1;2)
+debug 2023/07/08 09:53:45 P2: rec depth  5717
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 76
+debug 2023/07/08 09:53:45 P1: chose move (-1;-5)
+debug 2023/07/08 09:53:45 P1: rec depth  6464
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 80
+debug 2023/07/08 09:53:45 P2: chose move (0;-6)
+debug 2023/07/08 09:53:45 P2: rec depth  7094
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 85
+debug 2023/07/08 09:53:45 P1: chose move (-2;-3)
+debug 2023/07/08 09:53:45 P1: rec depth  8708
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 84
+debug 2023/07/08 09:53:45 P2: chose move (-2;-5)
+debug 2023/07/08 09:53:45 P2: rec depth  8829
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 84
+debug 2023/07/08 09:53:45 P1: chose move (-4;-3)
+debug 2023/07/08 09:53:45 P1: rec depth  8846
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 84
+debug 2023/07/08 09:53:45 P2: chose move (-1;-3)
+debug 2023/07/08 09:53:45 P2: rec depth  9339
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 83
+debug 2023/07/08 09:53:45 P1: chose move (-4;-5)
+debug 2023/07/08 09:53:45 P1: rec depth  8238
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 84
+debug 2023/07/08 09:53:45 P2: chose move (-4;-2)
+debug 2023/07/08 09:53:45 P2: rec depth  9227
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 85
+debug 2023/07/08 09:53:45 P1: chose move (-3;-4)
+debug 2023/07/08 09:53:45 P1: rec depth  8392
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 84
+debug 2023/07/08 09:53:45 P2: chose move (-5;-6)
+debug 2023/07/08 09:53:45 P2: rec depth  8664
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 92
+debug 2023/07/08 09:53:45 P1: chose move (-3;-2)
+debug 2023/07/08 09:53:45 P1: rec depth  10199
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 91
+debug 2023/07/08 09:53:45 P2: chose move (-3;-5)
+debug 2023/07/08 09:53:45 P2: rec depth  10285
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 90
+debug 2023/07/08 09:53:45 P1: chose move (-5;-4)
+debug 2023/07/08 09:53:45 P1: rec depth  9673
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 91
+debug 2023/07/08 09:53:45 P2: chose move (-7;-4)
+debug 2023/07/08 09:53:45 P2: rec depth  10280
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P1: level 1 cell count: 100
+debug 2023/07/08 09:53:45 P1: chose move (-3;-6)
+debug 2023/07/08 09:53:45 P1: rec depth  12180
+debug 2023/07/08 09:53:45 
+debug 2023/07/08 09:53:45 P2: level 1 cell count: 99
+debug 2023/07/08 09:53:46 P2: chose move (-6;-5)
+debug 2023/07/08 09:53:46 P2: rec depth  12229
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P1: level 1 cell count: 99
+debug 2023/07/08 09:53:46 P1: chose move (-8;-3)
+debug 2023/07/08 09:53:46 P1: rec depth  11299
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P2: level 1 cell count: 106
+debug 2023/07/08 09:53:46 P2: chose move (-2;-7)
+debug 2023/07/08 09:53:46 P2: rec depth  14062
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P1: level 1 cell count: 110
+debug 2023/07/08 09:53:46 P1: chose move (0;-7)
+debug 2023/07/08 09:53:46 P1: rec depth  14206
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P2: level 1 cell count: 111
+debug 2023/07/08 09:53:46 P2: chose move (-4;-7)
+debug 2023/07/08 09:53:46 P2: rec depth  14841
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P1: level 1 cell count: 112
+debug 2023/07/08 09:53:46 P1: chose move (-3;-8)
+debug 2023/07/08 09:53:46 P1: rec depth  14488
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P2: level 1 cell count: 116
+debug 2023/07/08 09:53:46 P2: chose move (2;-9)
+debug 2023/07/08 09:53:46 P2: rec depth  16033
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P1: level 1 cell count: 131
+debug 2023/07/08 09:53:46 P1: chose move (-5;-2)
+debug 2023/07/08 09:53:46 P1: rec depth  19128
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P2: level 1 cell count: 131
+debug 2023/07/08 09:53:46 P2: chose move (-5;-1)
+debug 2023/07/08 09:53:46 P2: rec depth  20579
+debug 2023/07/08 09:53:46 
+debug 2023/07/08 09:53:46 P1: level 1 cell count: 134
+debug 2023/07/08 09:53:47 P1: chose move (-5;-7)
+debug 2023/07/08 09:53:47 P1: rec depth  20068
+debug 2023/07/08 09:53:47 
+debug 2023/07/08 09:53:47 P2: level 1 cell count: 134
+debug 2023/07/08 09:53:47 P2: chose move (-1;-2)
+debug 2023/07/08 09:53:47 P2: rec depth  20919
+debug 2023/07/08 09:53:47 
+debug 2023/07/08 09:53:47 P1: level 1 cell count: 133
+debug 2023/07/08 09:53:47 P1: chose move (-1;0)
+debug 2023/07/08 09:53:47 P1: rec depth  20248
+debug 2023/07/08 09:53:47 
+debug 2023/07/08 09:53:47 P2: level 1 cell count: 133
+debug 2023/07/08 09:53:47 P2: chose move (-2;-1)
+debug 2023/07/08 09:53:47 P2: rec depth  21239
+debug 2023/07/08 09:53:47 
+debug 2023/07/08 09:53:47 P1: level 1 cell count: 132
+debug 2023/07/08 09:53:47 P1: chose move (3;-9)
+debug 2023/07/08 09:53:47 P1: rec depth  19492
+debug 2023/07/08 09:53:47 
+debug 2023/07/08 09:53:47 P2: level 1 cell count: 136
+debug 2023/07/08 09:53:47 P2: chose move (0;0)
+debug 2023/07/08 09:53:47 P2: rec depth  21679
+debug 2023/07/08 09:53:47 
+debug 2023/07/08 09:53:47 P1: level 1 cell count: 135
+debug 2023/07/08 09:53:48 P1: chose move (0;4)
+debug 2023/07/08 09:53:48 P1: rec depth  20904
+debug 2023/07/08 09:53:48 
+debug 2023/07/08 09:53:48 P2: level 1 cell count: 146
+debug 2023/07/08 09:53:48 P2: chose move (0;-11)
+debug 2023/07/08 09:53:48 P2: rec depth  25509
+debug 2023/07/08 09:53:48 
+debug 2023/07/08 09:53:48 P1: level 1 cell count: 157
+debug 2023/07/08 09:53:48 P1: chose move (-5;-9)
+debug 2023/07/08 09:53:48 P1: rec depth  28211
+debug 2023/07/08 09:53:48 
+debug 2023/07/08 09:53:48 P2: level 1 cell count: 163
+debug 2023/07/08 09:53:48 P2: chose move (-5;1)
+debug 2023/07/08 09:53:48 P2: rec depth  30949
+debug 2023/07/08 09:53:48 
+debug 2023/07/08 09:53:48 P1: level 1 cell count: 171
+debug 2023/07/08 09:53:49 P1: chose move (5;-9)
+debug 2023/07/08 09:53:49 P1: rec depth  32422
+debug 2023/07/08 09:53:49 
+debug 2023/07/08 09:53:49 P2: level 1 cell count: 180
+debug 2023/07/08 09:53:49 P2: chose move (5;-7)
+debug 2023/07/08 09:53:49 P2: rec depth  34246
+debug 2023/07/08 09:53:49 
+debug 2023/07/08 09:53:49 P1: level 1 cell count: 189
+debug 2023/07/08 09:53:49 P1: chose move (-6;3)
+debug 2023/07/08 09:53:49 P1: rec depth  36797
+debug 2023/07/08 09:53:49 
+debug 2023/07/08 09:53:49 P2: level 1 cell count: 201
+debug 2023/07/08 09:53:50 P2: chose move (-1;3)
+debug 2023/07/08 09:53:50 P2: rec depth  43342
+debug 2023/07/08 09:53:50 
+debug 2023/07/08 09:53:50 P1: level 1 cell count: 202
+debug 2023/07/08 09:53:50 P1: chose move (2;0)
+debug 2023/07/08 09:53:50 P1: rec depth  44070
+debug 2023/07/08 09:53:50 
+debug 2023/07/08 09:53:50 P2: level 1 cell count: 208
+debug 2023/07/08 09:53:51 P2: chose move (-6;-6)
+debug 2023/07/08 09:53:51 P2: rec depth  47322
+debug 2023/07/08 09:53:51 
+debug 2023/07/08 09:53:51 P1: level 1 cell count: 208
+debug 2023/07/08 09:53:51 P1: chose move (-2;1)
+debug 2023/07/08 09:53:51 P1: rec depth  46651
+debug 2023/07/08 09:53:51 
+debug 2023/07/08 09:53:51 P2: level 1 cell count: 207
+debug 2023/07/08 09:53:51 P2: chose move (-7;-6)
+debug 2023/07/08 09:53:51 P2: rec depth  45599
+debug 2023/07/08 09:53:51 
+debug 2023/07/08 09:53:51 P1: level 1 cell count: 208
+debug 2023/07/08 09:53:52 P1: chose move (-4;-6)
+debug 2023/07/08 09:53:52 P1: rec depth  46583
+debug 2023/07/08 09:53:52 
+debug 2023/07/08 09:53:52 P2: level 1 cell count: 207
+debug 2023/07/08 09:53:52 P2: chose move (-7;-5)
+debug 2023/07/08 09:53:52 P2: rec depth  46186
+debug 2023/07/08 09:53:52 
+debug 2023/07/08 09:53:52 P1: level 1 cell count: 206
+debug 2023/07/08 09:53:53 P1: chose move (-7;-7)
+debug 2023/07/08 09:53:53 P1: rec depth  46684
+debug 2023/07/08 09:53:53 
+debug 2023/07/08 09:53:53 P2: level 1 cell count: 207
+debug 2023/07/08 09:53:53 P2: chose move (-3;0)
+debug 2023/07/08 09:53:53 P2: rec depth  46444
+debug 2023/07/08 09:53:53 
+debug 2023/07/08 09:53:53 P1: level 1 cell count: 206
+debug 2023/07/08 09:53:54 P1: chose move (-4;1)
+debug 2023/07/08 09:53:54 P1: rec depth  45917
+debug 2023/07/08 09:53:54 
+debug 2023/07/08 09:53:54 P2: level 1 cell count: 205
+debug 2023/07/08 09:53:54 P2: chose move (1;-10)
+debug 2023/07/08 09:53:54 P2: rec depth  45787
+debug 2023/07/08 09:53:54 
+debug 2023/07/08 09:53:54 P1: level 1 cell count: 205
+debug 2023/07/08 09:53:55 P1: chose move (3;-8)
+debug 2023/07/08 09:53:55 P1: rec depth  45282
+debug 2023/07/08 09:53:55 
+debug 2023/07/08 09:53:55 P2: level 1 cell count: 204
+debug 2023/07/08 09:53:55 P2: chose move (-6;-4)
+debug 2023/07/08 09:53:55 P2: rec depth  45139
+debug 2023/07/08 09:53:55 
+debug 2023/07/08 09:53:55 P1: level 1 cell count: 203
+debug 2023/07/08 09:53:56 P1: chose move (-2;-10)
+debug 2023/07/08 09:53:56 P1: rec depth  44779
+debug 2023/07/08 09:53:56 
+debug 2023/07/08 09:53:56 P2: level 1 cell count: 204
+debug 2023/07/08 09:53:56 P2: chose move (-7;-3)
+debug 2023/07/08 09:53:56 P2: rec depth  45031
+debug 2023/07/08 09:53:56 
+debug 2023/07/08 09:53:56 P1: level 1 cell count: 203
+debug 2023/07/08 09:53:57 P1: chose move (-7;-1)
+debug 2023/07/08 09:53:57 P1: rec depth  44655
+debug 2023/07/08 09:53:57 
+debug 2023/07/08 09:53:57 P2: level 1 cell count: 205
+debug 2023/07/08 09:53:57 P2: chose move (-5;-3)
+debug 2023/07/08 09:53:57 P2: rec depth  45113
+debug 2023/07/08 09:53:57 
+debug 2023/07/08 09:53:57 P1: level 1 cell count: 204
+debug 2023/07/08 09:53:58 P1: chose move (-3;-1)
+debug 2023/07/08 09:53:58 P1: rec depth  44781
+debug 2023/07/08 09:53:58 
+debug 2023/07/08 09:53:58 P2: level 1 cell count: 203
+debug 2023/07/08 09:53:58 P2: chose move (-3;3)
+debug 2023/07/08 09:53:58 P2: rec depth  44319
+debug 2023/07/08 09:53:58 
+debug 2023/07/08 09:53:58 P1: level 1 cell count: 202
+debug 2023/07/08 09:53:59 P1: chose move (-8;-6)
+debug 2023/07/08 09:53:59 P1: rec depth  43917
+debug 2023/07/08 09:53:59 
+debug 2023/07/08 09:53:59 P2: level 1 cell count: 204
+debug 2023/07/08 09:53:59 P2: chose move (-4;-10)
+debug 2023/07/08 09:53:59 P2: rec depth  44584
+debug 2023/07/08 09:53:59 
+debug 2023/07/08 09:53:59 P1: level 1 cell count: 205
+debug 2023/07/08 09:54:00 P1: chose move (-6;-3)
+debug 2023/07/08 09:54:00 P1: rec depth  45205
+debug 2023/07/08 09:54:00 
+debug 2023/07/08 09:54:00 P2: level 1 cell count: 204
+debug 2023/07/08 09:54:01 P2: chose move (-8;-1)
+debug 2023/07/08 09:54:01 P2: rec depth  45101
+debug 2023/07/08 09:54:01 
+debug 2023/07/08 09:54:01 P1: level 1 cell count: 205
+debug 2023/07/08 09:54:01 P1: chose move (-3;2)
+debug 2023/07/08 09:54:01 P1: rec depth  45904
+debug 2023/07/08 09:54:01 
+debug 2023/07/08 09:54:01 P2: level 1 cell count: 204
+debug 2023/07/08 09:54:02 P2: chose move (-4;3)
+debug 2023/07/08 09:54:02 P2: rec depth  44870
+debug 2023/07/08 09:54:02 
+debug 2023/07/08 09:54:02 P1: level 1 cell count: 203
+debug 2023/07/08 09:54:02 P1: chose move (0;3)
+debug 2023/07/08 09:54:02 P1: rec depth  45139
+debug 2023/07/08 09:54:02 
+debug 2023/07/08 09:54:02 P2: level 1 cell count: 202
+debug 2023/07/08 09:54:03 P2: chose move (-8;-2)
+debug 2023/07/08 09:54:03 P2: rec depth  44278
+debug 2023/07/08 09:54:03 
+debug 2023/07/08 09:54:03 P1: level 1 cell count: 201
+debug 2023/07/08 09:54:03 P1: chose move (-10;0)
+debug 2023/07/08 09:54:03 P1: rec depth  44369
+debug 2023/07/08 09:54:03 
+debug 2023/07/08 09:54:03 P2: level 1 cell count: 212
+debug 2023/07/08 09:54:04 P2: chose move (-11;-1)
+debug 2023/07/08 09:54:04 P2: rec depth  48120
+debug 2023/07/08 09:54:04 
+debug 2023/07/08 09:54:04 P1: level 1 cell count: 218
+debug 2023/07/08 09:54:05 P1: chose move (3;-7)
+debug 2023/07/08 09:54:05 P1: rec depth  51666
+debug 2023/07/08 09:54:05 
+debug 2023/07/08 09:54:05 P2: level 1 cell count: 217
+debug 2023/07/08 09:54:05 P2: chose move (3;-6)
+debug 2023/07/08 09:54:05 P2: rec depth  51099
+debug 2023/07/08 09:54:05 
+debug 2023/07/08 09:54:05 P1: level 1 cell count: 219
+debug 2023/07/08 09:54:06 P1: chose move (0;2)
+debug 2023/07/08 09:54:06 P1: rec depth  51459
+debug 2023/07/08 09:54:06 
+debug 2023/07/08 09:54:06 P2: level 1 cell count: 218
+debug 2023/07/08 09:54:07 P2: chose move (0;5)
+debug 2023/07/08 09:54:07 P2: rec depth  51828
+debug 2023/07/08 09:54:07 
+debug 2023/07/08 09:54:07 P1: level 1 cell count: 222
+debug 2023/07/08 09:54:08 P1: chose move (-6;-10)
+debug 2023/07/08 09:54:08 P1: rec depth  52835
+debug 2023/07/08 09:54:08 
+debug 2023/07/08 09:54:08 P2: level 1 cell count: 225
+debug 2023/07/08 09:54:09 P2: chose move (1;-13)
+debug 2023/07/08 09:54:09 P2: rec depth  54842
+debug 2023/07/08 09:54:09 
+debug 2023/07/08 09:54:09 P1: level 1 cell count: 235
+debug 2023/07/08 09:54:09 P1: chose move (2;-1)
+debug 2023/07/08 09:54:09 P1: rec depth  59420
+debug 2023/07/08 09:54:09 
+debug 2023/07/08 09:54:09 P2: level 1 cell count: 236
+debug 2023/07/08 09:54:10 P2: chose move (3;-1)
+debug 2023/07/08 09:54:10 P2: rec depth  60239
+debug 2023/07/08 09:54:10 
+debug 2023/07/08 09:54:10 P1: level 1 cell count: 240
+debug 2023/07/08 09:54:11 P1: chose move (-5;0)
+debug 2023/07/08 09:54:11 P1: rec depth  62650
+debug 2023/07/08 09:54:11 
+debug 2023/07/08 09:54:11 P2: level 1 cell count: 239
+debug 2023/07/08 09:54:12 P2: chose move (-3;-12)
+debug 2023/07/08 09:54:12 P2: rec depth  62085
+debug 2023/07/08 09:54:12 
+debug 2023/07/08 09:54:12 P1: level 1 cell count: 245
+debug 2023/07/08 09:54:13 P1: chose move (2;-2)
+debug 2023/07/08 09:54:13 P1: rec depth  64981
+debug 2023/07/08 09:54:13 
+debug 2023/07/08 09:54:13 P2: level 1 cell count: 244
+debug 2023/07/08 09:54:14 P2: chose move (-13;-1)
+debug 2023/07/08 09:54:14 P2: rec depth  63553
+debug 2023/07/08 09:54:14 
+debug 2023/07/08 09:54:14 P1: level 1 cell count: 253
+debug 2023/07/08 09:54:15 P1: chose move (-6;-1)
+debug 2023/07/08 09:54:15 P1: rec depth  67959
+debug 2023/07/08 09:54:15 
+debug 2023/07/08 09:54:15 P2: level 1 cell count: 252
+debug 2023/07/08 09:54:16 P2: chose move (2;1)
+debug 2023/07/08 09:54:16 P2: rec depth  67309
+debug 2023/07/08 09:54:16 
+debug 2023/07/08 09:54:16 P1: level 1 cell count: 252
+debug 2023/07/08 09:54:17 P1: chose move (-7;-2)
+debug 2023/07/08 09:54:17 P1: rec depth  67392
+debug 2023/07/08 09:54:17 
+debug 2023/09/16 13:18:12 P2: level 1 cell count: 24
+debug 2023/09/16 13:18:12 P2: chose move (2;-2)
+debug 2023/09/16 13:18:12 P2: rec depth  955
+debug 2023/09/16 13:18:12 
+debug 2023/09/16 13:18:13 P2: level 1 cell count: 43
+debug 2023/09/16 13:18:13 P2: chose move (-2;0)
+debug 2023/09/16 13:18:13 P2: rec depth  2634
+debug 2023/09/16 13:18:13 
+debug 2023/09/16 13:18:14 P2: level 1 cell count: 48
+debug 2023/09/16 13:18:14 P2: chose move (2;0)
+debug 2023/09/16 13:18:14 P2: rec depth  3072
+debug 2023/09/16 13:18:14 
+debug 2023/09/16 13:18:16 P2: level 1 cell count: 50
+debug 2023/09/16 13:18:16 P2: chose move (-3;-2)
+debug 2023/09/16 13:18:16 P2: rec depth  3444
+debug 2023/09/16 13:18:16 
+debug 2023/09/16 13:18:16 P2: level 1 cell count: 59
+debug 2023/09/16 13:18:16 P2: chose move (0;-3)
+debug 2023/09/16 13:18:16 P2: rec depth  4408
+debug 2023/09/16 13:18:16 
+debug 2023/09/16 13:18:18 P2: level 1 cell count: 67
+debug 2023/09/16 13:18:18 P2: chose move (0;3)
+debug 2023/09/16 13:18:18 P2: rec depth  5520
+debug 2023/09/16 13:18:18 
+debug 2023/09/16 13:18:19 P2: level 1 cell count: 75
+debug 2023/09/16 13:18:19 P2: chose move (-2;1)
+debug 2023/09/16 13:18:19 P2: rec depth  6594
+debug 2023/09/16 13:18:19 
+debug 2023/09/16 13:18:22 P2: level 1 cell count: 76
+debug 2023/09/16 13:18:22 P2: chose move (-2;2)
+debug 2023/09/16 13:18:22 P2: rec depth  6921
+debug 2023/09/16 13:18:22 
+debug 2023/09/16 13:18:23 P2: level 1 cell count: 76
+debug 2023/09/16 13:18:23 P2: chose move (2;2)
+debug 2023/09/16 13:18:23 P2: rec depth  6857
+debug 2023/09/16 13:18:23 
+debug 2023/09/16 13:18:26 P2: level 1 cell count: 77
+debug 2023/09/16 13:18:26 P2: chose move (-3;-3)
+debug 2023/09/16 13:18:26 P2: rec depth  7216
+debug 2023/09/16 13:18:26 
+debug 2023/09/16 13:18:28 P2: level 1 cell count: 78
+debug 2023/09/16 13:18:28 P2: chose move (-3;-5)
+debug 2023/09/16 13:18:28 P2: rec depth  7404
+debug 2023/09/16 13:18:28 
+debug 2023/09/16 13:18:30 P2: level 1 cell count: 86
+debug 2023/09/16 13:18:30 P2: chose move (-3;-4)
+debug 2023/09/16 13:18:30 P2: rec depth  9141
+debug 2023/09/16 13:18:30 
+debug 2023/09/16 13:18:32 P2: level 1 cell count: 85
+debug 2023/09/16 13:18:32 P2: chose move (-2;-1)
+debug 2023/09/16 13:18:32 P2: rec depth  8886
+debug 2023/09/16 13:18:32 
+debug 2023/09/16 13:18:34 P2: level 1 cell count: 85
+debug 2023/09/16 13:18:34 P2: chose move (-3;-6)
+debug 2023/09/16 13:18:34 P2: rec depth  8504
+debug 2023/09/16 13:18:34 
+debug 2023/09/16 13:18:37 P2: level 1 cell count: 93
+debug 2023/09/16 13:18:37 P2: chose move (-4;-8)
+debug 2023/09/16 13:18:37 P2: rec depth  10357
+debug 2023/09/16 13:18:37 
+debug 2023/09/16 13:18:40 P2: level 1 cell count: 100
+debug 2023/09/16 13:18:40 P2: chose move (4;1)
+debug 2023/09/16 13:18:40 P2: rec depth  11695
+debug 2023/09/16 13:18:40 
+debug 2023/09/16 13:18:41 P2: level 1 cell count: 108
+debug 2023/09/16 13:18:41 P2: chose move (1;-2)
+debug 2023/09/16 13:18:41 P2: rec depth  13520
+debug 2023/09/16 13:18:41 
+debug 2023/09/16 13:18:42 P2: level 1 cell count: 107
+debug 2023/09/16 13:18:42 P2: chose move (1;4)
+debug 2023/09/16 13:18:42 P2: rec depth  13588
+debug 2023/09/16 13:18:42 
+debug 2023/09/16 13:18:43 P2: level 1 cell count: 111
+debug 2023/09/16 13:18:43 P2: chose move (3;4)
+debug 2023/09/16 13:18:43 P2: rec depth  14165
+debug 2023/09/16 13:18:43 
+debug 2023/09/16 13:18:44 P2: level 1 cell count: 113
+debug 2023/09/16 13:18:44 P2: chose move (-2;-6)
+debug 2023/09/16 13:18:44 P2: rec depth  14767
+debug 2023/09/16 13:18:44 
+debug 2023/09/16 13:18:44 P2: level 1 cell count: 114
+debug 2023/09/16 13:18:45 P2: chose move (-1;-2)
+debug 2023/09/16 13:18:45 P2: rec depth  14670
+debug 2023/09/16 13:18:45 
+debug 2023/09/16 13:18:46 P2: level 1 cell count: 114
+debug 2023/09/16 13:18:46 P2: chose move (5;4)
+debug 2023/09/16 13:18:46 P2: rec depth  14789
+debug 2023/09/16 13:18:46 
+debug 2023/09/16 13:18:49 P2: level 1 cell count: 118
+debug 2023/09/16 13:18:49 P2: chose move (1;5)
+debug 2023/09/16 13:18:49 P2: rec depth  15858
+debug 2023/09/16 13:18:49 
+debug 2023/09/16 13:18:49 P2: level 1 cell count: 123
+debug 2023/09/16 13:18:50 P2: chose move (4;6)
+debug 2023/09/16 13:18:50 P2: rec depth  17739
+debug 2023/09/16 13:18:50 
+debug 2023/09/16 13:18:51 P2: level 1 cell count: 127
+debug 2023/09/16 13:18:51 P2: chose move (5;3)
+debug 2023/09/16 13:18:51 P2: rec depth  17947
+debug 2023/09/16 13:18:51 
+debug 2023/09/16 13:18:52 P2: level 1 cell count: 128
+debug 2023/09/16 13:18:52 P2: chose move (2;8)
+debug 2023/09/16 13:18:52 P2: rec depth  18557
+debug 2023/09/16 13:18:52 
+debug 2023/09/16 13:18:55 P2: level 1 cell count: 136
+debug 2023/09/16 13:18:55 P2: chose move (-3;4)
+debug 2023/09/16 13:18:55 P2: rec depth  20921
+debug 2023/09/16 13:18:55 
+debug 2023/09/16 13:18:56 P2: level 1 cell count: 144
+debug 2023/09/16 13:18:56 P2: chose move (-2;-9)
+debug 2023/09/16 13:18:56 P2: rec depth  22899
+debug 2023/09/16 13:18:56 
+debug 2023/09/16 13:19:03 P2: level 1 cell count: 150
+debug 2023/09/16 13:19:04 P2: chose move (6;3)
+debug 2023/09/16 13:19:04 P2: rec depth  25818
+debug 2023/09/16 13:19:04 
+debug 2023/09/16 13:19:06 P2: level 1 cell count: 161
+debug 2023/09/16 13:19:06 P2: chose move (5;1)
+debug 2023/09/16 13:19:06 P2: rec depth  28629
+debug 2023/09/16 13:19:06 
+debug 2023/09/16 13:19:07 P2: level 1 cell count: 168
+debug 2023/09/16 13:19:07 P2: chose move (-3;-11)
+debug 2023/09/16 13:19:07 P2: rec depth  30838
+debug 2023/09/16 13:19:07 
+debug 2023/09/16 13:19:08 P2: level 1 cell count: 186
+debug 2023/09/16 13:19:08 P2: chose move (5;2)
+debug 2023/09/16 13:19:08 P2: rec depth  35848
+debug 2023/09/16 13:19:08 
+debug 2023/09/16 13:19:09 P2: level 1 cell count: 193
+debug 2023/09/16 13:19:09 P2: chose move (5;0)
+debug 2023/09/16 13:19:09 P2: rec depth  40526
+debug 2023/09/16 13:19:09 
+debug 2023/09/16 13:19:11 P2: level 1 cell count: 200
+debug 2023/09/16 13:19:11 P2: chose move (5;5)
+debug 2023/09/16 13:19:11 P2: rec depth  42948
+debug 2023/09/16 13:19:11 
+debug 2023/09/16 13:19:17 P2: level 1 cell count: 29
+debug 2023/09/16 13:19:17 P2: chose move (1;3)
+debug 2023/09/16 13:19:17 P2: rec depth  1224
+debug 2023/09/16 13:19:17 
+debug 2023/09/16 13:19:17 P2: level 1 cell count: 45
+debug 2023/09/16 13:19:17 P2: chose move (1;1)
+debug 2023/09/16 13:19:17 P2: rec depth  2896
+debug 2023/09/16 13:19:17 
+debug 2023/09/16 13:19:18 P2: level 1 cell count: 50
+debug 2023/09/16 13:19:18 P2: chose move (1;2)
+debug 2023/09/16 13:19:18 P2: rec depth  3758
+debug 2023/09/16 13:19:18 
+debug 2023/09/16 13:19:18 P2: level 1 cell count: 53
+debug 2023/09/16 13:19:18 P2: chose move (-4;1)
+debug 2023/09/16 13:19:18 P2: rec depth  3793
+debug 2023/09/16 13:19:18 
+debug 2023/09/16 13:19:20 P2: level 1 cell count: 60
+debug 2023/09/16 13:19:20 P2: chose move (-2;0)
+debug 2023/09/16 13:19:20 P2: rec depth  5062
+debug 2023/09/16 13:19:20 
+debug 2023/09/16 13:19:20 P2: level 1 cell count: 64
+debug 2023/09/16 13:19:20 P2: chose move (-3;0)
+debug 2023/09/16 13:19:20 P2: rec depth  5558
+debug 2023/09/16 13:19:20 
+debug 2023/09/16 13:19:20 P2: level 1 cell count: 68
+debug 2023/09/16 13:19:20 P2: chose move (-3;5)
+debug 2023/09/16 13:19:20 P2: rec depth  5629
+debug 2023/09/16 13:19:20 
+debug 2023/09/16 13:19:21 P2: level 1 cell count: 73
+debug 2023/09/16 13:19:21 P2: chose move (-2;-1)
+debug 2023/09/16 13:19:21 P2: rec depth  6929
+debug 2023/09/16 13:19:21 
+debug 2023/09/16 13:19:22 P2: level 1 cell count: 76
+debug 2023/09/16 13:19:22 P2: chose move (0;7)
+debug 2023/09/16 13:19:22 P2: rec depth  6375
+debug 2023/09/16 13:19:22 
+debug 2023/09/16 13:19:22 P2: level 1 cell count: 88
+debug 2023/09/16 13:19:23 P2: chose move (1;0)
+debug 2023/09/16 13:19:23 P2: rec depth  9459
+debug 2023/09/16 13:19:23 
+debug 2023/09/16 13:19:24 P2: level 1 cell count: 87
+debug 2023/09/16 13:19:24 P2: chose move (1;4)
+debug 2023/09/16 13:19:24 P2: rec depth  8994
+debug 2023/09/16 13:19:24 
+debug 2023/09/16 13:19:25 P2: level 1 cell count: 87
+debug 2023/09/16 13:19:25 P2: chose move (1;-1)
+debug 2023/09/16 13:19:25 P2: rec depth  9138
+debug 2023/09/16 13:19:25 
+debug 2023/09/16 13:19:29 P2: level 1 cell count: 24
+debug 2023/09/16 13:19:29 P2: chose move (0;2)
+debug 2023/09/16 13:19:29 P2: rec depth  991
+debug 2023/09/16 13:19:29 
+debug 2023/09/16 13:19:29 P2: level 1 cell count: 37
+debug 2023/09/16 13:19:29 P2: chose move (-2;0)
+debug 2023/09/16 13:19:29 P2: rec depth  2459
+debug 2023/09/16 13:19:29 
+debug 2023/09/16 13:19:31 P2: level 1 cell count: 41
+debug 2023/09/16 13:19:31 P2: chose move (-3;3)
+debug 2023/09/16 13:19:31 P2: rec depth  2862
+debug 2023/09/16 13:19:31 
+debug 2023/09/16 13:19:31 P2: level 1 cell count: 51
+debug 2023/09/16 13:19:31 P2: chose move (-1;3)
+debug 2023/09/16 13:19:31 P2: rec depth  3586
+debug 2023/09/16 13:19:31 
+debug 2023/09/16 13:19:33 P2: level 1 cell count: 56
+debug 2023/09/16 13:19:33 P2: chose move (-2;3)
+debug 2023/09/16 13:19:33 P2: rec depth  4521
+debug 2023/09/16 13:19:33 
+debug 2023/09/16 13:19:33 P2: level 1 cell count: 59
+debug 2023/09/16 13:19:33 P2: chose move (-1;-1)
+debug 2023/09/16 13:19:33 P2: rec depth  4598
+debug 2023/09/16 13:19:33 
+debug 2023/09/16 13:19:34 P2: level 1 cell count: 67
+debug 2023/09/16 13:19:34 P2: chose move (4;0)
+debug 2023/09/16 13:19:34 P2: rec depth  6120
+debug 2023/09/16 13:19:34 
+debug 2023/09/16 13:19:35 P2: level 1 cell count: 73
+debug 2023/09/16 13:19:35 P2: chose move (2;4)
+debug 2023/09/16 13:19:35 P2: rec depth  6895
+debug 2023/09/16 13:19:35 
+debug 2023/09/16 13:19:36 P2: level 1 cell count: 82
+debug 2023/09/16 13:19:36 P2: chose move (3;-1)
+debug 2023/09/16 13:19:36 P2: rec depth  7423
+debug 2023/09/16 13:19:36 
+debug 2023/09/16 13:19:36 P2: level 1 cell count: 85
+debug 2023/09/16 13:19:36 P2: chose move (0;-2)
+debug 2023/09/16 13:19:36 P2: rec depth  8747
+debug 2023/09/16 13:19:36 
+debug 2023/09/16 13:19:37 P2: level 1 cell count: 89
+debug 2023/09/16 13:19:37 P2: chose move (3;5)
+debug 2023/09/16 13:19:37 P2: rec depth  9570
+debug 2023/09/16 13:19:37 
+debug 2023/09/16 13:19:39 P2: level 1 cell count: 96
+debug 2023/09/16 13:19:39 P2: chose move (1;4)
+debug 2023/09/16 13:19:39 P2: rec depth  11328
+debug 2023/09/16 13:19:39 
+debug 2023/09/16 13:19:39 P2: level 1 cell count: 100
+debug 2023/09/16 13:19:39 P2: chose move (-2;2)
+debug 2023/09/16 13:19:39 P2: rec depth  11257
+debug 2023/09/16 13:19:39 
+debug 2023/09/16 13:19:40 P2: level 1 cell count: 103
+debug 2023/09/16 13:19:40 P2: chose move (0;3)
+debug 2023/09/16 13:19:40 P2: rec depth  12421
+debug 2023/09/16 13:19:40 
+debug 2023/09/16 13:19:40 P2: level 1 cell count: 106
+debug 2023/09/16 13:19:40 P2: chose move (8;4)
+debug 2023/09/16 13:19:40 P2: rec depth  13253
+debug 2023/09/16 13:19:40 
+debug 2023/09/16 13:19:42 P2: level 1 cell count: 112
+debug 2023/09/16 13:19:42 P2: chose move (1;3)
+debug 2023/09/16 13:19:42 P2: rec depth  14534
+debug 2023/09/16 13:19:42 
+debug 2023/09/16 13:19:42 P2: level 1 cell count: 115
+debug 2023/09/16 13:19:43 P2: chose move (-4;3)
+debug 2023/09/16 13:19:43 P2: rec depth  15611
+debug 2023/09/16 13:19:43 
+debug 2023/09/16 13:19:55 P2: level 1 cell count: 24
+debug 2023/09/16 13:19:55 P2: chose move (-1;2)
+debug 2023/09/16 13:19:55 P2: rec depth  979
+debug 2023/09/16 13:19:55 
+debug 2023/09/16 13:19:56 P2: level 1 cell count: 40
+debug 2023/09/16 13:19:56 P2: chose move (-1;0)
+debug 2023/09/16 13:19:56 P2: rec depth  2486
+debug 2023/09/16 13:19:56 
+debug 2023/09/16 13:19:58 P2: level 1 cell count: 42
+debug 2023/09/16 13:19:58 P2: chose move (-2;-1)
+debug 2023/09/16 13:19:58 P2: rec depth  2684
+debug 2023/09/16 13:19:58 
+debug 2023/09/16 13:20:03 P2: level 1 cell count: 64
+debug 2023/09/16 13:20:03 P2: chose move (4;4)
+debug 2023/09/16 13:20:03 P2: rec depth  5154
+debug 2023/09/16 13:20:03 
+debug 2023/09/16 13:20:10 P2: level 1 cell count: 92
+debug 2023/09/16 13:20:10 P2: chose move (-3;-2)
+debug 2023/09/16 13:20:10 P2: rec depth  9301
+debug 2023/09/16 13:20:10 
+debug 2023/09/16 13:20:10 P2: level 1 cell count: 102
+debug 2023/09/16 13:20:10 P2: chose move (3;4)
+debug 2023/09/16 13:20:10 P2: rec depth  12474
+debug 2023/09/16 13:20:10 
+debug 2023/09/16 13:20:11 P2: level 1 cell count: 104
+debug 2023/09/16 13:20:11 P2: chose move (-4;-3)
+debug 2023/09/16 13:20:11 P2: rec depth  12546
+debug 2023/09/16 13:20:11 
+debug 2023/09/16 13:20:13 P2: level 1 cell count: 113
+debug 2023/09/16 13:20:13 P2: chose move (0;1)
+debug 2023/09/16 13:20:13 P2: rec depth  15109
+debug 2023/09/16 13:20:13 
+debug 2023/09/16 13:20:14 P2: level 1 cell count: 111
+debug 2023/09/16 13:20:15 P2: chose move (-3;6)
+debug 2023/09/16 13:20:15 P2: rec depth  15020
+debug 2023/09/16 13:20:15 
+debug 2023/09/16 13:20:18 P2: level 1 cell count: 123
+debug 2023/09/16 13:20:18 P2: chose move (3;6)
+debug 2023/09/16 13:20:18 P2: rec depth  17667
+debug 2023/09/16 13:20:18 
+debug 2023/09/16 13:20:21 P2: level 1 cell count: 148
+debug 2023/09/16 13:20:21 P2: chose move (1;-1)
+debug 2023/09/16 13:20:21 P2: rec depth  25189
+debug 2023/09/16 13:20:21 
+debug 2023/09/16 13:20:22 P2: level 1 cell count: 154
+debug 2023/09/16 13:20:22 P2: chose move (2;4)
+debug 2023/09/16 13:20:22 P2: rec depth  27429
+debug 2023/09/16 13:20:22 
+debug 2023/09/16 13:20:23 P2: level 1 cell count: 167
+debug 2023/09/16 13:20:24 P2: chose move (0;-1)
+debug 2023/09/16 13:20:24 P2: rec depth  32051
+debug 2023/09/16 13:20:24 
+debug 2023/09/16 13:20:24 P2: level 1 cell count: 170
+debug 2023/09/16 13:20:25 P2: chose move (4;7)
+debug 2023/09/16 13:20:25 P2: rec depth  32259
+debug 2023/09/16 13:20:25 
+debug 2023/09/16 13:20:26 P2: level 1 cell count: 173
+debug 2023/09/16 13:20:26 P2: chose move (2;11)
+debug 2023/09/16 13:20:26 P2: rec depth  33677
+debug 2023/09/16 13:20:26 
+debug 2023/09/16 13:20:34 P2: level 1 cell count: 24
+debug 2023/09/16 13:20:34 P2: chose move (2;-1)
+debug 2023/09/16 13:20:34 P2: rec depth  966
+debug 2023/09/16 13:20:34 
+debug 2023/09/16 13:20:35 P2: level 1 cell count: 36
+debug 2023/09/16 13:20:35 P2: chose move (-1;0)
+debug 2023/09/16 13:20:35 P2: rec depth  2054
+debug 2023/09/16 13:20:35 
+debug 2023/09/16 13:20:36 P2: level 1 cell count: 40
+debug 2023/09/16 13:20:36 P2: chose move (3;0)
+debug 2023/09/16 13:20:36 P2: rec depth  2307
+debug 2023/09/16 13:20:36 
+debug 2023/09/16 13:20:37 P2: level 1 cell count: 48
+debug 2023/09/16 13:20:37 P2: chose move (1;-2)
+debug 2023/09/16 13:20:37 P2: rec depth  3554
+debug 2023/09/16 13:20:37 
+debug 2023/09/16 13:20:38 P2: level 1 cell count: 57
+debug 2023/09/16 13:20:38 P2: chose move (2;-2)
+debug 2023/09/16 13:20:38 P2: rec depth  4356
+debug 2023/09/16 13:20:38 
+debug 2023/09/16 13:20:39 P2: level 1 cell count: 63
+debug 2023/09/16 13:20:39 P2: chose move (4;4)
+debug 2023/09/16 13:20:39 P2: rec depth  5118
+debug 2023/09/16 13:20:39 
+debug 2023/09/16 13:20:39 P2: level 1 cell count: 77
+debug 2023/09/16 13:20:39 P2: chose move (5;-1)
+debug 2023/09/16 13:20:39 P2: rec depth  6763
+debug 2023/09/16 13:20:39 
+debug 2023/09/16 13:20:40 P2: level 1 cell count: 89
+debug 2023/09/16 13:20:40 P2: chose move (2;3)
+debug 2023/09/16 13:20:40 P2: rec depth  9562
+debug 2023/09/16 13:20:40 
+debug 2023/09/16 13:20:40 P2: level 1 cell count: 87
+debug 2023/09/16 13:20:40 P2: chose move (-3;4)
+debug 2023/09/16 13:20:40 P2: rec depth  9120
+debug 2023/09/16 13:20:40 
+debug 2023/09/16 13:20:41 P2: level 1 cell count: 98
+debug 2023/09/16 13:20:41 P2: chose move (4;2)
+debug 2023/09/16 13:20:41 P2: rec depth  11604
+debug 2023/09/16 13:20:41 
+debug 2023/09/16 13:20:42 P2: level 1 cell count: 96
+debug 2023/09/16 13:20:42 P2: chose move (0;-3)
+debug 2023/09/16 13:20:42 P2: rec depth  11123
+debug 2023/09/16 13:20:42 
+debug 2023/09/16 13:20:42 P2: level 1 cell count: 101
+debug 2023/09/16 13:20:42 P2: chose move (3;1)
+debug 2023/09/16 13:20:42 P2: rec depth  11816
+debug 2023/09/16 13:20:42 
+debug 2023/09/16 13:20:43 P2: level 1 cell count: 99
+debug 2023/09/16 13:20:43 P2: chose move (-1;-4)
+debug 2023/09/16 13:20:43 P2: rec depth  11340
+debug 2023/09/16 13:20:43 
+debug 2023/09/16 13:20:43 P2: level 1 cell count: 105
+debug 2023/09/16 13:20:43 P2: chose move (4;1)
+debug 2023/09/16 13:20:43 P2: rec depth  12857
+debug 2023/09/16 13:20:43 
+debug 2023/09/16 13:20:47 P2: level 1 cell count: 24
+debug 2023/09/16 13:20:47 P2: chose move (1;1)
+debug 2023/09/16 13:20:47 P2: rec depth  45622
+debug 2023/09/16 13:20:47 
+debug 2023/09/16 13:20:48 P2: level 1 cell count: 32
+debug 2023/09/16 13:20:49 P2: chose move (0;2)
+debug 2023/09/16 13:20:49 P2: rec depth  83652
+debug 2023/09/16 13:20:49 
+debug 2023/09/16 13:20:49 P2: level 1 cell count: 41
+debug 2023/09/16 13:20:50 P2: chose move (1;-2)
+debug 2023/09/16 13:20:50 P2: rec depth  133754
+debug 2023/09/16 13:20:50 
+debug 2023/09/16 13:20:51 P2: level 1 cell count: 54
+debug 2023/09/16 13:20:52 P2: chose move (-1;0)
+debug 2023/09/16 13:20:52 P2: rec depth  287717
+debug 2023/09/16 13:20:52 
+debug 2023/09/16 13:20:53 P2: level 1 cell count: 62
+debug 2023/09/16 13:20:55 P2: chose move (0;-1)
+debug 2023/09/16 13:20:55 P2: rec depth  360855
+debug 2023/09/16 13:20:55 
+debug 2023/09/16 13:21:01 P2: level 1 cell count: 24
+debug 2023/09/16 13:21:01 P2: chose move (0;2)
+debug 2023/09/16 13:21:01 P2: rec depth  999
+debug 2023/09/16 13:21:01 
+debug 2023/09/16 13:21:02 P2: level 1 cell count: 37
+debug 2023/09/16 13:21:02 P2: chose move (2;0)
+debug 2023/09/16 13:21:02 P2: rec depth  2121
+debug 2023/09/16 13:21:02 
+debug 2023/09/16 13:21:03 P2: level 1 cell count: 45
+debug 2023/09/16 13:21:03 P2: chose move (1;1)
+debug 2023/09/16 13:21:03 P2: rec depth  2768
+debug 2023/09/16 13:21:03 
+debug 2023/09/16 13:21:03 P2: level 1 cell count: 49
+debug 2023/09/16 13:21:03 P2: chose move (-3;0)
+debug 2023/09/16 13:21:03 P2: rec depth  3459
+debug 2023/09/16 13:21:03 
+debug 2023/09/16 13:21:04 P2: level 1 cell count: 57
+debug 2023/09/16 13:21:04 P2: chose move (2;1)
+debug 2023/09/16 13:21:04 P2: rec depth  4338
+debug 2023/09/16 13:21:04 
+debug 2023/09/16 13:21:05 P2: level 1 cell count: 61
+debug 2023/09/16 13:21:05 P2: chose move (-2;1)
+debug 2023/09/16 13:21:05 P2: rec depth  4896
+debug 2023/09/16 13:21:05 
+debug 2023/09/16 13:21:06 P2: level 1 cell count: 68
+debug 2023/09/16 13:21:06 P2: chose move (4;1)
+debug 2023/09/16 13:21:06 P2: rec depth  5956
+debug 2023/09/16 13:21:06 
+debug 2023/09/16 13:21:07 P2: level 1 cell count: 81
+debug 2023/09/16 13:21:07 P2: chose move (3;1)
+debug 2023/09/16 13:21:07 P2: rec depth  7408
+debug 2023/09/16 13:21:07 
+debug 2023/09/16 13:21:07 P2: level 1 cell count: 84
+debug 2023/09/16 13:21:07 P2: chose move (5;1)
+debug 2023/09/16 13:21:07 P2: rec depth  8628
+debug 2023/09/16 13:21:07 
+debug 2023/09/16 13:21:08 P2: level 1 cell count: 92
+debug 2023/09/16 13:21:08 P2: chose move (6;1)
+debug 2023/09/16 13:21:08 P2: rec depth  10668
+debug 2023/09/16 13:21:08 
+debug 2023/09/16 13:21:13 P2: level 1 cell count: 24
+debug 2023/09/16 13:21:13 P2: chose move (-2;2)
+debug 2023/09/16 13:21:13 P2: rec depth  957
+debug 2023/09/16 13:21:13 
+debug 2023/09/16 13:21:14 P2: level 1 cell count: 40
+debug 2023/09/16 13:21:14 P2: chose move (-2;0)
+debug 2023/09/16 13:21:14 P2: rec depth  2456
+debug 2023/09/16 13:21:14 
+debug 2023/09/16 13:21:15 P2: level 1 cell count: 45
+debug 2023/09/16 13:21:15 P2: chose move (2;0)
+debug 2023/09/16 13:21:15 P2: rec depth  2788
+debug 2023/09/16 13:21:15 
+debug 2023/09/16 13:21:16 P2: level 1 cell count: 51
+debug 2023/09/16 13:21:16 P2: chose move (-2;1)
+debug 2023/09/16 13:21:16 P2: rec depth  3422
+debug 2023/09/16 13:21:16 
+debug 2023/09/16 13:21:16 P2: level 1 cell count: 52
+debug 2023/09/16 13:21:16 P2: chose move (1;-1)
+debug 2023/09/16 13:21:16 P2: rec depth  3452
+debug 2023/09/16 13:21:16 
+debug 2023/09/16 13:21:17 P2: level 1 cell count: 60
+debug 2023/09/16 13:21:17 P2: chose move (1;4)
+debug 2023/09/16 13:21:17 P2: rec depth  4614
+debug 2023/09/16 13:21:17 
+debug 2023/09/16 13:21:18 P2: level 1 cell count: 64
+debug 2023/09/16 13:21:18 P2: chose move (3;4)
+debug 2023/09/16 13:21:18 P2: rec depth  5218
+debug 2023/09/16 13:21:18 
+debug 2023/09/16 13:21:19 P2: level 1 cell count: 72
+debug 2023/09/16 13:21:19 P2: chose move (-2;3)
+debug 2023/09/16 13:21:19 P2: rec depth  6230
+debug 2023/09/16 13:21:19 
+debug 2023/09/16 13:21:19 P2: level 1 cell count: 71
+debug 2023/09/16 13:21:19 P2: chose move (-2;4)
+debug 2023/09/16 13:21:19 P2: rec depth  6463
+debug 2023/09/16 13:21:19 
+debug 2023/09/16 13:21:20 P2: level 1 cell count: 72
+debug 2023/09/16 13:21:20 P2: chose move (-2;-1)
+debug 2023/09/16 13:21:20 P2: rec depth  6361
+debug 2023/09/16 13:21:20 
+debug 2023/09/16 13:21:27 P2: level 1 cell count: 44
+debug 2023/09/16 13:21:27 P2: chose move (-5;1)
+debug 2023/09/16 13:21:27 P2: rec depth  2554
+debug 2023/09/16 13:21:27 
+debug 2023/09/16 13:21:27 P2: level 1 cell count: 51
+debug 2023/09/16 13:21:27 P2: chose move (-2;0)
+debug 2023/09/16 13:21:27 P2: rec depth  3628
+debug 2023/09/16 13:21:27 
+debug 2023/09/16 13:21:28 P2: level 1 cell count: 51
+debug 2023/09/16 13:21:28 P2: chose move (-4;1)
+debug 2023/09/16 13:21:28 P2: rec depth  3550
+debug 2023/09/16 13:21:28 
+debug 2023/09/16 13:21:29 P2: level 1 cell count: 54
+debug 2023/09/16 13:21:29 P2: chose move (-3;-1)
+debug 2023/09/16 13:21:29 P2: rec depth  4125
+debug 2023/09/16 13:21:29 
+debug 2023/09/16 13:21:30 P2: level 1 cell count: 62
+debug 2023/09/16 13:21:30 P2: chose move (-3;5)
+debug 2023/09/16 13:21:30 P2: rec depth  5090
+debug 2023/09/16 13:21:30 
+debug 2023/09/16 13:21:31 P2: level 1 cell count: 70
+debug 2023/09/16 13:21:31 P2: chose move (-1;1)
+debug 2023/09/16 13:21:31 P2: rec depth  6373
+debug 2023/09/16 13:21:31 
+debug 2023/09/16 13:21:32 P2: level 1 cell count: 73
+debug 2023/09/16 13:21:32 P2: chose move (-5;0)
+debug 2023/09/16 13:21:32 P2: rec depth  6808
+debug 2023/09/16 13:21:32 
+debug 2023/09/16 13:21:33 P2: level 1 cell count: 77
+debug 2023/09/16 13:21:33 P2: chose move (-4;2)
+debug 2023/09/16 13:21:33 P2: rec depth  6604
+debug 2023/09/16 13:21:33 
+debug 2023/09/16 13:21:34 P2: level 1 cell count: 85
+debug 2023/09/16 13:21:34 P2: chose move (1;7)
+debug 2023/09/16 13:21:34 P2: rec depth  8518
+debug 2023/09/16 13:21:34 
+debug 2023/09/16 13:21:35 P2: level 1 cell count: 95
+debug 2023/09/16 13:21:35 P2: chose move (-4;-3)
+debug 2023/09/16 13:21:35 P2: rec depth  10431
+debug 2023/09/16 13:21:35 
+debug 2023/09/16 13:21:36 P2: level 1 cell count: 111
+debug 2023/09/16 13:21:36 P2: chose move (1;5)
+debug 2023/09/16 13:21:36 P2: rec depth  13989
+debug 2023/09/16 13:21:36 
+debug 2023/09/16 13:21:37 P2: level 1 cell count: 120
+debug 2023/09/16 13:21:37 P2: chose move (-4;10)
+debug 2023/09/16 13:21:37 P2: rec depth  16046
+debug 2023/09/16 13:21:37 
+debug 2023/09/16 13:21:38 P2: level 1 cell count: 127
+debug 2023/09/16 13:21:39 P2: chose move (-4;-1)
+debug 2023/09/16 13:21:39 P2: rec depth  18260
+debug 2023/09/16 13:21:39 
+debug 2023/09/16 13:21:42 P2: level 1 cell count: 126
+debug 2023/09/16 13:21:42 P2: chose move (-5;-3)
+debug 2023/09/16 13:21:42 P2: rec depth  17706
+debug 2023/09/16 13:21:42 
+debug 2023/09/16 13:21:43 P2: level 1 cell count: 127
+debug 2023/09/16 13:21:44 P2: chose move (-6;1)
+debug 2023/09/16 13:21:44 P2: rec depth  17854
+debug 2023/09/16 13:21:44 
+debug 2023/09/16 13:21:46 P2: level 1 cell count: 132
+debug 2023/09/16 13:21:46 P2: chose move (0;5)
+debug 2023/09/16 13:21:46 P2: rec depth  19893
+debug 2023/09/16 13:21:46 
+debug 2023/09/16 13:21:46 P2: level 1 cell count: 133
+debug 2023/09/16 13:21:46 P2: chose move (0;11)
+debug 2023/09/16 13:21:46 P2: rec depth  19902
+debug 2023/09/16 13:21:46 
+debug 2023/09/16 13:21:47 P2: level 1 cell count: 140
+debug 2023/09/16 13:21:47 P2: chose move (-4;11)
+debug 2023/09/16 13:21:47 P2: rec depth  22385
+debug 2023/09/16 13:21:47 
+debug 2023/09/16 13:21:48 P2: level 1 cell count: 145
+debug 2023/09/16 13:21:48 P2: chose move (-8;3)
+debug 2023/09/16 13:21:48 P2: rec depth  23556
+debug 2023/09/16 13:21:48 
+debug 2023/09/16 13:21:50 P2: level 1 cell count: 157
+debug 2023/09/16 13:21:50 P2: chose move (-10;3)
+debug 2023/09/16 13:21:50 P2: rec depth  27541
+debug 2023/09/16 13:21:50 
+debug 2023/09/16 13:21:50 P2: level 1 cell count: 170
+debug 2023/09/16 13:21:51 P2: chose move (-7;2)
+debug 2023/09/16 13:21:51 P2: rec depth  31720
+debug 2023/09/16 13:21:51 
+debug 2023/09/16 13:21:53 P2: level 1 cell count: 174
+debug 2023/09/16 13:21:53 P2: chose move (-3;-2)
+debug 2023/09/16 13:21:53 P2: rec depth  33970
+debug 2023/09/16 13:21:53 
