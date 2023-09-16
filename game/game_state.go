@@ -16,7 +16,7 @@ type GameState struct {
 	Conf GameOptions
 
 	Board      *BoardState
-	strikeStat *StrikeSet
+	StrikeStat *StrikeSet
 	solution   []Offset
 
 	winner       PlayerID
@@ -27,10 +27,24 @@ func NewGame(conf GameOptions) *GameState {
 	g := &GameState{
 		Conf:       conf,
 		Board:      NewBoardState(conf.Border),
-		strikeStat: NewStrikeSet(),
+		StrikeStat: NewStrikeSet(),
 	}
 
 	return g
+}
+
+// XXX: I didn't think when wrote this. Expects that no players yet won.
+func (g *GameState) Clone() *GameState {
+	strikeSet := NewStrikeSet()
+	for _, move := range g.Board.moveHistory {
+		strikeSet.MakeMove(move.Cell, move.Player)
+	}
+
+	return &GameState{
+		Conf:       g.Conf,
+		Board:      g.Board.Clone(),
+		StrikeStat: strikeSet,
+	}
 }
 
 func (g *GameState) AllCells() map[Offset]CellState {
@@ -56,7 +70,7 @@ func (g *GameState) MoveHistoryCopy() []PlayerMove {
 }
 
 func (g *GameState) CheckSolutionsAt(pos Offset) []Offset {
-	strikes := g.strikeStat.StrikesThrough(pos)
+	strikes := g.StrikeStat.StrikesThrough(pos)
 
 	for strikeID := range strikes {
 		if strikes[strikeID].Len >= g.Conf.StrikeLength {
@@ -72,7 +86,7 @@ func (g *GameState) CandidateCellsAt(cell Offset, player PlayerID) []Offset {
 	for _, dir := range StrikeDirs {
 		// Forward direction
 		afterCell := cell.Add(dir.Offset())
-		afterStrike := g.strikeStat.StrikesThrough(afterCell)[dir.FixedID]
+		afterStrike := g.StrikeStat.StrikesThrough(afterCell)[dir.FixedID]
 		if afterStrike.Player == player {
 			cells := afterStrike.AsCells()
 			candidates = append(candidates, cells...)
@@ -80,7 +94,7 @@ func (g *GameState) CandidateCellsAt(cell Offset, player PlayerID) []Offset {
 
 		// Backward direction
 		beforeCell := cell.Sub(dir.Offset())
-		beforeStrike := g.strikeStat.StrikesThrough(beforeCell)[dir.FixedID]
+		beforeStrike := g.StrikeStat.StrikesThrough(beforeCell)[dir.FixedID]
 		if beforeStrike.Player == player {
 			cells := beforeStrike.AsCells()
 			candidates = append(candidates, cells...)
@@ -105,7 +119,7 @@ func (g *GameState) BoardBound() Rect {
 
 func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 	g.Board.MarkCell(pos, player)
-	g.strikeStat.MakeMove(pos, player)
+	g.StrikeStat.MakeMove(pos, player)
 
 	g.solution = g.CheckSolutionsAt(pos)
 	if g.solution != nil {
@@ -116,7 +130,7 @@ func (g *GameState) MarkCell(pos Offset, player PlayerID) {
 
 func (g *GameState) UndoLastMove() {
 	lastMove := g.Board.LatestMove()
-	g.strikeStat.MarkUnoccupied(lastMove.Cell)
+	g.StrikeStat.MarkUnoccupied(lastMove.Cell)
 
 	g.Board.UndoLastMove()
 

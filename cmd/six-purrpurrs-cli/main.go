@@ -13,8 +13,16 @@ import (
 	. "github.com/kitsunemikan/six-purrpurrs/geom"
 )
 
-func NewAIPlayer(id game.PlayerID) game.PlayerAgent {
-	return ai.NewDefaultAIPlayer(id)
+func NewAIPlayer1(id game.PlayerID) game.PlayerAgent {
+	p := ai.NewDefaultAIPlayer(id)
+	p.SearchDepth = 2
+	return p
+}
+
+func NewAIPlayer2(id game.PlayerID) game.PlayerAgent {
+	p := ai.NewDefaultAIPlayer(id)
+	p.SearchDepth = 3
+	return p
 }
 
 func NewLocalPlayer(id game.PlayerID) game.PlayerAgent {
@@ -32,7 +40,8 @@ func NewObstructivePlayer(id game.PlayerID) game.PlayerAgent {
 var playerTypeGenerators = map[string]func(game.PlayerID) game.PlayerAgent{
 	"local":       NewLocalPlayer,
 	"random":      NewRandomPlayer,
-	"ai":          NewAIPlayer,
+	"ai1":         NewAIPlayer1,
+	"ai2":         NewAIPlayer2,
 	"obstructive": NewObstructivePlayer,
 }
 
@@ -107,6 +116,13 @@ func main() {
 		ScreenSize: Offset{X: w, Y: h},
 		TrackDepth: trackDepth,
 	}
+
+	f, err := tea.LogToFile("debug.log", "debug")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: open log file: %v\n", err)
+		os.Exit(1)
+	}
+	defer f.Close()
 
 	p := tea.NewProgram(gamecli.NewGameplayModel(modelConf))
 	if err := p.Start(); err != nil {
