@@ -42,12 +42,29 @@ var (
 		key.WithHelp("r", "watch replay"),
 	)
 	Forward = key.NewBinding(
-		key.WithKeys("shift+right", "f"),
-		key.WithHelp("f/shift+→", "forward"),
+		key.WithKeys("right", "f"),
+		key.WithHelp("f/→", "forward"),
 	)
 	Rewind = key.NewBinding(
-		key.WithKeys("shift+left", "r"),
-		key.WithHelp("r/shift+←", "rewind"),
+		key.WithKeys("left", "r"),
+		key.WithHelp("r/←", "rewind"),
+	)
+
+	ReplayCameraUp = key.NewBinding(
+		key.WithKeys("shift+up", "k"),
+		key.WithHelp("k/shift+↑", "forward"),
+	)
+	ReplayCameraDown = key.NewBinding(
+		key.WithKeys("shift+down", "j"),
+		key.WithHelp("j/shift+↓", "rewind"),
+	)
+	ReplayCameraRight = key.NewBinding(
+		key.WithKeys("shift+right", "l"),
+		key.WithHelp("l/shift+→", "forward"),
+	)
+	ReplayCameraLeft = key.NewBinding(
+		key.WithKeys("shift+left", "h"),
+		key.WithHelp("h/shift+←", "rewind"),
 	)
 )
 
@@ -67,10 +84,10 @@ var GameOver = GameOverModel{
 }
 
 var Replay = ReplayModel{
-	Left:    Left,
-	Right:   Right,
-	Up:      Up,
-	Down:    Down,
+	Left:    ReplayCameraLeft,
+	Right:   ReplayCameraRight,
+	Up:      ReplayCameraUp,
+	Down:    ReplayCameraDown,
 	Forward: Forward,
 	Rewind:  Rewind,
 	Help:    Help,
