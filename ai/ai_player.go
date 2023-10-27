@@ -1,7 +1,7 @@
 package ai
 
 import (
-	"log"
+	//"log"
 	"math/rand"
 	"time"
 
@@ -17,6 +17,11 @@ type RankMetric struct {
 
 type IsRankBetterForPlayerFunc func(p game.PlayerID, canMoveNext bool, old *BoardRank, candidate *BoardRank) bool
 
+// defaultMetricBasis represents an ordered set of basis vectors in terms of which
+// the player metrics are represented. Each basis represents a length of a strike
+// and the number sides from which it can be extended. The order of the metric basis
+// allows us to establesh a less-than ordering on the player metric vectors so that
+// we can compare them.
 var defaultMetricBasis = []RankMetric{
 	{8, 2},
 	{8, 1},
@@ -46,6 +51,7 @@ var defaultMetricBasis = []RankMetric{
 	{1, 1},
 }
 
+// BoardRank is represented by a pair of player metric vectors in the default metric basis
 type BoardRank struct {
 	P1, P2 playerMetrics
 }
@@ -89,6 +95,8 @@ func computeRank(s *game.GameState) BoardRank {
 	return rank
 }
 
+// Represents the strike statistics for a player expressed as a vector
+// in the span of specified basis.
 type playerMetrics struct {
 	basis []RankMetric
 	count []int
@@ -138,6 +146,13 @@ func (a playerMetrics) lessThan(b playerMetrics) bool {
 	return false
 }
 
+// The more longer strikes a player has the better,
+// and the more two-side extensible strikes a player has the better.
+// How we balance between these to heuristics is defined by the order of basis vectors in the
+// defaultMetricBasis variable. Additionally, depending of whether the current player can move or not
+// different metrics may be considered. For example if a player has 4-len 2-ext strike and can make a move
+// then it's a guaranteed victory, but if cannot, the other player blocks the strike and turns it into 1-side
+// extensible, robbing it of victory.
 func MetricTwoSideExtensible(player game.PlayerID, canMoveNext bool, old *BoardRank, candidate *BoardRank) bool {
 	oldUs := old.P1
 	oldThem := old.P2
@@ -151,7 +166,12 @@ func MetricTwoSideExtensible(player game.PlayerID, canMoveNext bool, old *BoardR
 		candThem = candidate.P1
 	}
 
-	// TODO: where check victoriousness?
+	// TODO: where check victoriousness? If AI can't look far into the future, it
+	// can use heuristics to recognize some board configurations that will lead to
+	// the opponents victory 100% if certain moves aren't made. For example,
+	// the 4-len 2-ext example, or 5-len 1-ext examples....
+
+	// NOTE: we ignore canMoveNext, as the AI performs well enough
 
 	oldUs.subtract(oldThem)
 	candUs.subtract(candThem)
@@ -199,6 +219,7 @@ func (p *AIPlayer) minimax(state *game.GameState, player game.PlayerID, depth in
 		state.UndoLastMove()
 	}
 
+	// CanMoveNext tells us whether our current player can make a move
 	canMoveNext := depth%2 != 0
 
 	bestOutcome := outcomes[0]
@@ -213,7 +234,14 @@ func (p *AIPlayer) minimax(state *game.GameState, player game.PlayerID, depth in
 
 func (p *AIPlayer) MakeMove(g *game.GameState) Offset {
 	if p.gameCopy == nil {
-		// TODO: illegal moves, border width 5 allows cells that 2 doesn't
+		// NOTE: border radius of 2 is the smallest playeble width, hence by using it
+		// we can skip checking if AI moves are within or not the board.
+		// Additionally, this game copy with all of its unoccupied cells will represent
+		// all the cells that the AI should consider. By limiting it to 2, we greatly limit
+		// the size of the search space for the performance's sake.
+		// Alas, if the border radius is increased, the AI player will be able to play more
+		// optimally, althogh it's up for a debate whether it's a good idea, as the game
+		// may as well never end if players play optimally (mathematicians couldn't prove it)
 		p.gameCopy = game.NewGame(game.GameOptions{
 			Border:  2,
 			Victory: g.VictoryChecker().Clone(),
@@ -228,14 +256,14 @@ func (p *AIPlayer) MakeMove(g *game.GameState) Offset {
 
 	p.recdepth = 0
 
-	log.Printf("%v: level 1 cell count: %v", p.id, len(p.gameCopy.Board.UnoccupiedCells()))
+	// log.Printf("%v: level 1 cell count: %v", p.id, len(p.gameCopy.Board.UnoccupiedCells()))
 
 	_, bestCell := p.minimax(p.gameCopy, p.id, p.SearchDepth)
 
-	log.Printf("%v: chose move %v\n", p.id, bestCell)
-	log.Printf("%v: rec depth  %v\n", p.id, p.recdepth)
+	// log.Printf("%v: chose move %v\n", p.id, bestCell)
+	// log.Printf("%v: rec depth  %v\n", p.id, p.recdepth)
 
-	log.Println()
+	// log.Println()
 
 	return bestCell
 }
