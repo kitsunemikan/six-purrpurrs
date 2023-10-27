@@ -220,12 +220,6 @@ func NewDefaultAIPlayer(id game.PlayerID) *AIPlayer {
 		id:   id,
 		rand: rand.New(rand.NewSource(time.Now().Unix())),
 		cmp:  MetricTwoSideExtensible,
-
-		// TODO: illegal moves, border width 5 allows cells that 2 doesn't
-		gameCopy: game.NewGame(game.GameOptions{
-			Border:       2,
-			StrikeLength: 6,
-		}),
 	}
 }
 
@@ -354,9 +348,17 @@ func (p *AIPlayer) parallelMinimax(state *game.GameState, player game.PlayerID, 
 }
 */
 
-func (p *AIPlayer) MakeMove(b *game.BoardState) Offset {
-	history := b.MoveHistoryCopy()
-	for p.gameCopy.MoveNumber()-1 < b.MoveCount() {
+func (p *AIPlayer) MakeMove(g *game.GameState) Offset {
+	if p.gameCopy == nil {
+		// TODO: illegal moves, border width 5 allows cells that 2 doesn't
+		p.gameCopy = game.NewGame(game.GameOptions{
+			Border:  2,
+			Victory: g.VictoryChecker().Clone(),
+		})
+	}
+
+	history := g.MoveHistoryCopy()
+	for p.gameCopy.MoveNumber() < g.MoveNumber() {
 		move := history[p.gameCopy.MoveNumber()-1]
 		p.gameCopy.MarkCell(move.Cell, move.Player)
 	}

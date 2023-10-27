@@ -21,7 +21,7 @@ func NewObstructivePlayer(id game.PlayerID) game.PlayerAgent {
 	}
 }
 
-func (p *ObstructivePlayer) MakeMove(b *game.BoardState) geom.Offset {
+func (p *ObstructivePlayer) MakeMove(g *game.GameState) geom.Offset {
 	// Collect shifts
 	dirs := make([]int, len(game.StrikeDirs))
 	for i := range dirs {
@@ -33,22 +33,22 @@ func (p *ObstructivePlayer) MakeMove(b *game.BoardState) geom.Offset {
 		dirs[0], dirs[swapID] = dirs[swapID], dirs[0]
 	}
 
-	for opponentCell := range b.PlayerCells()[p.Me.Other()] {
+	for opponentCell := range g.Board.PlayerCells()[p.Me.Other()] {
 		for i := 0; i < len(dirs); i++ {
 			cell := opponentCell.Add(game.StrikeDirs[dirs[i]].Offset())
-			if _, ok := b.UnoccupiedCells()[cell]; ok {
+			if _, ok := g.Board.UnoccupiedCells()[cell]; ok {
 				return cell
 			}
 
 			cell = opponentCell.Sub(game.StrikeDirs[dirs[i]].Offset())
-			if _, ok := b.UnoccupiedCells()[cell]; ok {
+			if _, ok := g.Board.UnoccupiedCells()[cell]; ok {
 				return cell
 			}
 		}
 	}
 
 	// If all opponent's cells are obstructed, choose unoccupied at random
-	for cell := range b.UnoccupiedCells() {
+	for cell := range g.Board.UnoccupiedCells() {
 		return cell
 	}
 

@@ -11,8 +11,8 @@ func NewRandomPlayer() game.PlayerAgent {
 	return &RandomPlayer{}
 }
 
-func (p *RandomPlayer) MakeMove(b *game.BoardState) Offset {
-	for cell := range b.UnoccupiedCells() {
+func (p *RandomPlayer) MakeMove(g *game.GameState) Offset {
+	for cell := range g.Board.UnoccupiedCells() {
 		return cell
 	}
 

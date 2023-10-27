@@ -96,8 +96,10 @@ func main() {
 	players[1] = playerTypeGenerators[*p2TypeFlag](game.P2)
 
 	gameConf := game.GameOptions{
-		Border:       int(*borderFlag),
-		StrikeLength: int(*strikeFlag),
+		Border: int(*borderFlag),
+		Victory: &game.EightDirStrikeVictoryChecker{
+			VictoryLength: int(*strikeFlag),
+		},
 	}
 
 	game := game.NewGame(gameConf)

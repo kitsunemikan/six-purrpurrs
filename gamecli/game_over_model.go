@@ -61,7 +61,7 @@ func (m GameOverModel) View() string {
 	view.WriteString(gameModel.View())
 	view.WriteByte('\n')
 
-	if m.Game.Solution() == nil {
+	if m.Game.VictoriousStrike() == nil {
 		view.WriteString("A draw...")
 	} else {
 		view.WriteString(m.Board.Theme.PlayerCells[m.Game.Winner()])

@@ -5,5 +5,5 @@ import (
 )
 
 type PlayerAgent interface {
-	MakeMove(*BoardState) Offset
+	MakeMove(*GameState) Offset
 }
