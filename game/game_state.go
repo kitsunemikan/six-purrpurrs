@@ -34,19 +34,6 @@ func (g *GameState) VictoryChecker() VictoryChecker {
 	return g.victory
 }
 
-func (g *GameState) Clone() *GameState {
-	strikeSet := NewStrikeSet()
-	for _, move := range g.Board.moveHistory {
-		strikeSet.MakeMove(move.Cell, move.Player)
-	}
-
-	return &GameState{
-		Board:      g.Board.Clone(),
-		StrikeStat: strikeSet,
-		victory:    g.victory.Clone(),
-	}
-}
-
 func (g *GameState) MoveNumber() int {
 	return g.Board.MoveCount() + 1
 }
