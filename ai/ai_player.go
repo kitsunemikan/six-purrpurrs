@@ -1,9 +1,8 @@
 package ai
 
 import (
-	"math/rand"
-	//"sync"
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/kitsunemikan/six-purrpurrs/game"
@@ -50,17 +49,6 @@ var defaultMetricBasis = []RankMetric{
 type BoardRank struct {
 	P1, P2 playerMetrics
 }
-
-/*
-func (a BoardRank) Victorious(player game.PlayerID, strikeLen int, canMoveNext bool) bool {
-	ranks := a.P1
-	if player == game.P2 {
-		ranks = a.P2
-	}
-
-	return ranks.victorious(strikeLen, canMoveNext)
-}
-*/
 
 type moveOutcome struct {
 	Cell Offset
@@ -150,34 +138,6 @@ func (a playerMetrics) lessThan(b playerMetrics) bool {
 	return false
 }
 
-/*
-func (pm playerMetrics) victorious(strikeLen int, canMoveNext bool) bool {
-	for i, rank := range pm.basis {
-		if pm.count[i] == 0 {
-			continue
-		}
-
-		if rank.Len >= strikeLen {
-			return true
-		}
-
-		if !canMoveNext && rank.Len == strikeLen-1 && rank.Extensions == 1 {
-			return true
-		}
-
-		if !canMoveNext && rank.Len == strikeLen-2 && rank.Extensions == 2 {
-			return true
-		}
-
-		if canMoveNext && rank.Len == strikeLen-1 && rank.Extensions == 2 {
-			return true
-		}
-	}
-
-	return false
-}
-*/
-
 func MetricTwoSideExtensible(player game.PlayerID, canMoveNext bool, old *BoardRank, candidate *BoardRank) bool {
 	oldUs := old.P1
 	oldThem := old.P2
@@ -185,10 +145,6 @@ func MetricTwoSideExtensible(player game.PlayerID, canMoveNext bool, old *BoardR
 	candThem := candidate.P2
 
 	if player == game.P2 {
-		/*
-			oldUs, oldThem = oldThem, oldUs
-			candUs, candThem = candThem, candUs
-		*/
 		oldUs = old.P2
 		oldThem = old.P1
 		candUs = candidate.P2
@@ -228,14 +184,6 @@ func (p *AIPlayer) minimax(state *game.GameState, player game.PlayerID, depth in
 	for move := range state.Board.UnoccupiedCells() {
 		state.MarkCell(move, player)
 
-		/*
-			if state.Over() {
-				rank := computeRank(state)
-				state.UndoLastMove()
-				return rank, move
-			}
-		*/
-
 		p.recdepth++
 
 		var rank BoardRank
@@ -254,20 +202,7 @@ func (p *AIPlayer) minimax(state *game.GameState, player game.PlayerID, depth in
 	canMoveNext := depth%2 != 0
 
 	bestOutcome := outcomes[0]
-	// foundValid := false
 	for i := range outcomes {
-		/*
-				if outcomes[i].Rank.Victorious(player.Other(), state.Conf.StrikeLength, depth%2 != 0) {
-					continue
-				}
-
-			if !foundValid {
-				bestOutcome = outcomes[i]
-				foundValid = true
-				continue
-			}
-		*/
-
 		if p.cmp(player, canMoveNext, &bestOutcome.Rank, &outcomes[i].Rank) {
 			bestOutcome = outcomes[i]
 		}
@@ -275,78 +210,6 @@ func (p *AIPlayer) minimax(state *game.GameState, player game.PlayerID, depth in
 
 	return bestOutcome.Rank, bestOutcome.Cell
 }
-
-/*
-func (p *AIPlayer) parallelMinimax(state *game.GameState, player game.PlayerID, depth int, threadCount int) (BoardRank, Offset) {
-	moveCh := make(chan Offset)
-	outcomeCh := make(chan moveOutcome)
-
-	var wg sync.WaitGroup
-	wg.Add(threadCount)
-	for i := 0; i < threadCount; i++ {
-		stateCopy := state.Clone()
-
-		go func(state *game.GameState) {
-			for move := range moveCh {
-				state.MarkCell(move, player)
-
-				if state.Over() {
-					rank := computeRank(state)
-					state.UndoLastMove()
-					outcomeCh <- moveOutcome{move, rank}
-					continue
-				}
-
-				var rank BoardRank
-				if depth == 1 {
-					// Calculate rank with move
-					rank = computeRank(state)
-				} else {
-					rank, _ = p.minimax(state, player.Other(), depth-1)
-				}
-
-				outcomeCh <- moveOutcome{move, rank}
-
-				state.UndoLastMove()
-			}
-
-			wg.Done()
-		}(stateCopy)
-	}
-
-	go func() {
-		for move := range state.Board.UnoccupiedCells() {
-			moveCh <- move
-		}
-		close(moveCh)
-	}()
-
-	go func() {
-		wg.Wait()
-		close(outcomeCh)
-	}()
-
-	bestOutcome := <-outcomeCh
-	foundValid := !bestOutcome.Rank.Victorious(player.Other(), state.Conf.StrikeLength, depth%2 != 0)
-	for outcome := range outcomeCh {
-		if outcome.Rank.Victorious(player.Other(), state.Conf.StrikeLength, depth%2 != 0) {
-			continue
-		}
-
-		if !foundValid {
-			bestOutcome = outcome
-			foundValid = true
-			continue
-		}
-
-		if p.cmp(player, &bestOutcome.Rank, &outcome.Rank) {
-			bestOutcome = outcome
-		}
-	}
-
-	return bestOutcome.Rank, bestOutcome.Cell
-}
-*/
 
 func (p *AIPlayer) MakeMove(g *game.GameState) Offset {
 	if p.gameCopy == nil {
