@@ -77,7 +77,7 @@ func NewGameplayModel(config GameplayModelConfig) GameplayModel {
 
 func (m *GameplayModel) AwaitMove(player game.PlayerID) tea.Cmd {
 	return func() tea.Msg {
-		move := m.Players[player].MakeMove(m.Game.Board)
+		move := m.Players[player].MakeMove(m.Game)
 		return PlayerMoveMsg{move}
 	}
 }

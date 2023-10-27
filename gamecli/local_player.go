@@ -15,7 +15,7 @@ func NewLocalPlayer() game.PlayerAgent {
 	}
 }
 
-func (p *LocalPlayer) MakeMove(g *game.BoardState) Offset {
+func (p *LocalPlayer) MakeMove(g *game.GameState) Offset {
 	return <-p.moves
 }
 

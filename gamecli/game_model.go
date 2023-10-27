@@ -25,7 +25,7 @@ func (m GameModel) View() string {
 	// Highlight candidates, if selection is visible
 	selection := m.Board.Selection()
 	if m.Board.SelectionVisible && m.Game.Cell(selection) == game.CellUnoccupied {
-		candidates := m.Game.CandidateCellsAt(selection, m.Board.CurrentPlayer)
+		candidates := m.Game.CandidatesAroundFor(selection, m.Board.CurrentPlayer)
 
 		for _, cell := range candidates {
 			styledCells[cell] = m.Board.Theme.CandidateCellStyle
@@ -39,7 +39,7 @@ func (m GameModel) View() string {
 	}
 
 	// Victory cells
-	for _, cell := range m.Game.Solution() {
+	for _, cell := range m.Game.VictoriousStrike() {
 		styledCells[cell] = m.Board.Theme.VictoryCellStyle
 	}
 
